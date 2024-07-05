@@ -6,13 +6,13 @@ import { Link } from 'react-router-dom';
 const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await axios.post(event.target.action);
+        const response = await axios.post(event.target.action)
+
         console.log('Request submitted successfully:', response.data);
     } catch (error) {
         console.error('Error submitting request:', error);
     }
 };
-
 
 const Navbar = ({ currentUser }) => (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
@@ -159,20 +159,34 @@ const Books = ({ books, currentUser }) => (
     </section>
 );
 
-const Pagination = ({ pages, current, filter, value }) => (
+const Pagination = ({ pages, current, filter, value, handlePagination }) => (
     <nav className="ml-3 mb-2" style={{ marginTop: '20px' }}>
         <ul className="pagination offset-md-3">
             {current === 1 ? (
-                <li className="page-item disabled"><a className="page-link">First</a></li>
+                <li className="page-item disabled"><span className="page-link">First</span></li>
             ) : (
-                <li className="page-item"><Link to={`/books/${filter}/${value}/1`} className="page-link">First</Link></li>
+                <li className="page-item">
+                    <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/1`) }}>
+                        First
+                    </a>
+                </li>
             )}
+
             {Array.from({ length: Math.min(pages, 5) }, (_, i) => i + (current > 5 ? current - 4 : 1)).map(i => (
                 <li className={`page-item ${i === current ? 'active' : ''}`} key={i}>
-                    <Link className="page-link" to={`/books/${filter}/${value}/${i}`}>{i}</Link>
+                    <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/${i}`) }}>
+                        {i}
+                    </a>
                 </li>
             ))}
-            {current < pages && <li className="page-item"><Link to={`/books/${filter}/${value}/${pages}`} className="page-link">Last</Link></li>}
+
+            {current < pages && (
+                <li className="page-item">
+                    <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/${pages}`) }}>
+                        Last
+                    </a>
+                </li>
+            )}
         </ul>
     </nav>
 );
@@ -184,7 +198,6 @@ const BooksPage = () => {
     const [filter, setFilter] = useState('all');
     const [value, setValue] = useState('all');
     const [currentUser, setCurrentUser] = useState(null);
-
     useEffect(() => {
         const fetchBooks = async () => {
             try {
@@ -202,13 +215,25 @@ const BooksPage = () => {
         };
         fetchBooks();
     }, []);
-
+    const handlePagination = async (lnk) => {
+        try {
+            const response = await axios.get(lnk);
+            const { books, current, pages, filter, value } = response.data;
+            setBooks(books);
+            setCurrent(current);
+            setPages(pages);
+            setFilter(filter);
+            setValue(value);
+        } catch (error) {
+            console.error('Error handling pagination:', error);
+        }
+    };
     return (
         <div>
             <Navbar currentUser={currentUser} />
             <SearchBar />
             <Books books={books} currentUser={currentUser} />
-            {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} />}
+            {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
         </div>
     );
 };
