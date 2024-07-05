@@ -1,0 +1,271 @@
+<style>
+  section.foot {
+    background: url("/image/other/2.jpg") no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    -ms-background-size: 100% 100%;
+  }
+
+  .contact-para {
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-weight: normal;
+    padding-bottom: 10px;
+    line-height: 29px;
+    color: #fff;
+  }
+
+  .contact-strong {
+    font-family: "Federo", sans-serif;
+    letter-spacing: 1.5px;
+    color: #ffce14 !important;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .contact-topic {
+    font-size: 35px;
+    letter-spacing: 1.5px;
+    font-weight: normal;
+    color: #fff;
+    padding-bottom: 20px;
+    text-align: center;
+    padding-top: 20px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  }
+
+  .contact-p1 {
+    font-size: 17px;
+    letter-spacing: 1px;
+    font-weight: 300;
+    color: #fff;
+    padding-bottom: 10px;
+    font-family: "Federo", sans-serif;
+  }
+
+  .map {
+    width: 100%;
+    height: 240px;
+    margin-top: 1.5em;
+    outline: none;
+    border: none;
+  }
+
+  .copy {
+    text-align: center;
+    background: black;
+    border-bottom: 0;
+  }
+
+  .copy p {
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-top: 10px;
+  }
+
+  .copy p a {
+    color: #ffce14;
+    text-decoration: none;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+  }
+
+  .copy p a:hover {
+    color: #fff;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+  }
+
+  .p1 {
+    align-items: center;
+    color: #ffce14;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .abcd {
+    float: right;
+    margin-right: 29%;
+  }
+
+  .abcde {
+    float: right;
+    margin-right: 40%;
+  }
+
+  .footer-col {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  .fab {
+    margin-top: 30px;
+    width: 40px;
+    height: 40px;
+    padding-top: 15px;
+  }
+
+  .fa-facebook-f {
+    color: rgb(253, 253, 253);
+    background: rgb(13, 59, 199);
+  }
+
+  .fa-twitter {
+    color: rgb(255, 255, 255);
+    background: royalblue;
+  }
+
+  .fa-google-plus-g {
+    color: rgb(255, 255, 255);
+    background: rgb(245, 33, 44);
+  }
+</style>
+
+<section class="foot">
+  <div class="container-fluid">
+    <h3 class="contact-topic">Contact Us</h3>
+    <div class="row">
+      <div
+        class="col-lg-6 col-md-6 col-sm-6 footer-col"
+        style="padding-left: 20px"
+        data-aos="flip-left"
+      >
+        <div class="">
+          <p class="p1 text-center">Give Us Feedback</p>
+          <form method="post" name="sentMessage" id="contactForm">
+            <div class="form-group">
+              <label class="contact-p1">Full Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                id="name"
+                required
+                style="background-color: transparent"
+              />
+            </div>
+            <div class="form-group">
+              <label class="contact-p1">Phone Number:</label>
+              <input
+                type="tel"
+                class="form-control"
+                name="phone"
+                id="phone"
+                required
+                style="background-color: transparent"
+              />
+            </div>
+            <div class="form-group">
+              <label class="contact-p1">Email Address:</label>
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                id="email"
+                required
+                style="background-color: transparent"
+              />
+            </div>
+            <input
+              type="submit"
+              name="sub"
+              value="Send Now"
+              class="btn btn-primary"
+            />
+          </form>
+        </div>
+        <div>
+          <ul class="list-unstyled list-inline text-center">
+            <li class="list-inline-item">
+              <a
+                href="https://www.facebook.com/"
+                class="btn-floating btn-gplus mx-1"
+              >
+                <i class="fa fa-facebook-f"></i
+              ></a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://twitter.com/" class="btn-floating btn-gplus mx-1"
+                ><i class="fa fa-twitter"></i
+              ></a>
+            </li>
+            <li class="list-inline-item">
+              <a
+                href="https://plus.google.com/u/0/"
+                class="btn-floating btn-gplus mx-1"
+                ><i class="fa fa-google-plus-g"></i
+              ></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="col-lg-6 col-md-6 col-sm-6 footer-col"
+        data-aos="flip-right"
+        style="padding-left: 50px"
+      >
+        <p class="contact-para">
+          <strong class="contact-strong">Phone :</strong
+          ><span class="abcd"
+            >General : +94 112369931-4<br />
+            Inquiry Section : +94 117220677</span
+          >
+        </p>
+        <br />
+        <p class="contact-para">
+          <strong class="contact-strong">Fax :</strong
+          ><span style="float: right; margin-right: 50%">+94 112369939</span>
+        </p>
+        <p class="contact-para">
+          <strong class="contact-strong">Email : </strong
+          ><a href="mailto:name@example.com"
+            ><span style="float: right; margin-right: 55%; color: #fff"
+              >info@lib.lk</span
+            ></a
+          >
+        </p>
+        <p class="contact-para">
+          <strong class="contact-strong">Address : </strong
+          ><span class="abcde"
+            >Colombo Library Center<br />
+            No 222/5D<br />Elvitigala mawatha<br />Narahenpita<br />Colombo
+            05<br />Sri Lanka.</span
+          >
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+  <div class="footer-copyright text-center py-3 copy">
+    <p>
+      Copyright © 2021 Library Management System. All Rights Reserved
+      <a routerLink="/homepage">Library Management System</a>
+    </p>
+  </div>
+</section>
+
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<script src="/assets/js/jquery-3.2.1.slim.min.js"></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+<script src="/assets/js/popper.min.js"></script>
+
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+<script src="/assets/js/bootstrap.min.js"></script>
+</body>
+
+</html>

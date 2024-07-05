@@ -1,0 +1,71 @@
+@media (max-width: 767px) {
+  .intro-text {
+    display: none;
+  }
+}
+
+#bannernbts {
+  background-size: cover;
+  background: rgb(103, 203, 243);
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.carousel-item {
+  transition: transform 2s ease, opacity 0.5s ease-out;
+}
+
+.carousel-item img {
+  width: 723px;
+  height: 430px;
+}
+
+.heading {
+  font-weight: bold;
+}
+
+.head5 {
+  font-weight: bold;
+  color: #ff0000;
+  font-style: oblique;
+  background: rgb(0, 0, 0);
+}
+
+.carousel-inner {
+  padding-top: 15px;
+}
+
+.c1 {
+  margin-top: 20px;
+}
+
+.c1 img {
+  width: 320px;
+  height: 265px;
+  float: left;
+  padding-right: 20px;
+}
+
+.c2 {
+  margin-top: 20px;
+}
+
+.c2 img {
+  width: 320px;
+  height: 265px;
+  float: left;
+  padding-right: 20px;
+}
+
+.para-blood {
+  font-size: 15px;
+  text-align: justify;
+}
+
+.special-btn {
+  border: 1px;
+}
+
+.special-btn:hover {
+  background-color: red;
+}

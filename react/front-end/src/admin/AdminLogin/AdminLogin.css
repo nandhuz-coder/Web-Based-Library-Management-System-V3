@@ -1,0 +1,19 @@
+#adminLoginForm {
+  background: url("http://localhost:3000/image/other/2.jpg") no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  -ms-background-size: 100% 100%;
+}
+
+.card {
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.card-header {
+  text-align: center;
+}
