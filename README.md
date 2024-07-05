@@ -1,70 +1,94 @@
-# Getting Started with Create React App
+# Library Management System V2
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Following feature will be added in this repo
 
-## Available Scripts
+1. Server side caching
+2. Server side validation
+3. Scalable image upload
+4. Wiring up CI/CD
 
-In the project directory, you can run:
+## Techonologies used in this application
 
-### `npm start`
+### Front-end
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. HTML5
+2. CSS3
+3. BOOTSTRAP 4
+4. jQuery
+5. EJS 2.7.4(frontend dev can update if needed).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Back-end
 
-### `npm test`
+1. Node.js
+2. Express.js
+3. MongoDB
+4. Passport.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Install dependencies
 
-### `npm run build`
+Open git bash or command line tools at application file and run following npm command `npm install` if you have `package.json` file.
+or
+`npm install passport passport-local passport-local-mongoose body-parser connect-flash ejs express express-session method-override mongoose multer sharp uuid bcrypt --save`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Install dev dependencies if needed
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+`npm install faker --save-dev`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Run the application
 
-### `npm run eject`
+- create a `.env` file in app directory
+- add `SESSION_SECRET=<your session secret>`, `ADMIN_SECRET=<your admin secret>`, `DB_URL=<your mongodb url>` and `DB_NAME=<database_name>` into that file. or
+- rename `.env.example` to `.env`
+- run `npm run dev`
+- App will open at [http://localhost:3000]
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Functionalitites
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Whole app is divided into three modules.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Admin
+- User
+- Browse books
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Admin module functionalities
 
-## Learn More
+- Sign up (This route is hidden. only accessible by typing the route manually and when admin log in)
+- Login
+- Logout
+- Track all users activities
+- Add books
+- Update books
+- Delete books
+- Out of stock books
+- Search books by category, title, author, ISBN
+- Find users by firstname, lastname, email and username
+- Delete user acount
+- Restrict individual user if violate any terms and conditions
+- Browse books showcase
+- Update admin profile and password
+- Add new admin
+- Delete currently logged in admin profile
+- Apporval and decline request books
+- Accept and decline return request
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### User module functionalities
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Sign up
+- Login
+- Logout
+- Track own activities
+- Request books
+- Renew books
+- Return books
+- Browse books showcase
+- Add, edit and delete comment on any books comment section
+- Upload/Update profile picture
+- Update profile and password
+- Delete account
 
-### Code Splitting
+### Browse books module functionalities
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This module can be accessed by anyone
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Show all books
+- Find books on filtered search
