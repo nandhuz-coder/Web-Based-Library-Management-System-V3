@@ -12,7 +12,8 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/auth/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminIndex />} />
-          <Route path="/books" element={<BooksPage />} />
+          <Route path="/books/*" element={<BooksPage />} />
+          <Route path="/books/details/:bookid" element={<BooksPage />} />
         </Routes>
       </BrowserRouter>
       <Footer />

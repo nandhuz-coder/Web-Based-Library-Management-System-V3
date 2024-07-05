@@ -2,18 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-
-const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-        const response = await axios.post(event.target.action)
-
-        console.log('Request submitted successfully:', response.data);
-    } catch (error) {
-        console.error('Error submitting request:', error);
-    }
-};
-
 const Navbar = ({ currentUser }) => (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
         <div className="container">
@@ -82,10 +70,10 @@ const Navbar = ({ currentUser }) => (
     </nav>
 );
 
-const SearchBar = () => (
+const SearchBar = ({ handleSubmit }) => (
     <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
         <div className="container">
-            <form action="/books/all/all/1" method="POST">
+            <form action="/books/all/all/1" method="POST" onSubmit={(e) => { handleSubmit(e) }}>
                 <div className="row">
                     <div className="col-md-5 p-1">
                         <select name="filter" id="filter" className="form-control">
@@ -201,7 +189,7 @@ const BooksPage = () => {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await axios.get('/api/books/all/all/1');
+                const response = await axios.get('/api/books/all/all/1')
                 const { books, current, pages, filter, value, user } = response.data;
                 setBooks(books);
                 setCurrent(current);
@@ -228,10 +216,31 @@ const BooksPage = () => {
             console.error('Error handling pagination:', error);
         }
     };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const searchParams = new URLSearchParams(formData).toString();
+        try {
+            const response = await axios.post(event.target.action, searchParams, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            const { books, current, pages, filter, value } = response.data;
+            setBooks(books);
+            setCurrent(current);
+            setPages(pages);
+            setFilter(filter);
+            setValue(value);
+        } catch (error) {
+            console.error('Error submitting request:', error);
+        }
+    };
+
     return (
         <div>
             <Navbar currentUser={currentUser} />
-            <SearchBar />
+            <SearchBar handleSubmit={handleSubmit} />
             <Books books={books} currentUser={currentUser} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
         </div>
