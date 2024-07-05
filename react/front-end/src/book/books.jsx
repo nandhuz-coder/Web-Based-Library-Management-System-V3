@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Alert from '../partials/Header/alert/alert';
 
-const Navbar = ({ currentUser }) => (
+const Navbar = ({ currentUser, logout }) => (
+
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
         <div className="container">
             <Link className="navbar-brand" to={!currentUser ? "/" : currentUser.isAdmin ? "/admin" : "/user/1"}>Home</Link>
@@ -41,7 +42,7 @@ const Navbar = ({ currentUser }) => (
                                         <Link to="/user/1/profile" className="dropdown-item">
                                             <i className="fa fa-user-circle"></i> Profile
                                         </Link>
-                                        <Link to="/auth/user-logout" className="dropdown-item">
+                                        <Link to="" onClick={e => { logout(e) }} className="dropdown-item">
                                             <i className="fa fa-user-times"></i> Logout
                                         </Link>
                                     </>
@@ -50,7 +51,7 @@ const Navbar = ({ currentUser }) => (
                                         <Link to="/admin/profile" className="dropdown-item">
                                             <i className="fa fa-user-circle"></i> Profile
                                         </Link>
-                                        <Link to="/auth/user-logout" className="dropdown-item">
+                                        <Link to="" onClick={e => { logout(e) }} className="dropdown-item">
                                             <i className="fa fa-user-times"></i> Logout
                                         </Link>
                                     </>
@@ -240,10 +241,13 @@ const BooksPage = () => {
             console.error('Error submitting request:', error);
         }
     };
-
+    const logout = async (e) => {
+        e.preventDefault();
+        axios.get("/auth/user-logout").then((res) => window.location.reload())
+    }
     return (
         <div>
-            <Navbar currentUser={currentUser} />
+            <Navbar currentUser={currentUser} logout={logout} />
             <SearchBar handleSubmit={handleSubmit} error={error} />
             <Books books={books} currentUser={currentUser} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}

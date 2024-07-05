@@ -3,7 +3,6 @@ const PER_PAGE = 12;
 
 exports.findBooks = async (req, res, next) => {
   var page = req.params.page || 1;
-  console.log(req.body);
   const filter = req.body.filter.toLowerCase();
   const value = req.body.searchName;
 

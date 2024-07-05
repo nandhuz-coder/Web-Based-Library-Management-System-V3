@@ -68,10 +68,10 @@ exports.getUserLoginPage = (req, res, next) => {
 };
 
 exports.getUserLogout = async (req, res, next) => {
-  await req.session.destroy();
-  req.logout(function (err) {
+  req.logout(async function (err) {
     if (err) return next(err);
-    res.redirect("/");
+    if (req.session) await req.session.destroy();
+    res.json(true);
   });
 };
 
