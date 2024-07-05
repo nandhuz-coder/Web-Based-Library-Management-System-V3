@@ -23,19 +23,19 @@ router.post("/auth/admin-login", middleware.ifUser, function (req, res, next) {
   try {
     passport.authenticate("local", function (err, user, info) {
       if (err) {
-        return next(err);
+        return res.json({ error: "try after some times." });
       }
       if (!user) {
-        res.status(401).json({ error: "Invalid username or password" });
+        return res.json({ error: "Invalid username or password" });
       }
       req.logIn(user, async function (err) {
         if (err) {
-          res.status(401).json({ error: "unknown error" });
-          return next(err);
+          return res.json({ error: "unknown error" });
         } else {
-          res
-            .status(200)
-            .json({ success: "Hello, " + user.username + " Welcome", user });
+          return res.json({
+            success: "Hello, " + user.username + " Welcome",
+            user,
+          });
         }
       });
     })(req, res, next);

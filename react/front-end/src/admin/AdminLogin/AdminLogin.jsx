@@ -13,17 +13,20 @@ const AdminLogin = () => {
         try {
             await axios.post('/auth/admin-login', {
                 username, password
-            }).then((response) => {
-                if (response.status === 401) {
+            }).then(async (response) => {
+                if (response.data.error) {
                     setError(response.data.error)
                     setSuccess('');
-                } else if (response.status === 200) {
+                }
+                if (response.data.success) {
                     setSuccess(response.data.success)
                     setError('');
                     window.location.href = '/admin';
                 }
             }).catch((err) => {
+                console.log(err);
                 setError(err)
+                setSuccess('');
                 window.location.reload()
             })
         } catch (error) {
