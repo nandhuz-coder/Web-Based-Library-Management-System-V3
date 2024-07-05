@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Alert from '../partials/Header/alert/alert';
 
 const Navbar = ({ currentUser }) => (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
@@ -70,9 +71,10 @@ const Navbar = ({ currentUser }) => (
     </nav>
 );
 
-const SearchBar = ({ handleSubmit }) => (
+const SearchBar = ({ handleSubmit, error }) => (
     <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
         <div className="container">
+            <Alert error={error} />
             <form action="/books/all/all/1" method="POST" onSubmit={(e) => { handleSubmit(e) }}>
                 <div className="row">
                     <div className="col-md-5 p-1">
@@ -186,6 +188,7 @@ const BooksPage = () => {
     const [filter, setFilter] = useState('all');
     const [value, setValue] = useState('all');
     const [currentUser, setCurrentUser] = useState(null);
+    const [error, setError] = useState('');
     useEffect(() => {
         const fetchBooks = async () => {
             try {
@@ -226,6 +229,7 @@ const BooksPage = () => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
+            if (response.data.error) return setError(response.data.error)
             const { books, current, pages, filter, value } = response.data;
             setBooks(books);
             setCurrent(current);
@@ -240,7 +244,7 @@ const BooksPage = () => {
     return (
         <div>
             <Navbar currentUser={currentUser} />
-            <SearchBar handleSubmit={handleSubmit} />
+            <SearchBar handleSubmit={handleSubmit} error={error} />
             <Books books={books} currentUser={currentUser} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
         </div>
