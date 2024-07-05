@@ -3,6 +3,7 @@ const express = require("express"),
   Book = require("../models/book"),
   PER_PAGE = 12;
 
+// Books -> Books & Pagination
 router.get("/api/books/:filter/:value/:page", async (req, res) => {
   var page = req.params.page || 1;
   const filter = req.params.filter;
@@ -35,5 +36,12 @@ router.get("/api/books/:filter/:value/:page", async (req, res) => {
     console.log(err);
   }
 });
+
+
+
+
+
+
+
 
 module.exports = router;

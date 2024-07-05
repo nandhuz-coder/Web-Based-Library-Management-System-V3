@@ -2,15 +2,6 @@ const Book = require("../models/book");
 const PER_PAGE = 12;
 const path = require("path");
 
-exports.getBooks = async (req, res, next) => {
-  try {
-    res.sendFile(
-      path.resolve(__dirname, "../../react/front-end/build", "index.html")
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 exports.findBooks = async (req, res, next) => {
   var page = req.params.page || 1;
