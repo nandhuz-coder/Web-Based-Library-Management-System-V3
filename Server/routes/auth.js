@@ -9,16 +9,6 @@ const authController = require("../controllers/auth");
 // Import models
 const User = require("../models/user");
 
-//landing page
-router.get("/", middleware.ifUser, authController.getLandingPage);
-
-//admin login handler
-router.get(
-  "/auth/admin-login",
-  middleware.ifUser,
-  authController.getAdminLoginPage
-);
-
 router.post("/auth/admin-login", middleware.ifUser, function (req, res, next) {
   try {
     passport.authenticate("local", function (err, user, info) {
@@ -43,9 +33,6 @@ router.post("/auth/admin-login", middleware.ifUser, function (req, res, next) {
     console.log(error);
   }
 });
-
-//admin logout handler
-router.post("/auth/admin-logout", authController.getAdminLogout);
 
 // admin sign up handler
 router.get(

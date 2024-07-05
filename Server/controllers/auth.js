@@ -8,23 +8,6 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config();
 // importing models
 const User = require("../models/user");
 
-exports.getLandingPage = (req, res, next) => {
-  res.render("landing");
-};
-
-exports.getAdminLoginPage = (req, res, next) => {
-  res.sendFile(
-    path.resolve(__dirname, "../../react/front-end/build", "index.html")
-  );
-};
-
-exports.getAdminLogout = async (req, res, next) => {
-  req.logout(function (err) {
-    if (err) return next(err);
-    res.redirect("/");
-  });
-};
-
 exports.getAdminSignUp = (req, res, next) => {
   res.render("signup");
 };
