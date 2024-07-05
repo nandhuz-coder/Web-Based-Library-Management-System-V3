@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Alert from '../partials/Header/alert/alert';
+let fetchBooks;
 
 const Navbar = ({ currentUser, logout }) => (
 
@@ -72,10 +73,10 @@ const Navbar = ({ currentUser, logout }) => (
     </nav>
 );
 
-const SearchBar = ({ handleSubmit, error }) => (
+const SearchBar = ({ handleSubmit, error, success }) => (
     <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
         <div className="container">
-            <Alert error={error} />
+            <Alert error={error} success={success} />
             <form action="/books/all/all/1" method="POST" onSubmit={(e) => { handleSubmit(e) }}>
                 <div className="row">
                     <div className="col-md-5 p-1">
@@ -110,7 +111,7 @@ const SearchBar = ({ handleSubmit, error }) => (
     </section>
 );
 
-const Books = ({ books, currentUser }) => (
+const Books = ({ books, currentUser, handleRequest }) => (
     <section id="browse_books" className="mt-5">
         <div className="container">
             <div className="row">
@@ -135,6 +136,7 @@ const Books = ({ books, currentUser }) => (
                                             action={`/books/${book._id}/request/${currentUser._id}`}
                                             method="POST"
                                             className="d-inline"
+                                            onSubmit={(e) => { handleRequest(e) }}
                                         >
                                             <input className="btn btn-sm btn-warning" type="submit" value="request" />
                                         </form>
@@ -190,8 +192,9 @@ const BooksPage = () => {
     const [value, setValue] = useState('all');
     const [currentUser, setCurrentUser] = useState(null);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     useEffect(() => {
-        const fetchBooks = async () => {
+        fetchBooks = async () => {
             try {
                 const response = await axios.get('/api/books/all/all/1')
                 const { books, current, pages, filter, value, user } = response.data;
@@ -241,6 +244,24 @@ const BooksPage = () => {
             console.error('Error submitting request:', error);
         }
     };
+    const handleRequest = async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target);
+        const searchParams = new URLSearchParams(formData).toString();
+        try {
+            await axios.post(e.target.action, searchParams, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then((response) => {
+                if (response.data.error) return setError(response.data.error)
+                if (response.data.success) setSuccess(response.data.success)
+                return fetchBooks()
+            })
+        } catch (error) {
+            console.error('Error submitting request:', error);
+        }
+    }
     const logout = async (e) => {
         e.preventDefault();
         axios.get("/auth/user-logout").then((res) => window.location.reload())
@@ -248,8 +269,8 @@ const BooksPage = () => {
     return (
         <div>
             <Navbar currentUser={currentUser} logout={logout} />
-            <SearchBar handleSubmit={handleSubmit} error={error} />
-            <Books books={books} currentUser={currentUser} />
+            <SearchBar handleSubmit={handleSubmit} error={error} success={success} />
+            <Books books={books} currentUser={currentUser} handleRequest={handleRequest} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
         </div>
     );

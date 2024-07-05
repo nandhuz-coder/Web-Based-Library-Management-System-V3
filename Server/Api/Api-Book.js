@@ -37,11 +37,15 @@ router.get("/api/books/:filter/:value/:page", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
+router.get("/api/books/details/:bookid", async (req, res, next) => {
+  try {
+    const book_id = req.params.bookid;
+    const book = await Book.findById(book_id).populate("comments");
+    return res.json({ book: book, user: req.user });
+  } catch (err) {
+    console.log(err);
+    return res.redirect("back");
+  }
+});
 
 module.exports = router;

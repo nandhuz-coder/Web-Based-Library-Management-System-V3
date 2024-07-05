@@ -478,16 +478,14 @@ exports.deleteUserAccount = async (req, res, next) => {
 //user -> request a book
 exports.postRequestbook = async (req, res, next) => {
   if (req.user.violationFlag) {
-    req.flash(
-      "error",
-      "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books"
-    );
-    return res.redirect("back");
+    return res.json({
+      error:
+        "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
+    });
   }
 
   if (req.user.bookIssueInfo.length >= 5) {
-    req.flash("warning", "You can't issue more than 5 books at a time");
-    return res.redirect("back");
+    return res.json({ error: "You can't issue more than 5 books at a time" });
   }
 
   try {
@@ -540,7 +538,10 @@ exports.postRequestbook = async (req, res, next) => {
     await book.save();
     await activity.save();
 
-    res.redirect("/books/all/all/1");
+    // api alert
+    return await res.json({
+      success: `${book.title} is successfully requested.`,
+    });
   } catch (err) {
     console.log(err);
     return res.redirect("back");

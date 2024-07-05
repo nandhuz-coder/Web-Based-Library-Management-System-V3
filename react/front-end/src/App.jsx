@@ -4,6 +4,7 @@ import Landing from "./landing/landing";
 import AdminLogin from "./admin/AdminLogin/AdminLogin";
 import AdminIndex from "./admin/admin-main/index";
 import BooksPage from "./book/books"
+import BooksDetails from "./book/book-details";
 function App() {
   return (
     <>
@@ -13,7 +14,7 @@ function App() {
           <Route path="/auth/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminIndex />} />
           <Route path="/books/*" element={<BooksPage />} />
-          <Route path="/books/details/:bookid" element={<BooksPage />} />
+          <Route path="/books/details/:bookid" element={<BooksDetails />} />
         </Routes>
       </BrowserRouter>
       <Footer />

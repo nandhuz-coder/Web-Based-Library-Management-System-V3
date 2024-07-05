@@ -43,13 +43,3 @@ exports.findBooks = async (req, res, next) => {
   }
 };
 
-exports.getBookDetails = async (req, res, next) => {
-  try {
-    const book_id = req.params.book_id;
-    const book = await Book.findById(book_id).populate("comments");
-    res.render("user/bookDetails", { book: book });
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
