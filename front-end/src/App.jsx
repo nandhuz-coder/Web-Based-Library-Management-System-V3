@@ -40,6 +40,21 @@ const IfAdmin = () => {
   return null;
 }
 
+const IsUser = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    axios.get('/middleware/isuser')
+      .then(res => {
+        if (!res.data.flag) {
+          navigate('/')
+        }
+      }).catch(err => {
+        console.log('Error checking user:', err);
+      });
+  }, [navigate]);
+  return null;
+};
+
 function App() {
   return (
     <>
