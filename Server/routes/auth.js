@@ -9,7 +9,7 @@ const authController = require("../controllers/auth");
 // Import models
 const User = require("../models/user");
 
-router.post("/auth/admin-login", middleware.ifUser, function (req, res, next) {
+router.post("/auth/admin-login", function (req, res, next) {
   try {
     passport.authenticate("local", function (err, user, info) {
       if (err) {

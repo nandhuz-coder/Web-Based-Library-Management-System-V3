@@ -37,6 +37,7 @@ router.get("/api/books/:filter/:value/:page", async (req, res) => {
   }
 });
 
+//Books -> Deatils api
 router.get("/api/books/details/:bookid", async (req, res, next) => {
   try {
     const book_id = req.params.bookid;

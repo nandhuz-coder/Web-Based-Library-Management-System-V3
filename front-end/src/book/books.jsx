@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Alert from '../partials/Header/alert/alert';
+import Loading from '../Loading/Loading';
 let fetchBooks;
 
 const Navbar = ({ currentUser, logout }) => (
@@ -112,44 +113,46 @@ const SearchBar = ({ handleSubmit, error, success }) => (
 );
 
 const Books = ({ books, currentUser, handleRequest }) => (
-    <section id="browse_books" className="mt-5">
-        <div className="container">
-            <div className="row">
-                {books.map((book, i) => (
-                    <div className="card col-md-3 text-center" style={{ marginBottom: '10px' }} key={i}>
-                        <div className="card-body">
-                            <h5 className="card-title">{book.title}</h5>
-                            <p><small style={{ color: 'red' }}>Author: {book.author}</small></p>
-                            <p><small style={{ color: 'rgb(20, 168, 40)' }}>Category: {book.category}</small></p>
-                            <p><small style={{ color: 'rgb(52, 33, 219)' }}>In stock: {book.stock}</small></p>
-                            {currentUser && book.stock >= 0 && (
-                                <>
-                                    {currentUser.bookIssueInfo?.some(book_info => book_info._id === book._id) ? (
-                                        <>
-                                            <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Issued!</a>
-                                            <Link to="/books/return-renew" className="btn btn-xs btn-success" role="button">Return/Renew</Link>
-                                        </>
-                                    ) : currentUser.bookRequestInfo?.some(book_info => book_info._id === book._id) ? (
-                                        <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Requested!</a>
-                                    ) : (
-                                        <form
-                                            action={`/books/${book._id}/request/${currentUser._id}`}
-                                            method="POST"
-                                            className="d-inline"
-                                            onSubmit={(e) => { handleRequest(e) }}
-                                        >
-                                            <input className="btn btn-sm btn-warning" type="submit" value="request" />
-                                        </form>
-                                    )}
-                                </>
-                            )}
-                            <Link to={`/books/details/${book._id}`} className="btn btn-sm btn-success">Details</Link>
+    <Suspense fallback={Loading}>
+        <section id="browse_books" className="mt-5">
+            <div className="container">
+                <div className="row">
+                    {books.map((book, i) => (
+                        <div className="card col-md-3 text-center" style={{ marginBottom: '10px' }} key={i}>
+                            <div className="card-body">
+                                <h5 className="card-title">{book.title}</h5>
+                                <p><small style={{ color: 'red' }}>Author: {book.author}</small></p>
+                                <p><small style={{ color: 'rgb(20, 168, 40)' }}>Category: {book.category}</small></p>
+                                <p><small style={{ color: 'rgb(52, 33, 219)' }}>In stock: {book.stock}</small></p>
+                                {currentUser && book.stock >= 0 && (
+                                    <>
+                                        {currentUser.bookIssueInfo?.some(book_info => book_info._id === book._id) ? (
+                                            <>
+                                                <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Issued!</a>
+                                                <Link to="/books/return-renew" className="btn btn-xs btn-success" role="button">Return/Renew</Link>
+                                            </>
+                                        ) : currentUser.bookRequestInfo?.some(book_info => book_info._id === book._id) ? (
+                                            <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Requested!</a>
+                                        ) : (
+                                            <form
+                                                action={`/books/${book._id}/request/${currentUser._id}`}
+                                                method="POST"
+                                                className="d-inline"
+                                                onSubmit={(e) => { handleRequest(e) }}
+                                            >
+                                                <input className="btn btn-sm btn-warning" type="submit" value="request" />
+                                            </form>
+                                        )}
+                                    </>
+                                )}
+                                <Link to={`/books/details/${book._id}`} className="btn btn-sm btn-success">Details</Link>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </Suspense>
 );
 
 const Pagination = ({ pages, current, filter, value, handlePagination }) => (

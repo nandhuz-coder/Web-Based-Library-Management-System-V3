@@ -18,7 +18,8 @@ const express = require("express"),
   bookRoutes = require("./routes/books"),
   authRoutes = require("./routes/auth"),
   ApiAdmin = require("./Api/Api-Admin"),
-  ApiBooks = require("./Api/Api-Book");
+  ApiBooks = require("./Api/Api-Book"),
+  ApiMiddleware = require("./middleware/middleware");
 
 // const Seed = require("./dev/seed");
 // uncomment below line for first time to seed database;
@@ -28,7 +29,7 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
 // app config
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "../react/front-end/build")));
+app.use(express.static(path.join(__dirname, "../front-end/build")));
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -108,12 +109,11 @@ app.use(bookRoutes);
 app.use(authRoutes);
 app.use(ApiAdmin);
 app.use(ApiBooks);
+app.use(ApiMiddleware);
 
 // Serve React App
 app.get("*", (req, res) => {
-  res.sendFile(
-    path.resolve(__dirname, "../react/front-end/build", "index.html")
-  );
+  res.sendFile(path.resolve(__dirname, "../front-end/build", "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;

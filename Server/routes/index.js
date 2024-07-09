@@ -8,12 +8,9 @@ require("dotenv").config();
 const User = require("../models/user");
 
 //landing page
-router.get("/", middleware.ifUser, (req, res) => {
-  res.sendFile(
-    path.resolve(__dirname, "../../react/front-end/build", "index.html")
-  );
+router.get("/", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../../front-end/build", "index.html"));
 });
-
 
 //admin login handler
 router.get("/adminLogin", middleware.ifUser, (req, res) => {

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminLogin.css';
 import Alert from '../../partials/Header/alert/alert';
+
 const AdminLogin = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -11,24 +14,16 @@ const AdminLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/auth/admin-login', {
-                username, password
-            }).then(async (response) => {
-                if (response.data.error) {
-                    setError(response.data.error)
-                    setSuccess('');
-                }
-                if (response.data.success) {
-                    setSuccess(response.data.success)
-                    setError('');
-                    window.location.href = '/admin';
-                }
-            }).catch((err) => {
-                console.log(err);
-                setError(err)
+            const response = await axios.post('/auth/admin-login', { username, password });
+            if (response.data.error) {
+                setError(response.data.error);
                 setSuccess('');
-                window.location.reload()
-            })
+            }
+            if (response.data.success) {
+                setSuccess(response.data.success);
+                setError('');
+                navigate('/admin');
+            }
         } catch (error) {
             console.error('Error logging in:', error);
             setError('Failed to login');

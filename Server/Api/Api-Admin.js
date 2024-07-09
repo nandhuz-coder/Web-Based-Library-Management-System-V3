@@ -44,27 +44,32 @@ router.get("/api/global", middleware.isAdmin, async (req, res, next) => {
 });
 
 //admin -> dashboard
-router.get("/api/admin", middleware.isAdmin, async (req, res, next) => {
-  var page = req.query.page || 1;
-  try {
-    const users_count = await User.find().countDocuments({ isAdmin: false });
-    const books_count = await Book.find().countDocuments();
-    const activity_count = await Activity.find().countDocuments();
-    const activities = await Activity.find()
-      .sort({ entryTime: -1 })
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE)
-      .exec();
-    return res.json({
-      users_count: users_count,
-      books_count: books_count,
-      activities: activities,
-      current: page,
-      pages: Math.ceil(activity_count / PER_PAGE),
-    });
-  } catch (err) {
-    console.log(err);
+router.get(
+  "/api/admin",
+  middleware.isAdmin,
+  middleware.ifUser,
+  async (req, res, next) => {
+    var page = req.query.page || 1;
+    try {
+      const users_count = await User.find().countDocuments({ isAdmin: false });
+      const books_count = await Book.find().countDocuments();
+      const activity_count = await Activity.find().countDocuments();
+      const activities = await Activity.find()
+        .sort({ entryTime: -1 })
+        .skip(PER_PAGE * page - PER_PAGE)
+        .limit(PER_PAGE)
+        .exec();
+      return res.json({
+        users_count: users_count,
+        books_count: books_count,
+        activities: activities,
+        current: page,
+        pages: Math.ceil(activity_count / PER_PAGE),
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
-});
+);
 
 module.exports = router;

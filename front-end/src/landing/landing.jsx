@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Landing.css';
 import Navbar from '../partials/Header/nav/nav';
-const Landing = () => {
+
+const Landing = ({ IfUser }) => {
     return (
         <>
+            <IfUser />
             <Navbar />
             <div className="container-fluid" id="bannernbts">
                 <div className="row">
@@ -23,7 +25,7 @@ const Landing = () => {
                                 </ol>
                                 <div className="carousel-inner">
                                     <div className="carousel-item active">
-                                        <img src="/image/other/1.jpg" className="d-block w-100" alt="..." />
+                                        <img src="/image/other/1.jpg" className="d-block w-100" alt="Library Management System 1" />
                                         <div className="carousel-caption d-none d-md-block">
                                             <h5 className="heading">Library Management System</h5>
                                             <p style={{ textAlign: 'justify' }}>
@@ -32,7 +34,7 @@ const Landing = () => {
                                         </div>
                                     </div>
                                     <div className="carousel-item">
-                                        <img src="/image/other/2.jpg" className="d-block w-100" alt="..." />
+                                        <img src="/image/other/2.jpg" className="d-block w-100" alt="Library Management System 2" />
                                         <div className="carousel-caption d-none d-md-block">
                                             <h5 className="heading">Library Management System</h5>
                                             <p>
@@ -41,7 +43,7 @@ const Landing = () => {
                                         </div>
                                     </div>
                                     <div className="carousel-item">
-                                        <img src="/image/other/3.jpg" className="d-block w-100" alt="..." />
+                                        <img src="/image/other/3.jpg" className="d-block w-100" alt="Library Management System 3" />
                                         <div className="carousel-caption d-none d-md-block">
                                             <h5 className="heading">Library Management System</h5>
                                             <p>
@@ -50,7 +52,7 @@ const Landing = () => {
                                         </div>
                                     </div>
                                     <div className="carousel-item">
-                                        <img src="/image/other/4.jpg" className="d-block w-100" alt="..." />
+                                        <img src="/image/other/4.jpg" className="d-block w-100" alt="Library Management System 4" />
                                         <div className="carousel-caption d-none d-md-block">
                                             <h5 className="heading">Library Management System</h5>
                                             <p>
@@ -80,5 +82,4 @@ const Landing = () => {
         </>
     );
 }
-
 export default Landing;

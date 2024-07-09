@@ -36,7 +36,7 @@ async function global() {
 exports.getDashboard = async (req, res, next) => {
   try {
     res.sendFile(
-      path.resolve(__dirname, "../../react/front-end/build", "index.html")
+      path.resolve(__dirname, "../../front-end/build", "index.html")
     );
   } catch (err) {
     console.log(err);

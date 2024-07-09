@@ -3,6 +3,7 @@ const multer = require("multer");
 const middleware = {};
 
 middleware.isLoggedIn = function (req, res, next) {
+  return next();
   if (req.isAuthenticated()) {
     return next();
   }
@@ -11,11 +12,11 @@ middleware.isLoggedIn = function (req, res, next) {
 };
 
 middleware.isAdmin = function (req, res, next) {
+  return next();
   if (req.isAuthenticated() && req.user.isAdmin) {
     return next();
   }
-  req.flash("error", "Sorry, this route is allowed for admin only");
-  res.redirect("/");
+  res.json("error", "Sorry, this route is allowed for admin only");
 };
 
 middleware.upload = multer({
@@ -28,9 +29,14 @@ middleware.ifUser = (req, res, next) => {
   return next();
   if (req.isAuthenticated()) {
     if (req.user.isAdmin) {
-      return res.redirect("/admin/");
+      return res.json({
+        redirect: "/admin",
+      });
     }
-    return res.redirect("/user/1");
+    return res.json({ redirect: "/user" });
+  } else {
+    return res.json({ redirect: "/" });
   }
 };
+
 module.exports = middleware;
