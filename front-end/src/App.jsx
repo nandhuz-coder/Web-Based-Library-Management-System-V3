@@ -18,12 +18,27 @@ const IfUser = () => {
         }
       })
       .catch(err => {
-        console.error('Error checking user:', err);
+        console.log('Error checking user:', err);
       });
   }, [navigate]);
 
   return null;
 };
+
+const IfAdmin = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    axios.get('/middleware/ifadmin')
+      .then(res => {
+        if (!res.data.flag) {
+          navigate('/')
+        }
+      }).catch(err => {
+        console.log('Error checking user:', err);
+      });
+  }, [navigate])
+  return null;
+}
 
 function App() {
   return (
@@ -32,7 +47,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing IfUser={IfUser} />} />
           <Route path="/auth/admin-login" element={<AdminLogin IfUser={IfUser} />} />
-          <Route path="/admin" element={<AdminIndex />} />
+          <Route path="/admin" element={<AdminIndex IfAdmin={IfAdmin} />} />
           <Route path="/books/*" element={<BooksPage />} />
           <Route path="/books/details/:bookid" element={<BooksDetails />} />
         </Routes>

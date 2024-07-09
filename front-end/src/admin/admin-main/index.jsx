@@ -5,7 +5,7 @@ import './index.css';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import Loading from '../../Loading/Loading';
 
-const AdminIndex = () => {
+const AdminIndex = ({ IfAdmin }) => {
     const [activities, setActivities] = useState([]);
     const [pages, setPages] = useState(0);
     const [current, setCurrent] = useState(1);
@@ -29,6 +29,7 @@ const AdminIndex = () => {
     }, []);
     return (
         <>
+            <IfAdmin />
             <Suspense fallback={Loading}>
                 <AdminNavbar />
                 {/* DASHBOARD SECTION */}
