@@ -11,11 +11,8 @@
 
 ### Front-end
 
-1. HTML5
-2. CSS3
-3. BOOTSTRAP 4
-4. jQuery
-5. EJS 2.7.4(frontend dev can update if needed).
+1. React.js
+2. Bootstrap
 
 ### Back-end
 
