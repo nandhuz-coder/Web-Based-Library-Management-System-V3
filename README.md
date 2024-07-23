@@ -1,11 +1,11 @@
-# Library Management System V2
+# Library Management System V3
 
 ## Following feature will be added in this repo
 
 1. Server side caching
 2. Server side validation
 3. Scalable image upload
-4. Wiring up CI/CD
+4. Api rendering
 
 ## Techonologies used in this application
 
