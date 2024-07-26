@@ -77,7 +77,6 @@ const Navbar = ({ currentUser, logout }) => (
 const SearchBar = ({ handleSubmit, error, success }) => (
     <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
         <div className="container">
-            <Alert error={error} success={success} />
             <form action="/books/all/all/1" method="POST" onSubmit={(e) => { handleSubmit(e) }}>
                 <div className="row">
                     <div className="col-md-5 p-1">
@@ -135,7 +134,7 @@ const Books = ({ books, currentUser, handleRequest }) => (
                                             <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Requested!</a>
                                         ) : (
                                             <form
-                                                action={`/books/${book._id}/request/${currentUser._id}`}
+                                                action={`/api/books/${book._id}/request/${currentUser._id}`}
                                                 method="POST"
                                                 className="d-inline"
                                                 onSubmit={(e) => { handleRequest(e) }}
@@ -269,10 +268,18 @@ const BooksPage = () => {
         e.preventDefault();
         axios.get("/auth/user-logout").then((res) => window.location.reload())
     }
+    const dismissAlert = (type) => {
+        if (type === 'error') {
+            setError('');
+        } else if (type === 'success') {
+            setSuccess('');
+        }
+    };
     return (
         <div>
             <Navbar currentUser={currentUser} logout={logout} />
             <SearchBar handleSubmit={handleSubmit} error={error} success={success} />
+            <Alert error={error} success={success} dismissAlert={dismissAlert} />
             <Books books={books} currentUser={currentUser} handleRequest={handleRequest} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
         </div>
