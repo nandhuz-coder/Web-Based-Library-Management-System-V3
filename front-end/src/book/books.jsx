@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Alert from '../partials/Header/alert/alert';
@@ -6,7 +6,6 @@ import Loading from '../Loading/Loading';
 let fetchBooks;
 
 const Navbar = ({ currentUser, logout }) => (
-
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
         <div className="container">
             <Link className="navbar-brand" to={!currentUser ? "/" : currentUser.isAdmin ? "/admin" : "/user/1"}>Home</Link>
@@ -39,25 +38,12 @@ const Navbar = ({ currentUser, logout }) => (
                                 <i className="fa fa-user"></i> Welcome {currentUser.username}
                             </a>
                             <div className="dropdown-menu">
-                                {!currentUser.isAdmin ? (
-                                    <>
-                                        <Link to="/user/1/profile" className="dropdown-item">
-                                            <i className="fa fa-user-circle"></i> Profile
-                                        </Link>
-                                        <Link to="" onClick={e => { logout(e) }} className="dropdown-item">
-                                            <i className="fa fa-user-times"></i> Logout
-                                        </Link>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Link to="/admin/profile" className="dropdown-item">
-                                            <i className="fa fa-user-circle"></i> Profile
-                                        </Link>
-                                        <Link to="" onClick={e => { logout(e) }} className="dropdown-item">
-                                            <i className="fa fa-user-times"></i> Logout
-                                        </Link>
-                                    </>
-                                )}
+                                <Link to={currentUser.isAdmin ? "/admin/profile" : "/user/1/profile"} className="dropdown-item">
+                                    <i className="fa fa-user-circle"></i> Profile
+                                </Link>
+                                <Link to="" onClick={logout} className="dropdown-item">
+                                    <i className="fa fa-user-times"></i> Logout
+                                </Link>
                             </div>
                         </li>
                         <li className="nav-item">
@@ -77,15 +63,15 @@ const Navbar = ({ currentUser, logout }) => (
 const SearchBar = ({ handleSubmit, error, success }) => (
     <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
         <div className="container">
-            <form action="/books/all/all/1" method="POST" onSubmit={(e) => { handleSubmit(e) }}>
+            <form action="/books/all/all/1" method="POST" onSubmit={handleSubmit}>
                 <div className="row">
                     <div className="col-md-5 p-1">
                         <select name="filter" id="filter" className="form-control">
                             <option selected disabled>Select Filter...</option>
-                            <option name="title">Title</option>
-                            <option name="author">Author</option>
-                            <option name="category">Category</option>
-                            <option name="ISBN">ISBN</option>
+                            <option value="title">Title</option>
+                            <option value="author">Author</option>
+                            <option value="category">Category</option>
+                            <option value="ISBN">ISBN</option>
                         </select>
                     </div>
                     <div className="col-md-5 p-1">
@@ -111,42 +97,46 @@ const SearchBar = ({ handleSubmit, error, success }) => (
     </section>
 );
 
-const Books = ({ books, currentUser, handleRequest }) => (
-    <Suspense fallback={Loading}>
+const BookCard = ({ book, currentUser, handleRequest, current }) => (
+    <div className="card col-md-3 text-center" style={{ marginBottom: '10px' }}>
+        <div className="card-body">
+            <h5 className="card-title">{book.title}</h5>
+            <p><small style={{ color: 'red' }}>Author: {book.author}</small></p>
+            <p><small style={{ color: 'rgb(20, 168, 40)' }}>Category: {book.category}</small></p>
+            <p><small style={{ color: 'rgb(52, 33, 219)' }}>In stock: {book.stock}</small></p>
+            {currentUser && book.stock >= 0 && (
+                <>
+                    {currentUser.bookIssueInfo?.some(book_info => book_info._id === book._id) ? (
+                        <>
+                            <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Issued!</a>
+                            <Link to="/books/return-renew" className="btn btn-xs btn-success" role="button">Return/Renew</Link>
+                        </>
+                    ) : currentUser.bookRequestInfo?.some(book_info => book_info._id === book._id) ? (
+                        <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Requested!</a>
+                    ) : (
+                        <form
+                            action={`/api/books/${book._id}/request/${currentUser._id}/${current}`}
+                            method="POST"
+                            className="d-inline"
+                            onSubmit={handleRequest}
+                        >
+                            <input className="btn btn-sm btn-warning" type="submit" value="request" />
+                        </form>
+                    )}
+                </>
+            )}
+            <Link to={`/books/details/${book._id}`} className="btn btn-sm btn-success">Details</Link>
+        </div>
+    </div>
+);
+
+const Books = ({ books, currentUser, handleRequest, current }) => (
+    <Suspense fallback={<Loading />}>
         <section id="browse_books" className="mt-5">
             <div className="container">
                 <div className="row">
                     {books.map((book, i) => (
-                        <div className="card col-md-3 text-center" style={{ marginBottom: '10px' }} key={i}>
-                            <div className="card-body">
-                                <h5 className="card-title">{book.title}</h5>
-                                <p><small style={{ color: 'red' }}>Author: {book.author}</small></p>
-                                <p><small style={{ color: 'rgb(20, 168, 40)' }}>Category: {book.category}</small></p>
-                                <p><small style={{ color: 'rgb(52, 33, 219)' }}>In stock: {book.stock}</small></p>
-                                {currentUser && book.stock >= 0 && (
-                                    <>
-                                        {currentUser.bookIssueInfo?.some(book_info => book_info._id === book._id) ? (
-                                            <>
-                                                <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Issued!</a>
-                                                <Link to="/books/return-renew" className="btn btn-xs btn-success" role="button">Return/Renew</Link>
-                                            </>
-                                        ) : currentUser.bookRequestInfo?.some(book_info => book_info._id === book._id) ? (
-                                            <a href="#" className="btn btn-xs btn-warning disabled" role="button" aria-disabled="true">Requested!</a>
-                                        ) : (
-                                            <form
-                                                action={`/api/books/${book._id}/request/${currentUser._id}`}
-                                                method="POST"
-                                                className="d-inline"
-                                                onSubmit={(e) => { handleRequest(e) }}
-                                            >
-                                                <input className="btn btn-sm btn-warning" type="submit" value="request" />
-                                            </form>
-                                        )}
-                                    </>
-                                )}
-                                <Link to={`/books/details/${book._id}`} className="btn btn-sm btn-success">Details</Link>
-                            </div>
-                        </div>
+                        <BookCard key={i} book={book} currentUser={currentUser} handleRequest={handleRequest} current={current} />
                     ))}
                 </div>
             </div>
@@ -157,16 +147,11 @@ const Books = ({ books, currentUser, handleRequest }) => (
 const Pagination = ({ pages, current, filter, value, handlePagination }) => (
     <nav className="ml-3 mb-2" style={{ marginTop: '20px' }}>
         <ul className="pagination offset-md-3">
-            {current === 1 ? (
-                <li className="page-item disabled"><span className="page-link">First</span></li>
-            ) : (
-                <li className="page-item">
-                    <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/1`) }}>
-                        First
-                    </a>
-                </li>
-            )}
-
+            <li className={`page-item ${current === 1 ? 'disabled' : ''}`}>
+                <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/1`) }}>
+                    First
+                </a>
+            </li>
             {Array.from({ length: Math.min(pages, 5) }, (_, i) => {
                 const startPage = Math.max(1, Math.min(current - 2, pages - 4));
                 return startPage + i;
@@ -177,20 +162,14 @@ const Pagination = ({ pages, current, filter, value, handlePagination }) => (
                     </a>
                 </li>
             ))}
-
-            {current < pages ? (
-                <li className="page-item">
-                    <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/${pages}`) }}>
-                        Last
-                    </a>
-                </li>
-            ) : (
-                <li className="page-item disabled"><span className="page-link">Last</span></li>
-            )}
+            <li className={`page-item ${current < pages ? '' : 'disabled'}`}>
+                <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/${pages}`) }}>
+                    Last
+                </a>
+            </li>
         </ul>
     </nav>
 );
-
 
 const BooksPage = () => {
     const [books, setBooks] = useState([]);
@@ -201,10 +180,11 @@ const BooksPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    let cd = 1
     useEffect(() => {
         fetchBooks = async () => {
             try {
-                const response = await axios.get('/api/books/all/all/1')
+                const response = await axios.get(`/api/books/all/all/1`);
                 const { books, current, pages, filter, value, user } = response.data;
                 setBooks(books);
                 setCurrent(current);
@@ -213,12 +193,13 @@ const BooksPage = () => {
                 setValue(value);
                 setCurrentUser(user);
             } catch (error) {
-                console.error('Error fetching books:', error);
+                setError('Failed to fetch books. Please try again later.');
             }
         };
         fetchBooks();
     }, []);
-    const handlePagination = async (lnk) => {
+
+    const handlePagination = useCallback(async (lnk) => {
         try {
             const response = await axios.get(lnk);
             const { books, current, pages, filter, value } = response.data;
@@ -229,9 +210,11 @@ const BooksPage = () => {
             setValue(value);
         } catch (error) {
             console.error('Error handling pagination:', error);
+            setError('Failed to load page. Please try again.');
         }
-    };
-    const handleSubmit = async (event) => {
+    }, []);
+
+    const handleSubmit = useCallback(async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
         const searchParams = new URLSearchParams(formData).toString();
@@ -241,7 +224,7 @@ const BooksPage = () => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-            if (response.data.error) return setError(response.data.error)
+            if (response.data.error) return setError(response.data.error);
             const { books, current, pages, filter, value } = response.data;
             setBooks(books);
             setCurrent(current);
@@ -249,31 +232,56 @@ const BooksPage = () => {
             setFilter(filter);
             setValue(value);
         } catch (error) {
-            console.error('Error submitting request:', error);
+            console.error('Error submitting search:', error);
+            setError('Search failed. Please try again.');
         }
-    };
-    const handleRequest = async (e) => {
-        e.preventDefault()
+    }, []);
+
+    const handleRequest = useCallback(async (e) => {
+        e.preventDefault();
         const formData = new FormData(e.target);
         const searchParams = new URLSearchParams(formData).toString();
         try {
-            await axios.post(e.target.action, searchParams, {
+            const response = await axios.post(e.target.action, searchParams, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).then((response) => {
-                if (response.data.error) return setError(response.data.error)
-                if (response.data.success) setSuccess(response.data.success)
-                return fetchBooks()
-            })
+            });
+            if (response.data.error) return setError(response.data.error);
+            if (response.data.success) setSuccess(response.data.success);
+            if (response.data.current) cd = response.data.current
+            const fetchBooks1 = async () => {
+                try {
+                    const response = await axios.get(`/api/books/all/all/${cd}`);
+                    const { books, current, pages, filter, value, user } = response.data;
+                    setBooks(books);
+                    setCurrent(current);
+                    setPages(pages);
+                    setFilter(filter);
+                    setValue(value);
+                    setCurrentUser(user);
+                } catch (error) {
+                    setError('Failed to fetch books. Please try again later.');
+                }
+            };
+            fetchBooks1();
         } catch (error) {
-            console.error('Error submitting request:', error);
+            console.error('Error requesting book:', error);
+            setError('Request failed. Please try again.');
         }
-    }
-    const logout = async (e) => {
+    }, []);
+
+    const logout = useCallback(async (e) => {
         e.preventDefault();
-        axios.get("/auth/user-logout").then((res) => window.location.reload())
-    }
+        try {
+            await axios.get("/auth/user-logout");
+            window.location.reload();
+        } catch (error) {
+            console.error('Error logging out:', error);
+            setError('Logout failed. Please try again.');
+        }
+    }, []);
+
     const dismissAlert = (type) => {
         if (type === 'error') {
             setError('');
@@ -281,12 +289,13 @@ const BooksPage = () => {
             setSuccess('');
         }
     };
+
     return (
         <div>
             <Navbar currentUser={currentUser} logout={logout} />
             <SearchBar handleSubmit={handleSubmit} error={error} success={success} />
             <Alert error={error} success={success} dismissAlert={dismissAlert} />
-            <Books books={books} currentUser={currentUser} handleRequest={handleRequest} />
+            <Books books={books} currentUser={currentUser} handleRequest={handleRequest} current={current} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
         </div>
     );

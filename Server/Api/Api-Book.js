@@ -55,74 +55,79 @@ router.get("/api/books/details/:bookid", async (req, res, next) => {
   }
 });
 
-router.post("/api/books/:book_id/request/:user_id", async (req, res, next) => {
-  if (req.user.violationFlag) {
-    return res.json({
-      error:
-        "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
-    });
-  }
-
-  if (req.user.bookIssueInfo.length >= 5) {
-    return res.json({ error: "You can't issue more than 5 books at a time" });
-  }
-
-  try {
-    const book = await Book.findById(req.params.book_id);
-    const user = await User.findById(req.params.user_id);
-
-    if (book.stock == 0) {
-      return res.json({ error: "No stock available at this moment." });
+router.post(
+  "/api/books/:book_id/request/:user_id/:current",
+  async (req, res, next) => {
+    if (req.user.violationFlag) {
+      return res.json({
+        error:
+          "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
+      });
     }
-    // registering request
 
-    const request = new Request({
-      book_info: {
-        id: book._id,
-        title: book.title,
-        author: book.author,
-        ISBN: book.ISBN,
-        category: book.category,
-      },
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
+    if (req.user.bookIssueInfo.length >= 5) {
+      return res.json({ error: "You can't issue more than 5 books at a time" });
+    }
 
-    // putting request record on individual user document
-    user.bookRequestInfo.push(book._id);
+    try {
+      const book = await Book.findById(req.params.book_id);
+      const user = await User.findById(req.params.user_id);
+      const current = req.params.current;
 
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Request",
-      time: {
-        id: Request._id,
-      },
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
+      if (book.stock == 0) {
+        return res.json({ error: "No stock available at this moment." });
+      }
+      // registering request
 
-    // await ensure to synchronously save all database alteration
-    await request.save();
-    await user.save();
-    await book.save();
-    await activity.save();
+      const request = new Request({
+        book_info: {
+          id: book._id,
+          title: book.title,
+          author: book.author,
+          ISBN: book.ISBN,
+          category: book.category,
+        },
+        user_id: {
+          id: user._id,
+          username: user.username,
+        },
+      });
 
-    // api alert
-    return res.json({
-      success: `${book.title} is successfully requested.`,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.json({ error: "Error submitting request" });
+      // putting request record on individual user document
+      user.bookRequestInfo.push(book._id);
+
+      // logging the activity
+      const activity = new Activity({
+        info: {
+          id: book._id,
+          title: book.title,
+        },
+        category: "Request",
+        time: {
+          id: Request._id,
+        },
+        user_id: {
+          id: user._id,
+          username: user.username,
+        },
+      });
+
+      // await ensure to synchronously save all database alteration
+      await request.save();
+      await user.save();
+      await book.save();
+      await activity.save();
+
+      // api alert
+      return res.json({
+        success: `${book.title} is successfully requested.`,
+        current: current,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.json({ error: "Error submitting request" });
+    }
   }
-});
+);
 
 module.exports = router;

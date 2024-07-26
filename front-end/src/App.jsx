@@ -5,7 +5,7 @@ import Footer from './partials/Footer/Footer';
 import Landing from './landing/Landing';
 import AdminLogin from './admin/AdminLogin/AdminLogin';
 import AdminIndex from './admin/admin-main/index';
-import BooksPage from './book/Books';
+import BooksPage from './book/books';
 import BooksDetails from './book/book-details';
 
 const IfUser = () => {
