@@ -167,7 +167,10 @@ const Pagination = ({ pages, current, filter, value, handlePagination }) => (
                 </li>
             )}
 
-            {Array.from({ length: Math.min(pages, 5) }, (_, i) => i + (current > 5 ? current - 4 : 1)).map(i => (
+            {Array.from({ length: Math.min(pages, 5) }, (_, i) => {
+                const startPage = Math.max(1, Math.min(current - 2, pages - 4));
+                return startPage + i;
+            }).map(i => (
                 <li className={`page-item ${i === current ? 'active' : ''}`} key={i}>
                     <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/${i}`) }}>
                         {i}
@@ -175,16 +178,19 @@ const Pagination = ({ pages, current, filter, value, handlePagination }) => (
                 </li>
             ))}
 
-            {current < pages && (
+            {current < pages ? (
                 <li className="page-item">
                     <a className="page-link" href="#" onClick={(e) => { e.preventDefault(); handlePagination(`/api/books/${filter}/${value}/${pages}`) }}>
                         Last
                     </a>
                 </li>
+            ) : (
+                <li className="page-item disabled"><span className="page-link">Last</span></li>
             )}
         </ul>
     </nav>
 );
+
 
 const BooksPage = () => {
     const [books, setBooks] = useState([]);
