@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Suspense } from 'react';
-import { Link } from "react-router-dom"
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 import './index.css';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
@@ -14,8 +14,8 @@ const AdminIndex = ({ IfAdmin }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('/api/admin');
-                const data = await response.data;
+                const response = await axios.get('/api/admin/1');
+                const data = response.data;
                 setActivities(data.activities);
                 setPages(data.pages);
                 setCurrent(data.current);
@@ -27,12 +27,26 @@ const AdminIndex = ({ IfAdmin }) => {
         };
         fetchData();
     }, []);
+
+    const handlePagination = useCallback(async (lnk) => {
+        try {
+            const response = await axios.get(lnk);
+            const data = response.data;
+            setActivities(data.activities);
+            setPages(data.pages);
+            setCurrent(data.current);
+            setBooksCount(data.books_count);
+            setUsersCount(data.users_count);
+        } catch (error) {
+            console.error('Error handling pagination:', error);
+        }
+    }, []);
+
     return (
         <>
             <IfAdmin />
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading />}>
                 <AdminNavbar />
-                {/* DASHBOARD SECTION */}
                 <header id="main-header" className="py-2 bg-primary text-white">
                     <div className="container">
                         <div className="row">
@@ -45,7 +59,6 @@ const AdminIndex = ({ IfAdmin }) => {
                     </div>
                 </header>
 
-                {/* SEARCH BAR */}
                 <section id="actions" className="py-4">
                     <div className="container">
                         <div className="row justify-content-end">
@@ -69,7 +82,6 @@ const AdminIndex = ({ IfAdmin }) => {
                     </div>
                 </section>
 
-                {/* POSTS */}
                 <section id="posts" className="my-5">
                     <div className="container">
                         <div className="row">
@@ -124,42 +136,52 @@ const AdminIndex = ({ IfAdmin }) => {
                                             <ul className="pagination">
                                                 {current === 1 ? (
                                                     <li className="page-item disabled">
-                                                        <a href="#" className="page-link">First</a>
+                                                        <button className="page-link" disabled>First</button>
                                                     </li>
                                                 ) : (
                                                     <li className="page-item">
-                                                        <a href="/admin?page=1" className="page-link">
+                                                        <button
+                                                            onClick={() => handlePagination('/api/admin/1')}
+                                                            className="page-link"
+                                                        >
                                                             First
-                                                        </a>
+                                                        </button>
                                                     </li>
                                                 )}
                                                 {Array.from({ length: pages }, (_, i) => i + 1).map((page) =>
                                                     page === current ? (
                                                         <li className="page-item active" key={page}>
-                                                            <a className="page-link">{page}</a>
+                                                            <button className="page-link" disabled>{page}</button>
                                                         </li>
                                                     ) : (
                                                         <li className="page-item" key={page}>
-                                                            <a className="page-link" href={`/admin?page=${page}`}>
+                                                            <button
+                                                                className="page-link"
+                                                                onClick={() => handlePagination(`/api/admin/${page}`)}
+                                                            >
                                                                 {page}
-                                                            </a>
+                                                            </button>
                                                         </li>
                                                     )
                                                 )}
                                                 {current === pages ? (
                                                     <li className="page-item disabled">
-                                                        <a className="page-link">Last</a>
+                                                        <button className="page-link" disabled>Last</button>
                                                     </li>
                                                 ) : (
                                                     <li className="page-item">
-                                                        <a href={`/admin?page=${pages}`} className="page-link">
+                                                        <button
+                                                            className="page-link"
+                                                            onClick={() => handlePagination(`/api/admin/${pages}`)}
+                                                        >
                                                             Last
-                                                        </a>
+                                                        </button>
                                                     </li>
                                                 )}
                                             </ul>
                                         </nav>
                                     )}
+
                                 </div>
                             </div>
 

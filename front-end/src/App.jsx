@@ -62,7 +62,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing IfUser={IfUser} />} />
           <Route path="/auth/admin-login" element={<AdminLogin IfUser={IfUser} />} />
-          <Route path="/admin" element={<AdminIndex IfAdmin={IfAdmin} />} />
+          <Route path="/admin/*" element={<AdminIndex IfAdmin={IfAdmin} />} />
           <Route path="/books/*" element={<BooksPage />} />
           <Route path="/books/details/:bookid" element={<BooksDetails />} />
         </Routes>

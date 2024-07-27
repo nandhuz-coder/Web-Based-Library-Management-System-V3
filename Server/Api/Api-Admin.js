@@ -45,11 +45,11 @@ router.get("/api/global", middleware.isAdmin, async (req, res, next) => {
 
 //admin -> dashboard
 router.get(
-  "/api/admin",
+  "/api/admin/:page",
   middleware.isAdmin,
   middleware.ifUser,
   async (req, res, next) => {
-    var page = req.query.page || 1;
+    var page = req.params.page || 1;
     try {
       const users_count = await User.find().countDocuments({ isAdmin: false });
       const books_count = await Book.find().countDocuments();

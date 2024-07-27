@@ -44,7 +44,7 @@ router.get("/api/books/:filter/:value/:page", async (req, res) => {
 });
 
 //Books -> Deatils api
-router.get("/api/books/details/:bookid", async (req, res, next) => {
+router.get("/api/books/details/:bookid", async (req, res) => {
   try {
     const book_id = req.params.bookid;
     const book = await Book.findById(book_id).populate("comments");
@@ -55,21 +55,24 @@ router.get("/api/books/details/:bookid", async (req, res, next) => {
   }
 });
 
+//Books -> Book request api
 router.post(
   "/api/books/:book_id/request/:user_id/:current",
-  async (req, res, next) => {
-    if (req.user.violationFlag) {
-      return res.json({
-        error:
-          "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
-      });
-    }
-
-    if (req.user.bookIssueInfo.length >= 5) {
-      return res.json({ error: "You can't issue more than 5 books at a time" });
-    }
-
+  async (req, res) => {
     try {
+      if (req.user.violationFlag) {
+        return res.json({
+          error:
+            "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
+        });
+      }
+
+      if (req.user.bookIssueInfo.length >= 5) {
+        return res.json({
+          error: "You can't issue more than 5 books at a time",
+        });
+      }
+
       const book = await Book.findById(req.params.book_id);
       const user = await User.findById(req.params.user_id);
       const current = req.params.current;
