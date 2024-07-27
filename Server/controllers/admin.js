@@ -134,49 +134,6 @@ exports.getAdminBookInventory = async (req, res) => {
   }
 };
 
-// admin -> return book inventory by search query working procedure
-/*
-    same as getAdminBookInventory method
-*/
-exports.postAdminBookInventory = async (req, res, next) => {
-  try {
-    let page = req.params.page || 1;
-    const filter = req.body.filter.toLowerCase();
-    const value = req.body.searchName;
-
-    if (value == "") {
-      req.flash(
-        "error",
-        "Search field is empty. Please fill the search field in order to get a result"
-      );
-      return res.redirect("back");
-    }
-    const searchObj = {};
-    searchObj[filter] = value;
-
-    // get the books count
-    const books_count = await Book.find(searchObj).countDocuments();
-
-    // fetch the books by search query
-    const books = await Book.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE);
-
-    // rendering admin/bookInventory
-    await res.render("admin/bookInventory", {
-      books: books,
-      current: page,
-      pages: Math.ceil(books_count / PER_PAGE),
-      filter: filter,
-      value: value,
-      global: await global(),
-    });
-  } catch (err) {
-    // console.log(err.message);
-    return res.redirect("back");
-  }
-};
-
 // admin -> get the book to be updated
 exports.getUpdateBook = async (req, res, next) => {
   try {
@@ -208,21 +165,6 @@ exports.postUpdateBook = async (req, res, next) => {
   }
 };
 
-// admin -> delete book
-exports.getDeleteBook = async (req, res, next) => {
-  try {
-    const book_id = req.params.book_id;
-
-    const book = await Book.findById(book_id);
-    await book.deleteOne();
-
-    req.flash("success", `A book named ${book.title} is just deleted!`);
-    res.redirect("back");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
-};
 
 // admin -> get user list
 exports.getUserList = async (req, res, next) => {

@@ -72,4 +72,17 @@ router.get(
   }
 );
 
+// admin -> delete book
+router.get("/api/admin/book/delete/:book_id", async (req, res) => {
+  try {
+    const book_id = req.params.book_id;
+    const book = await Book.findById(book_id);
+    await book.deleteOne();
+    res.json({ success: `A book named ${book.title} is just deleted!` });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: err });
+  }
+});
+
 module.exports = router;

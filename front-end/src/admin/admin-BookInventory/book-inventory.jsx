@@ -1,8 +1,9 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import Loading from '../../Loading/Loading';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import debounce from 'lodash.debounce';
+import Alert from '../../partials/Header/alert/alert';
 
 const BookInventory = ({ IfAdmin }) => {
     const [books, setBooks] = useState([]);
@@ -11,6 +12,8 @@ const BookInventory = ({ IfAdmin }) => {
     const [filter, setFilter] = useState('all');
     const [searchName, setSearchName] = useState('all');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const fetchBooks = debounce(async () => {
         setLoading(true);
@@ -42,6 +45,25 @@ const BookInventory = ({ IfAdmin }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setCurrent(1);
+    };
+
+    const DeleteBook = useCallback(async (id) => {
+        try {
+            const res = await axios.get(`/api/admin/book/delete/${id}`);
+            if (res.data.error) setError(res.data.error);
+            if (res.data.success) setSuccess(res.data.success);
+            fetchBooks();
+        } catch (error) {
+            setError('Error deleting book');
+        }
+    }, [fetchBooks]);
+
+    const dismissAlert = (type) => {
+        if (type === 'error') {
+            setError('');
+        } else if (type === 'success') {
+            setSuccess('');
+        }
     };
 
     const renderPagination = () => {
@@ -136,6 +158,7 @@ const BookInventory = ({ IfAdmin }) => {
                             </form>
                         </div>
                     </section>
+                    <Alert success={success} error={error} dismissAlert={dismissAlert} />
                     <section id="bookInventory" className="mt-2">
                         <div className="container" style={{ width: '85%', maxWidth: 'none' }}>
                             <div className="row">
@@ -169,13 +192,13 @@ const BookInventory = ({ IfAdmin }) => {
                                                                 >
                                                                     Update
                                                                 </a>
-                                                                <a
-                                                                    href={`/admin/book/delete/${book._id}`}
+                                                                <button
+                                                                    onClick={(e) => { e.preventDefault(); DeleteBook(book._id) }}
                                                                     className="btn btn-sm btn-danger"
                                                                     id="to-delete-book-btn"
                                                                 >
                                                                     Delete
-                                                                </a>
+                                                                </button>
                                                             </span>
                                                         </td>
                                                     </tr>

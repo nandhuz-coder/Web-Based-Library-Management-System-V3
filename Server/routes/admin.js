@@ -26,13 +26,6 @@ router.get(
   adminController.getAdminBookInventory
 );
 
-// admin -> show searched books
-router.post(
-  "/admin/bookInventory/:filter/:value/:page",
-  middleware.isAdmin,
-  adminController.postAdminBookInventory
-);
-
 //admin -> show books to be updated
 router.get(
   "/admin/book/update/:book_id",
@@ -45,13 +38,6 @@ router.post(
   "/admin/book/update/:book_id",
   middleware.isAdmin,
   adminController.postUpdateBook
-);
-
-//admin -> delete book
-router.get(
-  "/admin/book/delete/:book_id",
-  middleware.isAdmin,
-  adminController.getDeleteBook
 );
 
 //admin -> users list
