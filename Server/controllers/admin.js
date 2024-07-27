@@ -99,13 +99,13 @@ exports.deleteAdminProfile = async (req, res, next) => {
     2. Fetch books by search object
     3. Render admin/bookInventory
 */
-exports.getAdminBookInventory = async (req, res, next) => {
+exports.getAdminBookInventory = async (req, res) => {
   try {
     let page = req.params.page || 1;
-    const filter = req.params.filter;
+    const filter = req.params.filter.toLowerCase();
     const value = req.params.value;
 
-    // // constructing search object
+    // constructing search object
     let searchObj = {};
     if (filter !== "all" && value !== "all") {
       // fetch books by search value and filter
@@ -121,17 +121,16 @@ exports.getAdminBookInventory = async (req, res, next) => {
       .limit(PER_PAGE);
 
     // rendering admin/bookInventory
-    await res.render("admin/bookInventory", {
+    await res.json({
       books: books,
       current: page,
       pages: Math.ceil(books_count / PER_PAGE),
       filter: filter,
       value: value,
-      global: await global(),
     });
   } catch (err) {
-    // console.log(err.messge);
-    return res.redirect("back");
+    console.log(err);
+    return res.json("error");
   }
 };
 

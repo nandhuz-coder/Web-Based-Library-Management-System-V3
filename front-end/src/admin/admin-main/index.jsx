@@ -141,7 +141,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                                 ) : (
                                                     <li className="page-item">
                                                         <button
-                                                            onClick={() => handlePagination('/api/admin/1')}
+                                                            onClick={() => handlePagination('/admin/1')}
                                                             className="page-link"
                                                         >
                                                             First
@@ -157,7 +157,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                                         <li className="page-item" key={page}>
                                                             <button
                                                                 className="page-link"
-                                                                onClick={() => handlePagination(`/api/admin/${page}`)}
+                                                                onClick={() => handlePagination(`/admin/${page}`)}
                                                             >
                                                                 {page}
                                                             </button>
@@ -172,7 +172,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                                     <li className="page-item">
                                                         <button
                                                             className="page-link"
-                                                            onClick={() => handlePagination(`/api/admin/${pages}`)}
+                                                            onClick={() => handlePagination(`/admin/${pages}`)}
                                                         >
                                                             Last
                                                         </button>
@@ -192,9 +192,9 @@ const AdminIndex = ({ IfAdmin }) => {
                                         <h1 className="display-4">
                                             <i className="fa fa-pencil"></i> {booksCount}
                                         </h1>
-                                        <a href="/admin/bookInventory/all/all/1" id="add_books" className="btn btn-outline-light">
+                                        <Link to="/admin/bookInventory/" id="add_books" className="btn btn-outline-light">
                                             View
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
 
@@ -204,9 +204,9 @@ const AdminIndex = ({ IfAdmin }) => {
                                         <h1 className="display-4">
                                             <i className="fa fa-users"></i> {usersCount}
                                         </h1>
-                                        <a href="/admin/users/1" className="btn btn-outline-light">
+                                        <Link to="/admin/users/1" className="btn btn-outline-light">
                                             Users
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
