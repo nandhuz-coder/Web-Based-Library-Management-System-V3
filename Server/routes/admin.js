@@ -16,12 +16,6 @@ router.delete(
   adminController.deleteAdminProfile
 );
 
-//admin book inventory
-router.get(
-  "/admin/bookInventory/:filter/:value/:page",
-  middleware.isAdmin,
-  adminController.getAdminBookInventory
-);
 
 //admin -> show books to be updated
 router.get(

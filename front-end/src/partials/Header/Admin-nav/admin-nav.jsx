@@ -43,7 +43,7 @@ const AdminNavbar = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav">
                         <li className="nav-item px-2">
-                            <Link to={`/admin/bookInventory/`} id="book_inventory" title="Book Inventory" className="nav-link">Book Inventory</Link>
+                            <Link to={`/admin/books/bookInventory/`} id="book_inventory" title="Book Inventory" className="nav-link">Book Inventory</Link>
                         </li>
 
                         <li className="nav-item px-2">

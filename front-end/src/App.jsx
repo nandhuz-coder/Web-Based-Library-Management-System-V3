@@ -8,6 +8,7 @@ import AdminIndex from './admin/admin-main/index';
 import BooksPage from './book/books';
 import BooksDetails from './book/book-details';
 import BookInventory from './admin/admin-BookInventory/book-inventory';
+import EditBook from './admin/Admin-BookUpdate/Bookupdate';
 
 const IfUser = () => {
   const navigate = useNavigate();
@@ -32,14 +33,14 @@ const IfAdmin = () => {
     axios.get('/middleware/ifadmin')
       .then(res => {
         if (!res.data.flag) {
-          navigate('/')
+          navigate('/');
         }
       }).catch(err => {
         console.log('Error checking user:', err);
       });
-  }, [navigate])
+  }, [navigate]);
   return null;
-}
+};
 
 const IsUser = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const IsUser = () => {
     axios.get('/middleware/isuser')
       .then(res => {
         if (!res.data.flag) {
-          navigate('/')
+          navigate('/');
         }
       }).catch(err => {
         console.log('Error checking user:', err);
@@ -66,7 +67,8 @@ function App() {
           <Route path="/admin/*" element={<AdminIndex IfAdmin={IfAdmin} />} />
           <Route path="/books/*" element={<BooksPage />} />
           <Route path="/books/details/:bookid" element={<BooksDetails />} />
-          <Route path="/admin/bookInventory/*" element={<BookInventory IfAdmin={IfAdmin} />} />
+          <Route path="/admin/books/bookInventory/*" element={<BookInventory IfAdmin={IfAdmin} />} />
+          <Route path="/admin/books/1/update/:bookid" element={<EditBook IfAdmin={IfAdmin} />} />
         </Routes>
       </BrowserRouter>
       <Footer />

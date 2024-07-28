@@ -1,9 +1,10 @@
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import Loading from '../../Loading/Loading';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import debounce from 'lodash.debounce';
 import Alert from '../../partials/Header/alert/alert';
+import { Link } from 'react-router-dom';
 
 const BookInventory = ({ IfAdmin }) => {
     const [books, setBooks] = useState([]);
@@ -15,21 +16,28 @@ const BookInventory = ({ IfAdmin }) => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const fetchBooks = debounce(async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`/admin/bookInventory/${filter}/${searchName}/${current}`);
-            setBooks(response.data.books);
-            setPages(response.data.pages);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
-        }
-    }, 300);
+    const fetchBooksRef = useRef();
+
+    const fetchBooks = useCallback(
+        debounce(async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`/api/admin/bookInventory/${filter}/${searchName}/${current}`);
+                setBooks(response.data.books);
+                setPages(response.data.pages);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        }, 300),
+        [filter, searchName, current]
+    );
+
+    fetchBooksRef.current = fetchBooks;
 
     useEffect(() => {
-        fetchBooks();
+        fetchBooksRef.current();
     }, [filter, searchName, current]);
 
     const handleFilterChange = (event) => {
@@ -52,11 +60,11 @@ const BookInventory = ({ IfAdmin }) => {
             const res = await axios.get(`/api/admin/book/delete/${id}`);
             if (res.data.error) setError(res.data.error);
             if (res.data.success) setSuccess(res.data.success);
-            fetchBooks();
+            fetchBooksRef.current();
         } catch (error) {
             setError('Error deleting book');
         }
-    }, [fetchBooks]);
+    }, []);
 
     const dismissAlert = (type) => {
         if (type === 'error') {
@@ -113,7 +121,7 @@ const BookInventory = ({ IfAdmin }) => {
     return (
         <>
             <IfAdmin />
-            <Suspense fallback={Loading}>
+            <React.Suspense fallback={Loading}>
                 <AdminNavbar />
                 <div>
                     <header id="main-header" className="py-2 bg-primary text-white">
@@ -185,19 +193,11 @@ const BookInventory = ({ IfAdmin }) => {
                                                         <td>{book.stock}</td>
                                                         <td>
                                                             <span>
-                                                                <a
-                                                                    href={`/admin/book/update/${book._id}`}
-                                                                    className="btn btn-info btn-sm"
-                                                                    id="to-update-book-btn"
-                                                                >
-                                                                    Update
-                                                                </a>
+                                                                <Link to={`/admin/books/1/update/${book._id}`} className="btn btn-info btn-sm" id="to-update-book-btn"> Update </Link>
                                                                 <button
                                                                     onClick={(e) => { e.preventDefault(); DeleteBook(book._id) }}
                                                                     className="btn btn-sm btn-danger"
-                                                                    id="to-delete-book-btn"
-                                                                >
-                                                                    Delete
+                                                                    id="to-delete-book-btn"> Delete
                                                                 </button>
                                                             </span>
                                                         </td>
@@ -212,7 +212,7 @@ const BookInventory = ({ IfAdmin }) => {
                         </div>
                     </section>
                 </div>
-            </Suspense>
+            </React.Suspense>
         </>
     );
 };

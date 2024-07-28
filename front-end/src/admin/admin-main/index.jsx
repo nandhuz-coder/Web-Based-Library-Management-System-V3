@@ -192,7 +192,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                         <h1 className="display-4">
                                             <i className="fa fa-pencil"></i> {booksCount}
                                         </h1>
-                                        <Link to="/admin/bookInventory/" id="add_books" className="btn btn-outline-light">
+                                        <Link to="/admin/books/bookInventory/" id="add_books" className="btn btn-outline-light">
                                             View
                                         </Link>
                                     </div>
