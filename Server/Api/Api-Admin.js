@@ -31,6 +31,28 @@ async function global() {
   return value;
 }
 
+router.get("/api/users/suggestions", async (req, res, next) => {
+  try {
+    const searchValue = req.query.q;
+    const regex = new RegExp(searchValue, "i");
+    const users = await User.find({
+      $or: [
+        { firstName: regex },
+        { lastName: regex },
+        { username: regex },
+        { email: regex },
+      ],
+      isAdmin: false,
+    })
+      .limit(10)
+      .select("firstName lastName username");
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 //admin -> global & user
 router.get("/api/global", middleware.isAdmin, async (req, res, next) => {
   try {
@@ -75,4 +97,5 @@ router.post("/api/admin/book/update/:book_id", async (req, res) => {
     return res.json({ error: "error" });
   }
 });
+
 module.exports = router;

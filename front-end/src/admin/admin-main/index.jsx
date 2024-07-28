@@ -204,7 +204,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                         <h1 className="display-4">
                                             <i className="fa fa-users"></i> {usersCount}
                                         </h1>
-                                        <Link to="/admin/users/1" className="btn btn-outline-light">
+                                        <Link to="/admin/1/users/" className="btn btn-outline-light">
                                             Users
                                         </Link>
                                     </div>

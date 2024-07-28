@@ -123,6 +123,7 @@ exports.getUpdateBook = async (req, res, next) => {
 // admin -> get user list
 exports.getUserList = async (req, res, next) => {
   try {
+    console.log("hey");
     const page = req.params.page || 1;
 
     const users = await User.find()
@@ -132,11 +133,10 @@ exports.getUserList = async (req, res, next) => {
 
     const users_count = await User.find().countDocuments({ isAdmin: false });
 
-    await res.render("admin/users", {
+    await res.json({
       users: users,
       current: page,
       pages: Math.ceil(users_count / PER_PAGE),
-      global: await global(),
     });
   } catch (err) {
     console.log(err);
@@ -158,21 +158,17 @@ exports.postShowSearchedUser = async (req, res, next) => {
         { email: search_value },
       ],
     });
-
     if (users.length <= 0) {
-      req.flash("error", "User not found!");
-      return res.redirect("back");
+      return res.json({ error: "User not found!" });
     } else {
-      await res.render("admin/users", {
+      await res.json({
         users: users,
         current: page,
         pages: 0,
-        global: await global(),
       });
     }
   } catch (err) {
     console.log(err);
-    res.redirect("back");
   }
 };
 
