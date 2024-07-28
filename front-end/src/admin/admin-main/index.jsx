@@ -14,7 +14,7 @@ const AdminIndex = ({ IfAdmin }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('/api/admin/1');
+                const response = await axios.get('/admin/1');
                 const data = response.data;
                 setActivities(data.activities);
                 setPages(data.pages);
@@ -113,7 +113,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                                         {activity.category === 'Decline' && (
                                                             <>
                                                                 request of {' '}
-                                                                <span style={{ color: 'red' }}>{activity.info.title}</span> Admin declined{' '}
+                                                                <span style={{ color: 'red' }}>{activity.info.title}</span> declined by admin {' '}
                                                             </>
                                                         )}
                                                         {activity.category === 'Renew' && `renewed ${activity.info.title}`}

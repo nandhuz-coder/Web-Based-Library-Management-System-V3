@@ -33,48 +33,26 @@ async function global() {
     2. Fetch all activities in chunk (for pagination)
     3. Render admin/index
 */
-exports.getDashboard = async (req, res, next) => {
+exports.getDashboard = async (req, res) => {
+  var page = req.params.page || 1;
   try {
-    res.sendFile(
-      path.resolve(__dirname, "../../front-end/build", "index.html")
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-// admin -> search activities working procedure
-/*
-    1. Get user and book count
-    2. Fetch activities by search query
-    3. Render admin/index
-    *pagination is not done
-*/
-exports.postDashboard = async (req, res, next) => {
-  try {
-    const search_value = req.body.searchUser;
-
-    // getting user and book count
-    const books_count = await Book.find().countDocuments();
     const users_count = await User.find().countDocuments({ isAdmin: false });
-
-    // fetching activities by search query
-    const activities = await Activity.find({
-      $or: [{ "user_id.username": search_value }, { category: search_value }],
-    });
-
-    // rendering
-    await res.render("admin/index", {
+    const books_count = await Book.find().countDocuments();
+    const activity_count = await Activity.find().countDocuments();
+    const activities = await Activity.find()
+      .sort({ entryTime: -1 })
+      .skip(PER_PAGE * page - PER_PAGE)
+      .limit(PER_PAGE)
+      .exec();
+    return res.json({
       users_count: users_count,
       books_count: books_count,
       activities: activities,
-      current: 1,
-      pages: 0,
-      global: await global(),
+      current: page,
+      pages: Math.ceil(activity_count / PER_PAGE),
     });
   } catch (err) {
     console.log(err);
-    return res.redirect("back");
   }
 };
 
@@ -164,7 +142,6 @@ exports.postUpdateBook = async (req, res, next) => {
     res.redirect("back");
   }
 };
-
 
 // admin -> get user list
 exports.getUserList = async (req, res, next) => {

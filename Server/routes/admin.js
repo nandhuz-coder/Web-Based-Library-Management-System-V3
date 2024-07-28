@@ -7,10 +7,7 @@ const express = require("express"),
 const adminController = require("../controllers/admin");
 
 //admin -> dashboard
-//router.get("/admin", middleware.isAdmin, adminController.getDashboard);
-
-//admin -> find activities of all users on admin dashboard
-router.post("/admin", middleware.isAdmin, adminController.postDashboard);
+router.get("/admin/:page", middleware.isAdmin, adminController.getDashboard);
 
 //admin -> delete profile
 router.delete(
