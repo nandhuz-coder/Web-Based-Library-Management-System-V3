@@ -15,7 +15,6 @@ const express = require("express"),
   User = require("./models/user"),
   userRoutes = require("./routes/users"),
   adminRoutes = require("./routes/admin"),
-  bookRoutes = require("./routes/books"),
   authRoutes = require("./routes/auth"),
   ApiAdmin = require("./Api/Api-Admin"),
   ApiBooks = require("./Api/Api-Book"),
@@ -105,7 +104,6 @@ app.use((req, res, next) => {
 // Routes
 app.use(userRoutes);
 app.use(adminRoutes);
-app.use(bookRoutes);
 app.use(authRoutes);
 app.use(ApiAdmin);
 app.use(ApiBooks);

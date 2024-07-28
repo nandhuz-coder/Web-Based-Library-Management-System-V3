@@ -16,19 +16,17 @@ router.delete(
   adminController.deleteAdminProfile
 );
 
+router.get(
+  "/admin/bookInventory/:filter/:value/:page",
+  middleware.isAdmin,
+  adminController.getInventory
+);
 
 //admin -> show books to be updated
 router.get(
   "/admin/book/update/:book_id",
   middleware.isAdmin,
   adminController.getUpdateBook
-);
-
-//admin -> update book
-router.post(
-  "/admin/book/update/:book_id",
-  middleware.isAdmin,
-  adminController.postUpdateBook
 );
 
 //admin -> users list

@@ -33,7 +33,7 @@ const EditBook = ({ IfAdmin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`/admin/book/update/${bookid}`, { book });
+            const response = await axios.post(`/api/admin/book/update/${bookid}`, { book });
             if (response.data.success) {
                 setSuccess(response.data.success);
                 navigate('/admin/books/bookInventory/');

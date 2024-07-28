@@ -22,7 +22,7 @@ const BookInventory = ({ IfAdmin }) => {
         debounce(async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`/api/admin/bookInventory/${filter}/${searchName}/${current}`);
+                const response = await axios.get(`/admin/bookInventory/${filter}/${searchName}/${current}`);
                 setBooks(response.data.books);
                 setPages(response.data.pages);
             } catch (error) {

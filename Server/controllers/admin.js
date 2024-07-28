@@ -71,6 +71,41 @@ exports.deleteAdminProfile = async (req, res, next) => {
   }
 };
 
+exports.getInventory = async (req, res) => {
+  try {
+    let page = req.params.page || 1;
+    const filter = req.params.filter.toLowerCase();
+    const value = req.params.value;
+
+    // constructing search object
+    let searchObj = {};
+    if (filter !== "all" && value !== "all") {
+      // fetch books by search value and filter
+      searchObj[filter] = value;
+    }
+
+    // get the book counts
+    const books_count = await Book.find(searchObj).countDocuments();
+
+    // fetching books
+    const books = await Book.find(searchObj)
+      .skip(PER_PAGE * page - PER_PAGE)
+      .limit(PER_PAGE);
+
+    // rendering admin/bookInventory
+    await res.json({
+      books: books,
+      current: page,
+      pages: Math.ceil(books_count / PER_PAGE),
+      filter: filter,
+      value: value,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json("error");
+  }
+};
+
 // admin -> get the book to be updated
 exports.getUpdateBook = async (req, res, next) => {
   try {
@@ -79,21 +114,6 @@ exports.getUpdateBook = async (req, res, next) => {
     await res.json({
       book: book,
     });
-  } catch (err) {
-    console.log(err);
-    return res.json({ error: "error" });
-  }
-};
-
-// admin -> post update book
-exports.postUpdateBook = async (req, res, next) => {
-  try {
-    const book_info = req.body.book;
-    const book_id = req.params.book_id;
-
-    await Book.findByIdAndUpdate(book_id, book_info);
-
-    res.json({ success: "Book updated successfully." });
   } catch (err) {
     console.log(err);
     return res.json({ error: "error" });

@@ -49,41 +49,6 @@ router.get("/api/global", middleware.isAdmin, async (req, res, next) => {
     2. Fetch books by search object
     3. Render admin/bookInventory
 */
-router.get("/api/admin/bookInventory/:filter/:value/:page", async (req, res) => {
-  try {
-    console.log("heyy");
-    let page = req.params.page || 1;
-    const filter = req.params.filter.toLowerCase();
-    const value = req.params.value;
-
-    // constructing search object
-    let searchObj = {};
-    if (filter !== "all" && value !== "all") {
-      // fetch books by search value and filter
-      searchObj[filter] = value;
-    }
-
-    // get the book counts
-    const books_count = await Book.find(searchObj).countDocuments();
-
-    // fetching books
-    const books = await Book.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE);
-
-    // rendering admin/bookInventory
-    await res.json({
-      books: books,
-      current: page,
-      pages: Math.ceil(books_count / PER_PAGE),
-      filter: filter,
-      value: value,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.json("error");
-  }
-});
 
 // admin -> delete book
 router.get("/api/admin/book/delete/:book_id", async (req, res) => {
@@ -98,4 +63,16 @@ router.get("/api/admin/book/delete/:book_id", async (req, res) => {
   }
 });
 
+// admin -> Update book (post)
+router.post("/api/admin/book/update/:book_id", async (req, res) => {
+  try {
+    const book_info = req.body.book;
+    const book_id = req.params.book_id;
+    await Book.findByIdAndUpdate(book_id, book_info);
+    res.json({ success: "Book updated successfully." });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: "error" });
+  }
+});
 module.exports = router;
