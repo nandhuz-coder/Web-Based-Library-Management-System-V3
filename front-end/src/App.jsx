@@ -10,6 +10,7 @@ import BooksDetails from './book/book-details';
 import BookInventory from './admin/admin-BookInventory/book-inventory';
 import EditBook from './admin/Admin-BookUpdate/Bookupdate';
 import UsersPage from './admin/Admin-users-list/users';
+import AddBook from './admin/admin-AddBook/AddBook';
 
 const IfUser = () => {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ function App() {
           <Route path="/admin/books/bookInventory/*" element={<BookInventory IfAdmin={IfAdmin} />} />
           <Route path="/admin/books/1/update/:bookid" element={<EditBook IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/users/" element={<UsersPage IfAdmin={IfAdmin} />} />
+          <Route path="/admin/1/addbook" element={<AddBook IfAdmin={IfAdmin} />} />
         </Routes>
       </BrowserRouter>
       <Footer />

@@ -47,13 +47,12 @@ const AdminNavbar = () => {
                         </li>
 
                         <li className="nav-item px-2">
-                            <a className="nav-link" href="/admin/1/users/">Users</a>
+                            <Link to={`/admin/1/users/`} id="users_list" title="Users" className="nav-link">Users</Link>
                         </li>
 
                         <li className="nav-item px-2">
-                            <a className="nav-link" href="/admin/books/add" id="add_books">Add Books</a>
+                            <Link to={`/admin/1/addbook`} id="add_book" title="Add Books" className="nav-link">Add Books</Link>
                         </li>
-
                         <li className="nav-item px-2">
                             <a className="nav-link" href="/admin/bookStock/all/all/1" id="add_books">
                                 Stock Out&nbsp;

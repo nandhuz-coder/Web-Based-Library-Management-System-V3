@@ -167,4 +167,26 @@ router.get("/api/admin/users/flagged/:user_id", async (req, res) => {
   }
 });
 
+router.post("/api/admin/add/book", async (req, res) => {
+  try {
+    console.log(req.body.book);
+    const book_info = req.body.book;
+    const isDuplicate = await Book.find(book_info);
+
+    if (isDuplicate.length > 0) {
+      return res.json({
+        error: "This book is already registered in inventory",
+      });
+    }
+    const new_book = new Book(book_info);
+    await new_book.save();
+    return res.json({
+      success: `A new book named ${new_book.title} is added to the inventory`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: `unknown error` });
+  }
+});
+
 module.exports = router;

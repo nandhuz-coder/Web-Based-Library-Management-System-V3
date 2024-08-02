@@ -57,19 +57,6 @@ router.post(
   adminController.postShowActivitiesByCategory
 );
 
-//admin -> add new book
-router.get(
-  "/admin/books/add",
-  middleware.isAdmin,
-  adminController.getAddNewBook
-);
-
-router.post(
-  "/admin/books/add",
-  middleware.isAdmin,
-  adminController.postAddNewBook
-);
-
 //admin -> profile
 router.get(
   "/admin/profile",

@@ -1,82 +1,120 @@
-<% include ../partials/header %>
-
-  <!--NAVIGATION BAR FOR ADMIN-->
-  <% include ../partials/adminNav %>
-
-
-    <!--DASHBOARD SECTION-->
-    <header id="main-header" class="py-2 bg-primary text-white">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <h1><i class="fa fa-gear"></i> Dashboard</h1>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <div class="container">
-      <div class="row">
-        <div class="col card" style="margin-top: 20px;margin-bottom: 20px;border: 1px solid black;">
-          <div class="card-header text-center" style="background: rgb(100, 170, 236);">
-            <% include ../partials/alerts %>
-              <h4>Add Book</h4>
-          </div>
-
-          <form class="p-3" action="/admin/books/add" method="POST">
-            <div class="row">
-              <div class="col-md-6">
-
-                <div class="form-group">
-                  <label class="form-control-label">Title</label>
-                  <input type="text" name="book[title]" id="book-title" placeholder="Book Title" class="form-control"
-                    required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">Author Name</label>
-                  <input type="text" name="book[author]" id="book-author" placeholder="Author Name" class="form-control"
-                    required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">ISBN</label>
-                  <input type="text" name="book[ISBN]" id="book-ISBN" placeholder="ISBN" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">Category</label>
-                  <select class="form-control" name="book[category]" id="book-category" required>
-                    <option selected>Book Category</option>
-                    <option value="Fiction">Fiction</option>
-                    <option value="Novel">Novel</option>
-                    <option value="Short Story">Short Story</option>
-                    <option value="Educational">Educational</option>
-                    <option value="Religious">Religious</option>
-                    <option value="History">History</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label class="form-control-label">Stock</label>
-                  <input type="Number" name="book[stock]" id="book-stock" placeholder="Book Stocks" class="form-control"
-                    required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-control-label">Book Description</label>
-                  <textarea name="book[description]" id="book-description" cols="30" rows="5" class="form-control"
-                    required></textarea>
-                </div>
-
-              </div>
-              <button type="submit" class="btn btn-primary btn-block" id="add-book-btn"
-                style="width: 50%;margin-left: 25%;">Add Book</button>
-            </div>
-          </form>
-        </div>
+<!--DASHBOARD SECTION-->
+<header id="main-header" class="py-2 bg-primary text-white">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1><i class="fa fa-gear"></i> Dashboard</h1>
       </div>
     </div>
+  </div>
+</header>
 
-    <% include ../partials/footer %>
+<div class="container">
+  <div class="row">
+    <div
+      class="col card"
+      style="margin-top: 20px; margin-bottom: 20px; border: 1px solid black"
+    >
+      <div
+        class="card-header text-center"
+        style="background: rgb(100, 170, 236)"
+      >
+        <% include ../partials/alerts %>
+        <h4>Add Book</h4>
+      </div>
+
+      <form class="p-3" action="/api/admin/add/book" method="POST">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Title</label>
+              <input
+                type="text"
+                name="book[title]"
+                id="book-title"
+                placeholder="Book Title"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-control-label">Author Name</label>
+              <input
+                type="text"
+                name="book[author]"
+                id="book-author"
+                placeholder="Author Name"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-control-label">ISBN</label>
+              <input
+                type="text"
+                name="book[ISBN]"
+                id="book-ISBN"
+                placeholder="ISBN"
+                class="form-control"
+                disabled
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-control-label">Category</label>
+              <select
+                class="form-control"
+                name="book[category]"
+                id="book-category"
+                required
+              >
+                <option selected>Book Category</option>
+                <option value="Fiction">Fiction</option>
+                <option value="Novel">Novel</option>
+                <option value="Short Story">Short Story</option>
+                <option value="Educational">Educational</option>
+                <option value="Religious">Religious</option>
+                <option value="History">History</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-control-label">Stock</label>
+              <input
+                type="Number"
+                name="book[stock]"
+                id="book-stock"
+                placeholder="Book Stocks"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-control-label">Book Description</label>
+              <textarea
+                name="book[description]"
+                id="book-description"
+                cols="30"
+                rows="5"
+                class="form-control"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            id="add-book-btn"
+            style="width: 50%; margin-left: 25%"
+          >
+            Add Book
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -203,37 +203,6 @@ exports.postShowActivitiesByCategory = async (req, res, next) => {
   }
 };
 
-// admin -> add new book
-exports.getAddNewBook = async (req, res, next) => {
-  await res.render("admin/addBook", {
-    global: await global(),
-  });
-};
-
-exports.postAddNewBook = async (req, res, next) => {
-  try {
-    const book_info = req.body.book;
-
-    const isDuplicate = await Book.find(book_info);
-
-    if (isDuplicate.length > 0) {
-      req.flash("error", "This book is already registered in inventory");
-      return res.redirect("back");
-    }
-
-    const new_book = new Book(book_info);
-    await new_book.save();
-    req.flash(
-      "success",
-      `A new book named ${new_book.title} is added to the inventory`
-    );
-    res.redirect("/admin/bookInventory/all/all/1");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
-};
-
 // admin -> get profile
 exports.getAdminProfile = async (req, res, next) => {
   await res.render("admin/profile", {
