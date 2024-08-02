@@ -143,7 +143,6 @@ exports.getUserList = async (req, res, next) => {
   }
 };
 
-
 // admin -> show one user
 exports.getUserProfile = async (req, res, next) => {
   try {
@@ -252,87 +251,35 @@ exports.putUpdateAdminPassword = async (req, res, next) => {
     2. Fetch books by search object
     3. Render admin/stock
 */
-exports.getAdminStock = async (req, res, next) => {
+exports.getAdminStock = async (req, res) => {
   try {
-    let page = req.params.page || 1;
-    const filter = req.params.filter;
-    const value = req.params.value;
+    const page = parseInt(req.params.page, 10) || 1;
+    const filter = req.params.filter || "all";
+    const value = req.params.value || "all";
 
-    // console.log(filter, value);
-    // // constructing search object
-    let searchObj = {
-      stock: 0,
-    };
-    if (filter !== "all" && value !== "all") {
-      // fetch books by search value and filter
+    let searchObj = { stock: 0 };
+    if (filter !== " " && value !== " ") {
       searchObj[filter] = value;
     }
 
-    // get the book counts
     const books_count = await Book.find(searchObj).countDocuments();
 
-    // fetching books
     const books = await Book.find(searchObj)
       .skip(PER_PAGE * page - PER_PAGE)
       .limit(PER_PAGE);
 
-    // rendering admin/bookInventory
-    await res.render("admin/stock", {
+    return res.json({
       books: books,
       current: page,
       pages: Math.ceil(books_count / PER_PAGE),
       filter: filter,
       value: value,
-      global: await global(),
     });
   } catch (err) {
-    // console.log(err.messge);
-    return res.redirect("back");
-  }
-};
-
-// admin -> return book stock inventory by search query working procedure
-/*
-    same as getAdminBookInventory method
-*/
-exports.postAdminStock = async (req, res, next) => {
-  try {
-    let page = req.params.page || 1;
-    const filter = req.body.filter.toLowerCase();
-    const value = req.body.searchName;
-
-    if (value == "") {
-      req.flash(
-        "error",
-        "Search field is empty. Please fill the search field in order to get a result"
-      );
-      return res.redirect("back");
-    }
-    const searchObj = {
-      stock: 0,
-    };
-    searchObj[filter] = value;
-
-    // get the books count
-    const books_count = await Book.find(searchObj).countDocuments();
-
-    // fetch the books by search query
-    const books = await Book.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE);
-
-    // rendering admin/bookInventory
-    await res.render("admin/stock", {
-      books: books,
-      current: page,
-      pages: Math.ceil(books_count / PER_PAGE),
-      filter: filter,
-      value: value,
-      global: await global(),
+    console.error("Error fetching admin stock:", err);
+    return res.json({
+      error: "An error occurred while fetching the stock data.",
     });
-  } catch (err) {
-    // console.log(err.message);
-    return res.redirect("back");
   }
 };
 

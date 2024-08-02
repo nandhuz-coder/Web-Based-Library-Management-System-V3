@@ -80,16 +80,9 @@ router.post(
 
 //admin book inventory
 router.get(
-  "/admin/bookStock/:filter/:value/:page",
+  "/admin/bookstock/out/:filter/:value/:page",
   middleware.isAdmin,
   adminController.getAdminStock
-);
-
-// admin -> show searched books
-router.post(
-  "/admin/bookStock/:filter/:value/:page",
-  middleware.isAdmin,
-  adminController.postAdminStock
 );
 
 //admin stock out book inventory

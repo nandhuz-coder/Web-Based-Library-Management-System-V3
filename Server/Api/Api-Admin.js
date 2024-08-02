@@ -169,7 +169,6 @@ router.get("/api/admin/users/flagged/:user_id", async (req, res) => {
 
 router.post("/api/admin/add/book", async (req, res) => {
   try {
-    console.log(req.body.book);
     const book_info = req.body.book;
     const isDuplicate = await Book.find(book_info);
 
