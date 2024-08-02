@@ -21,8 +21,10 @@ const express = require("express"),
   ApiMiddleware = require("./middleware/middleware");
 
 // const Seed = require("./dev/seed");
+//const seedUsers = require("./dev/seeduser");
 // uncomment below line for first time to seed database;
 // Seed(555);
+//seedUsers(223);
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 

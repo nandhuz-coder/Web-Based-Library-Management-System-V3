@@ -54,7 +54,7 @@ router.get("/api/users/suggestions", async (req, res, next) => {
 });
 
 //admin -> global & user
-router.get("/api/global", middleware.isAdmin, async (req, res, next) => {
+router.get("/api/global", middleware.isAdmin, async (req, res) => {
   try {
     return res.json({
       global: await global(),
@@ -64,13 +64,6 @@ router.get("/api/global", middleware.isAdmin, async (req, res, next) => {
     console.log(error);
   }
 });
-
-// admin -> get book inventory working procedure
-/*
-    1. Construct search object
-    2. Fetch books by search object
-    3. Render admin/bookInventory
-*/
 
 // admin -> delete book
 router.get("/api/admin/book/delete/:book_id", async (req, res) => {
@@ -95,6 +88,34 @@ router.post("/api/admin/book/update/:book_id", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.json({ error: "error" });
+  }
+});
+
+// admin -> show searched user
+router.post("/api/admin/users/:page", async (req, res, next) => {
+  try {
+    const page = req.params.page || 1;
+    const search_value = req.body.searchUser;
+
+    const users = await User.find({
+      $or: [
+        { firstName: search_value },
+        { lastName: search_value },
+        { username: search_value },
+        { email: search_value },
+      ],
+    });
+    if (users.length <= 0) {
+      return res.json({ error: "User not found!" });
+    } else {
+      await res.json({
+        users: users,
+        current: page,
+        pages: 0,
+      });
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 

@@ -123,7 +123,6 @@ exports.getUpdateBook = async (req, res, next) => {
 // admin -> get user list
 exports.getUserList = async (req, res, next) => {
   try {
-    console.log("hey");
     const page = req.params.page || 1;
 
     const users = await User.find()
@@ -141,34 +140,6 @@ exports.getUserList = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     res.redirect("back");
-  }
-};
-
-// admin -> show searched user
-exports.postShowSearchedUser = async (req, res, next) => {
-  try {
-    const page = req.params.page || 1;
-    const search_value = req.body.searchUser;
-
-    const users = await User.find({
-      $or: [
-        { firstName: search_value },
-        { lastName: search_value },
-        { username: search_value },
-        { email: search_value },
-      ],
-    });
-    if (users.length <= 0) {
-      return res.json({ error: "User not found!" });
-    } else {
-      await res.json({
-        users: users,
-        current: page,
-        pages: 0,
-      });
-    }
-  } catch (err) {
-    console.log(err);
   }
 };
 

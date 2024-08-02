@@ -36,13 +36,6 @@ router.get(
   adminController.getUserList
 );
 
-//admin -> show searched user
-router.post(
-  "/admin/users/:page",
-  middleware.isAdmin,
-  adminController.postShowSearchedUser
-);
-
 //admin -> flag/unflag user
 router.get(
   "/admin/users/flagged/:user_id",
