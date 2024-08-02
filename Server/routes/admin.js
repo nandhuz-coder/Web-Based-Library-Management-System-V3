@@ -36,13 +36,6 @@ router.get(
   adminController.getUserList
 );
 
-//admin -> flag/unflag user
-router.get(
-  "/admin/users/flagged/:user_id",
-  middleware.isAdmin,
-  adminController.getFlagUser
-);
-
 //admin -> show one user
 router.get(
   "/admin/users/profile/:user_id",

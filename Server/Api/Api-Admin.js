@@ -143,4 +143,28 @@ router.get("/api/admin/users/delete/:user_id", async (req, res) => {
   }
 });
 
+router.get("/api/admin/users/flagged/:user_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const user = await User.findById(user_id);
+
+    if (user.violationFlag) {
+      user.violationFlag = false;
+      await user.save();
+      return res.json({
+        success: `An user named ${user.firstName} ${user.lastName} is just unflagged!`,
+      });
+    } else {
+      user.violationFlag = true;
+      await user.save();
+      return res.json({
+        warning: `An user named ${user.firstName} ${user.lastName} is just flagged!`,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: `unknown error` });
+  }
+});
+
 module.exports = router;

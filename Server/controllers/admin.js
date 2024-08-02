@@ -143,35 +143,6 @@ exports.getUserList = async (req, res, next) => {
   }
 };
 
-// admin -> flag/unflag user
-exports.getFlagUser = async (req, res, next) => {
-  try {
-    const user_id = req.params.user_id;
-
-    const user = await User.findById(user_id);
-
-    if (user.violationFlag) {
-      user.violationFlag = false;
-      await user.save();
-      req.flash(
-        "success",
-        `An user named ${user.firstName} ${user.lastName} is just unflagged!`
-      );
-    } else {
-      user.violationFlag = true;
-      await user.save();
-      req.flash(
-        "warning",
-        `An user named ${user.firstName} ${user.lastName} is just flagged!`
-      );
-    }
-
-    res.redirect("/admin/users/1");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
-};
 
 // admin -> show one user
 exports.getUserProfile = async (req, res, next) => {
