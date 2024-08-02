@@ -119,4 +119,28 @@ router.post("/api/admin/users/:page", async (req, res, next) => {
   }
 });
 
+router.get("/api/admin/users/delete/:user_id", async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const user = await User.findById(user_id);
+    await user.deleteOne();
+
+    let imagePath = `images/${user.image}`;
+    if (fs.existsSync(imagePath)) {
+      deleteImage(imagePath);
+    }
+
+    await Issue.deleteMany({ "user_id.id": user_id });
+    await Comment.deleteMany({ "author.id": user_id });
+    await Activity.deleteMany({ "user_id.id": user_id });
+    await Request.deleteMany({ "user_id.id": user_id });
+    await Return.deleteMany({ "user_id.id": user_id });
+
+    return res.json({ success: `${user.username} has removed` });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: `unknown error` });
+  }
+});
+
 module.exports = router;

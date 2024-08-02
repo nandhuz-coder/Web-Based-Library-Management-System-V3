@@ -64,13 +64,6 @@ router.post(
   adminController.postShowActivitiesByCategory
 );
 
-// admin -> delete a user
-router.get(
-  "/admin/users/delete/:user_id",
-  middleware.isAdmin,
-  adminController.getDeleteUser
-);
-
 //admin -> add new book
 router.get(
   "/admin/books/add",

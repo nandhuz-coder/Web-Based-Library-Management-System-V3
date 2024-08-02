@@ -47,7 +47,7 @@ const AdminNavbar = () => {
                         </li>
 
                         <li className="nav-item px-2">
-                            <a className="nav-link" href="/admin/users/1">Users</a>
+                            <a className="nav-link" href="/admin/1/users/">Users</a>
                         </li>
 
                         <li className="nav-item px-2">

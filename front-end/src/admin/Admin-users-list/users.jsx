@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import debounce from 'lodash.debounce';
 import Alert from '../../partials/Header/alert/alert';
+import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav'
 
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
@@ -86,9 +87,12 @@ const UsersPage = () => {
 
     const handleDeleteUser = async (userId) => {
         try {
-            await axios.delete(`/admin/users/delete/${userId}`);
-            setSuccess('User deleted successfully.');
-            fetchUsers(currentPage);
+            await axios.get(`/api/admin/users/delete/${userId}`).then((res) => {
+                if (res.data.error)
+                    return setError(res.data.error)
+                setSuccess(res.data.success);
+                fetchUsers(currentPage);
+            })
         } catch (err) {
             setError('Failed to delete user...');
         }
@@ -112,6 +116,7 @@ const UsersPage = () => {
 
     return (
         <>
+            <AdminNavbar />
             <header id="main-header" className="py-2 bg-primary text-white">
                 <div className="container">
                     <div className="row">
@@ -123,7 +128,6 @@ const UsersPage = () => {
                     </div>
                 </div>
             </header>
-
             <section id="actions" className="py-4 mb-4">
                 <div className="container">
                     <div className="row">

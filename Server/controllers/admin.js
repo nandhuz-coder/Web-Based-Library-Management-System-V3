@@ -139,7 +139,7 @@ exports.getUserList = async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
-    res.redirect("back");
+    res.json({ error: "unknown error" });
   }
 };
 
@@ -226,29 +226,6 @@ exports.postShowActivitiesByCategory = async (req, res, next) => {
       activities: activities,
       global: await global(),
     });
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
-};
-
-// admin -> delete a user
-exports.getDeleteUser = async (req, res, next) => {
-  try {
-    const user_id = req.params.user_id;
-    const user = await User.findById(user_id);
-    await user.deleteOne();
-
-    let imagePath = `images/${user.image}`;
-    if (fs.existsSync(imagePath)) {
-      deleteImage(imagePath);
-    }
-
-    await Issue.deleteMany({ "user_id.id": user_id });
-    await Comment.deleteMany({ "author.id": user_id });
-    await Activity.deleteMany({ "user_id.id": user_id });
-
-    res.redirect("/admin/users/1");
   } catch (err) {
     console.log(err);
     res.redirect("back");
