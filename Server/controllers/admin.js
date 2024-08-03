@@ -290,11 +290,11 @@ exports.getAdminStock = async (req, res) => {
     3. Render admin/request
 */
 
-exports.getAdminRequest = async (req, res, next) => {
+exports.getAdminRequest = async (req, res) => {
   try {
     let page = req.params.page || 1;
-    const filter = req.params.filter;
-    const value = req.params.value;
+    const filter = req.params.filter || "all";
+    const value = req.params.value || "all";
 
     if (filter != "all") {
       if (filter == "username") {
@@ -303,7 +303,6 @@ exports.getAdminRequest = async (req, res, next) => {
         filter = `book_info.${filter}`;
       }
     }
-
     let searchObj = {};
 
     if (filter !== "all" && value !== "all") {
@@ -324,213 +323,16 @@ exports.getAdminRequest = async (req, res, next) => {
       })
       .exec();
 
-    await res.render("admin/request", {
+    await res.json({
       books: request,
       current: page,
       pages: Math.ceil(Request_count / PER_PAGE),
       filter: filter,
       value: value,
-      global: await global(),
     });
   } catch (err) {
-    // console.log(err.messge);
-    return res.redirect("back");
-  }
-};
-
-// admin -> return book request inventory by search query working procedure
-/*
-    same as getAdminBookInventory method
-*/
-exports.postAdminRequest = async (req, res, next) => {
-  try {
-    let page = req.params.page || 1;
-    let filter = req.body.filter.toLowerCase();
-    const value = req.body.searchName;
-
-    if (value == "") {
-      req.flash(
-        "error",
-        "Search field is empty. Please fill the search field in order to get a result"
-      );
-      return res.redirect("back");
-    }
-
-    if (filter != "all") {
-      if (filter == "username") {
-        filter = `user_id.username`;
-      } else {
-        filter = `book_info.${filter}`;
-      }
-    }
-
-    const searchObj = {};
-    searchObj[filter] = value;
-
-    // get the Request counts
-    const Request_count = await Request.find(searchObj).countDocuments();
-
-    // fetching Request
-    const request = await Request.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE)
-      .populate({
-        path: "book_info.id",
-        select: "stock",
-      })
-      .exec();
-
-    // rendering admin/Request Book Inventory
-    await res.render("admin/request", {
-      books: request,
-      current: page,
-      pages: Math.ceil(Request_count / PER_PAGE),
-      filter: filter,
-      value: value,
-      global: await global(),
-    });
-  } catch (err) {
-    // console.log(err.message);
-    return res.redirect("back");
-  }
-};
-
-//admin -> Accept book Request
-/*  
-    ? work Flow
-    1. fetch request doc by params.id
-    2. fetch user by request.user_id
-    3. fetch book by request.book_info
-    4. check user violation
-    5. check user book issued
-    6. check book stock
-    7. registering book issue
-    8. clearing request
-    9. logging activity
-    10 redirect('/admin/bookRequest/all/all/1)
- */
-
-exports.getAcceptRequest = async (req, res, next) => {
-  const request = await Request.findById(req.params.id);
-  const user = await User.findById(request.user_id.id);
-  const book = await Book.findById(request.book_info.id);
-
-  if (user.violationFlag) {
-    req.flash(
-      "error",
-      "user are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books"
-    );
-    return res.redirect("back");
-  }
-
-  if (user.bookIssueInfo.length >= 5) {
-    req.flash("warning", "You can't issue more than 5 books at a time");
-    return res.redirect("back");
-  }
-
-  if (book.stock <= 0) {
-    req.flash("warning", "Book is not in stock");
-    return res.redirect("back");
-  }
-
-  try {
-    // registering issue
-    book.stock -= 1;
-    const issue = new Issue({
-      book_info: {
-        id: book._id,
-        title: book.title,
-        author: book.author,
-        ISBN: book.ISBN,
-        category: book.category,
-        stock: book.stock,
-      },
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    // putting issue record on individual user document
-    await user.bookIssueInfo.push(book._id);
-
-    //Clearing request
-    await Request.findByIdAndDelete(req.params.id);
-    user.bookRequestInfo.pull({ _id: request.book_info.id });
-
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Issue",
-      time: {
-        id: issue._id,
-        issueDate: issue.book_info.issueDate,
-        returnDate: issue.book_info.returnDate,
-      },
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    // await ensure to synchronously save all database alteration
-    await issue.save();
-    await user.save();
-    await book.save();
-    await activity.save();
-
-    //redirect
-    res.redirect("/admin/bookRequest/all/all/1");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
-
-//admin -> Decline book Request
-/*  
-    ? work Flow
-    1. fetch request doc by params.id
-    2. fetch user by request.user_id
-    3. logging activity
-    4. clearing request
-    5. redirect('/admin/bookRequest/all/all/1)
- */
-
-exports.getDeclineRequest = async (req, res, next) => {
-  const request = await Request.findById(req.params.id);
-  const user = await User.findById(request.user_id.id);
-
-  try {
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: request._id,
-        title: request.book_info.title,
-      },
-      category: "Decline",
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    //Clearing request
-    await Request.findByIdAndDelete(req.params.id);
-    user.bookRequestInfo.pull({ _id: request.book_info.id });
-
-    // await ensure to synchronously save all database alteration
-    await user.save();
-    await activity.save();
-
-    //redirect
-    res.redirect("/admin/bookRequest/all/all/1");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
+    console.log(err.messge);
+    res.json({ error: "unknown error" });
   }
 };
 

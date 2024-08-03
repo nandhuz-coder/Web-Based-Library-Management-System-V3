@@ -92,27 +92,6 @@ router.get(
   adminController.getAdminRequest
 );
 
-// admin -> show request books
-router.post(
-  "/admin/bookRequest/:filter/:value/:page",
-  middleware.isAdmin,
-  adminController.postAdminRequest
-);
-
-// admin -> accept request books
-router.get(
-  "/admin/book/accept/:id",
-  middleware.isAdmin,
-  adminController.getAcceptRequest
-);
-
-// admin -> decline request books
-router.get(
-  "/admin/book/decline/:id",
-  middleware.isAdmin,
-  adminController.getDeclineRequest
-);
-
 // admin -> show return request books
 router.get(
   "/admin/bookReturn/:filter/:value/:page",

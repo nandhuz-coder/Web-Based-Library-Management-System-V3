@@ -63,14 +63,10 @@ const AdminNavbar = () => {
                         </li>
 
                         <li className="nav-item px-2">
-                            <Link to={`/admin/1/book/stockout`} id="stock_out" title="Stock OUt" className="nav-link">
-                                <a className="nav-link" href="/admin/bookRequest/all/all/1" id="add_books">
-                                    Request&nbsp;
-                                    <span className="badge badge-success">
-                                        {global.reqbook ? global.reqbook : 0}
-                                    </span>
-                                    <span className="sr-only">unread messages</span>
-                                </a>
+                            <Link to={`/admin/1/book/request`} id="request" title="request" className="nav-link">Request&nbsp;
+                                <span className="badge badge-success">
+                                    {global.reqbook ? global.reqbook : 0}
+                                </span>
                             </Link>
                         </li>
 

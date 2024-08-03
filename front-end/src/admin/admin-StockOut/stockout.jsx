@@ -17,7 +17,7 @@ const StockOut = ({ IfAdmin }) => {
     const fetchBooksRef = useRef(() => { });
 
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-    
+
     useEffect(() => {
         fetchBooks(filter, searchName, current);
         fetchBooksRef.current = () => fetchBooks(filter, searchName, current);
@@ -196,22 +196,6 @@ const StockOut = ({ IfAdmin }) => {
                                                         </li>
                                                     )}
 
-                                                    {current === 1 ? (
-                                                        <li className="page-item disabled">
-                                                            <a className="page-link">Previous</a>
-                                                        </li>
-                                                    ) : (
-                                                        <li className="page-item">
-                                                            <a
-                                                                href="#"
-                                                                className="page-link"
-                                                                onClick={(e) => { e.preventDefault(); handlePagination(current - 1); }}
-                                                            >
-                                                                Previous
-                                                            </a>
-                                                        </li>
-                                                    )}
-
                                                     {Array.from({ length: Math.min(pages, 5) }, (_, i) => i + (current > 5 ? current - 4 : 1)).map(page => (
                                                         <li key={page} className={`page-item ${page === current ? 'active' : ''}`}>
                                                             <a
@@ -223,22 +207,6 @@ const StockOut = ({ IfAdmin }) => {
                                                             </a>
                                                         </li>
                                                     ))}
-
-                                                    {current === pages ? (
-                                                        <li className="page-item disabled">
-                                                            <a className="page-link">Next</a>
-                                                        </li>
-                                                    ) : (
-                                                        <li className="page-item">
-                                                            <a
-                                                                href="#"
-                                                                className="page-link"
-                                                                onClick={(e) => { e.preventDefault(); handlePagination(current + 1); }}
-                                                            >
-                                                                Next
-                                                            </a>
-                                                        </li>
-                                                    )}
 
                                                     {current === pages ? (
                                                         <li className="page-item disabled">
