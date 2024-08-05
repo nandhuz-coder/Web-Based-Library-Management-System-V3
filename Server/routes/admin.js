@@ -45,16 +45,9 @@ router.get(
 
 //admin -> show all activities of one user
 router.get(
-  "/admin/users/activities/:user_id",
+  "/admin/1/users/activities/:user_id",
   middleware.isAdmin,
   adminController.getUserAllActivities
-);
-
-//admin -> show activities by category
-router.post(
-  "/admin/users/activities/:user_id",
-  middleware.isAdmin,
-  adminController.postShowActivitiesByCategory
 );
 
 //admin -> profile

@@ -176,29 +176,12 @@ exports.getUserAllActivities = async (req, res, next) => {
     const activities = await Activity.find({ "user_id.id": user_id }).sort(
       "-entryTime"
     );
-    await res.render("admin/activities", {
+    await res.json({
       activities: activities,
-      global: await global(),
     });
   } catch (err) {
     console.log(err);
-    res.redirect("back");
-  }
-};
-
-// admin -> show activities by category
-exports.postShowActivitiesByCategory = async (req, res, next) => {
-  try {
-    const category = req.body.category;
-    const activities = await Activity.find({ category: category });
-
-    await res.render("admin/activities", {
-      activities: activities,
-      global: await global(),
-    });
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
+    res.json({ error: "unknown error" });
   }
 };
 

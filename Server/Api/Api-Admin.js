@@ -435,4 +435,23 @@ router.get("/api/admin/book/return/decline/:id", async (req, res, next) => {
   }
 });
 
+// admin -> show activities by category
+router.post("/api/admin/users/activities/:id", async (req, res, next) => {
+  try {
+    const user_id = req.params.id;
+    const category = req.body.category;
+    const activities = await Activity.find({
+      category: category,
+      "user_id.id": user_id,
+    });
+
+    return res.json({
+      activities: activities,
+    });
+  } catch (err) {
+    console.log(err);
+    res.redirect("back");
+  }
+});
+
 module.exports = router;
