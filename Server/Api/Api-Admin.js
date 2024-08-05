@@ -320,4 +320,119 @@ router.get("/api/admin/book/request/decline/:id", async (req, res) => {
   }
 });
 
+//admin -> Accept book Return
+/*  
+    ? work Flow
+    1. fetch return doc by params.id
+    2. fetch user by request.user_id
+    3. fetch book by request.book_info
+    4. fetch issue by request.book_info
+    5. remove book object ID from user
+    6. remove issue and return document
+    7. book stock arranged
+    8. logging activity
+    9. redirect('/admin/bookReturn/all/all/1)
+ */
+
+router.get("/api/admin/book/return/accept/:id", async (req, res, next) => {
+  try {
+    const request = await Return.findById(req.params.id);
+    const user = await User.findById(request.user_id.id);
+    const book = await Book.findById(request.book_info.id);
+    const issue = await Issue.findOne({
+      "user_id.id": request.user_id.id,
+      "book_info.id": request.book_info.id,
+    });
+
+    //remove book object ID from user
+    await user.bookReturnInfo.pull(book._id);
+    await user.bookIssueInfo.pull(book._id);
+
+    //remove issue and return document
+    await issue.deleteOne();
+    await request.deleteOne();
+
+    //addming book stock
+    book.stock++;
+
+    // logging the activity
+    const activity = new Activity({
+      info: {
+        id: book._id,
+        title: book.title,
+      },
+      category: "Return",
+      user_id: {
+        id: user._id,
+        username: user.username,
+      },
+    });
+
+    // await ensure to synchronously save all database alteration
+    await user.save();
+    await book.save();
+    await activity.save();
+
+    //redirect
+    res.json({ success: "Request has been accepted" });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: "unknown error" });
+  }
+});
+
+//admin -> Decline book Return
+/*  
+ ? work Flow
+  1. fetch return doc by params.id
+  2. fetch user by request.user_id
+  3. fetch book by request.book_info
+  4. remove book object ID from user
+  5. remove return document
+  6. logging activity
+  7. redirect('/admin/bookReturn/all/all/1)
+ */
+
+router.get("/api/admin/book/return/decline/:id", async (req, res, next) => {
+  try {
+    const request = await Return.findById(req.params.id);
+    const user = await User.findById(request.user_id.id);
+    const book = await Book.findById(request.book_info.id);
+    const issue = await Issue.findOne({
+      "user_id.id": request.user_id.id,
+      "book_info.id": request.book_info.id,
+    });
+    //remove book object ID from user
+    await user.bookReturnInfo.pull(book._id);
+    issue.book_info.isReturn = false;
+
+    //remove return document
+    await request.deleteOne();
+
+    // logging the activity
+    const activity = new Activity({
+      info: {
+        id: book._id,
+        title: book.title,
+      },
+      category: "Return decline",
+      user_id: {
+        id: user._id,
+        username: user.username,
+      },
+    });
+
+    // await ensure to synchronously save all database alteration
+    await user.save();
+    await activity.save();
+    await issue.save();
+
+    //redirect
+    res.json({ error: "Request has been removed" });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: "unknown error" });
+  }
+});
+
 module.exports = router;

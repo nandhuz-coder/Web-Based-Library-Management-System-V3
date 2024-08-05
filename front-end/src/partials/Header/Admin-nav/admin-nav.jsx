@@ -71,13 +71,11 @@ const AdminNavbar = () => {
                         </li>
 
                         <li className="nav-item px-2">
-                            <a className="nav-link" href="/admin/bookReturn/all/all/1" id="add_books">
-                                Return books&nbsp;
+                            <Link to={`/admin/1/book/return`} id="return" title="return" className="nav-link">Return&nbsp;
                                 <span className="badge badge-warning">
                                     {global.return ? global.return : 0}
                                 </span>
-                                <span className="sr-only">unread messages</span>
-                            </a>
+                            </Link>
                         </li>
 
                         <li className="nav-item px-2">

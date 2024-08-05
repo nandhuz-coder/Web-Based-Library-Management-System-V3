@@ -99,27 +99,6 @@ router.get(
   adminController.getAdminReturn
 );
 
-// admin -> show request books
-router.post(
-  "/admin/bookReturn/:filter/:value/:page",
-  middleware.isAdmin,
-  adminController.postAdminReturn
-);
-
-// admin -> accept request books
-router.get(
-  "/admin/book/return/accept/:id",
-  middleware.isAdmin,
-  adminController.getAcceptReturn
-);
-
-// admin -> decline request books
-router.get(
-  "/admin/book/return/decline/:id",
-  middleware.isAdmin,
-  adminController.getDeclineReturn
-);
-
 // //admin -> notifications
 // router.get("/admin/notifications", (req, res) => {
 //    res.send("This route is still under development. will be added in next version");

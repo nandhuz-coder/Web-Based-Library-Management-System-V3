@@ -343,7 +343,7 @@ exports.getAdminRequest = async (req, res) => {
     3. Render admin/return
 */
 
-exports.getAdminReturn = async (req, res, next) => {
+exports.getAdminReturn = async (req, res) => {
   try {
     let page = req.params.page || 1;
     const filter = req.params.filter;
@@ -372,183 +372,15 @@ exports.getAdminReturn = async (req, res, next) => {
       .limit(PER_PAGE)
       .exec();
 
-    await res.render("admin/return", {
+    await res.json({
       books: request,
       current: page,
       pages: Math.ceil(Request_count / PER_PAGE),
       filter: filter,
       value: value,
-      global: await global(),
     });
   } catch (err) {
     console.log(err.messge);
-    return res.redirect("back");
-  }
-};
-
-// admin -> return book request inventory by search query working procedure
-/*
-    same as getAdminBookInventory method
-*/
-exports.postAdminReturn = async (req, res, next) => {
-  try {
-    let page = req.params.page || 1;
-    let filter = req.body.filter.toLowerCase();
-    const value = req.body.searchName;
-
-    if (value == "") {
-      req.flash(
-        "error",
-        "Search field is empty. Please fill the search field in order to get a result"
-      );
-      return res.redirect("back");
-    }
-
-    if (filter != "all") {
-      if (filter == "username") {
-        filter = `user_id.username`;
-      } else {
-        filter = `book_info.${filter}`;
-      }
-    }
-
-    const searchObj = {};
-    searchObj[filter] = value;
-    // get the Request counts
-    const Request_count = await Return.find(searchObj).countDocuments();
-
-    // fetching Request
-    const request = await Return.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE)
-      .exec();
-
-    // rendering admin/Request Book Inventory
-    await res.render("admin/return", {
-      books: request,
-      current: page,
-      pages: Math.ceil(Request_count / PER_PAGE),
-      filter: filter,
-      value: value,
-      global: await global(),
-    });
-  } catch (err) {
-    console.log(err.message);
-    return res.redirect("back");
-  }
-};
-
-//admin -> Accept book Return
-/*  
-    ? work Flow
-    1. fetch return doc by params.id
-    2. fetch user by request.user_id
-    3. fetch book by request.book_info
-    4. fetch issue by request.book_info
-    5. remove book object ID from user
-    6. remove issue and return document
-    7. book stock arranged
-    8. logging activity
-    9. redirect('/admin/bookReturn/all/all/1)
- */
-
-exports.getAcceptReturn = async (req, res, next) => {
-  try {
-    const request = await Return.findById(req.params.id);
-    const user = await User.findById(request.user_id.id);
-    const book = await Book.findById(request.book_info.id);
-    const issue = await Issue.findOne({
-      "user_id.id": request.user_id.id,
-      "book_info.id": request.book_info.id,
-    });
-
-    //remove book object ID from user
-    await user.bookReturnInfo.pull(book._id);
-    await user.bookIssueInfo.pull(book._id);
-
-    //remove issue and return document
-    await issue.deleteOne();
-    await request.deleteOne();
-
-    //addming book stock
-    book.stock++;
-
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Return",
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    // await ensure to synchronously save all database alteration
-    await user.save();
-    await book.save();
-    await activity.save();
-
-    //redirect
-    res.redirect("/admin/bookReturn/all/all/1");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
-
-//admin -> Decline book Return
-/*  
-    ? work Flow
-    1. fetch return doc by params.id
-    2. fetch user by request.user_id
-    3. fetch book by request.book_info
-    4. remove book object ID from user
-    5. remove return document
-    6. logging activity
-    7. redirect('/admin/bookReturn/all/all/1)
- */
-
-exports.getDeclineReturn = async (req, res, next) => {
-  try {
-    const request = await Return.findById(req.params.id);
-    const user = await User.findById(request.user_id.id);
-    const book = await Book.findById(request.book_info.id);
-    const issue = await Issue.findOne({
-      "user_id.id": request.user_id.id,
-      "book_info.id": request.book_info.id,
-    });
-    //remove book object ID from user
-    await user.bookReturnInfo.pull(book._id);
-    issue.book_info.isReturn = false;
-
-    //remove return document
-    await request.deleteOne();
-
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Return decline",
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    // await ensure to synchronously save all database alteration
-    await user.save();
-    await activity.save();
-    await issue.save();
-
-    //redirect
-    res.redirect("/admin/bookReturn/all/all/1");
-  } catch (err) {
-    console.log(err);
     return res.redirect("back");
   }
 };
