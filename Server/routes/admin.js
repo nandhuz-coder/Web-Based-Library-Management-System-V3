@@ -57,13 +57,6 @@ router.get(
   adminController.getAdminProfile
 );
 
-//admin -> update password
-router.post(
-  "/admin/update-password",
-  middleware.isAdmin,
-  adminController.putUpdateAdminPassword
-);
-
 //admin book inventory
 router.get(
   "/admin/bookstock/out/:filter/:value/:page",

@@ -456,7 +456,7 @@ router.post("/api/admin/users/activities/:id", async (req, res, next) => {
 });
 
 // admin -> update profile
-router.get("/api/admin/edit/profile", async (req, res, next) => {
+router.post("/api/admin/edit/profile", async (req, res) => {
   try {
     const user_id = req.user._id;
     const update_info = req.body.admin;
@@ -466,6 +466,22 @@ router.get("/api/admin/edit/profile", async (req, res, next) => {
   } catch (err) {
     console.log(err);
     res.json({ error: "error editing admin." });
+  }
+});
+
+// admin -> update password
+router.post("/admin/update-password", async (req, res) => {
+  try {
+    const user_id = req.user._id;
+    const old_password = req.body.oldPassword;
+    const password = req.body.newPassword;
+    const admin = await User.findById(user_id);
+    await admin.changePassword(old_password, password);
+    await admin.save();
+    res.json({ success: "Successfully changed password." });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: "failed changing password." });
   }
 });
 

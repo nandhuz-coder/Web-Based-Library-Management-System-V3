@@ -195,27 +195,6 @@ exports.getAdminProfile = async (req, res) => {
   await res.json({ username: req.user.username, email: req.user.email });
 };
 
-// admin -> update password
-exports.putUpdateAdminPassword = async (req, res, next) => {
-  try {
-    const user_id = req.user._id;
-    const old_password = req.body.oldPassword;
-    const password = req.body.newPassword;
-    const admin = await User.findById(user_id);
-    await admin.changePassword(old_password, password);
-    await admin.save();
-
-    req.flash(
-      "success",
-      "Your password is changed recently. Please login again to confirm"
-    );
-    res.redirect("/auth/admin-login");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
-};
-
 // admin -> get stock out book inventory working procedure
 /*
     1. Construct search object
