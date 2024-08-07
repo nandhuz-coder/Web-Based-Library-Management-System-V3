@@ -11,6 +11,7 @@ const AdminIndex = ({ IfAdmin }) => {
     const [current, setCurrent] = useState(1);
     const [booksCount, setBooksCount] = useState(0);
     const [usersCount, setUsersCount] = useState(0);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -21,8 +22,10 @@ const AdminIndex = ({ IfAdmin }) => {
                 setCurrent(data.current);
                 setBooksCount(data.books_count);
                 setUsersCount(data.users_count);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching data', error);
+                setLoading(false);
             }
         };
         fetchData();
@@ -41,7 +44,6 @@ const AdminIndex = ({ IfAdmin }) => {
             console.error('Error handling pagination:', error);
         }
     }, []);
-
     return (
         <>
             <IfAdmin />
@@ -99,6 +101,7 @@ const AdminIndex = ({ IfAdmin }) => {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {loading && <Loading />}
                                             {activities.map((activity, index) => (
                                                 <tr key={index}>
                                                     <td>

@@ -12,6 +12,7 @@ const BookRequestInventory = ({ IfAdmin }) => {
     const [pages, setPages] = useState(0);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchBooks(filter, searchName, current);
@@ -26,9 +27,11 @@ const BookRequestInventory = ({ IfAdmin }) => {
             const response = await axios.get(`/admin/bookRequest/${filter}/${value}/${page}`);
             setBooks(response.data.books);
             setPages(response.data.pages);
+            setLoading(false);
         } catch (error) {
             console.error(error);
             setError('Failed to fetch books');
+            setLoading(false);
         }
     };
 
@@ -145,6 +148,7 @@ const BookRequestInventory = ({ IfAdmin }) => {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {loading && <Loading />}
                                             {books.map(book => (
                                                 <tr key={book._id}>
                                                     <td>{book.book_info.title}</td>

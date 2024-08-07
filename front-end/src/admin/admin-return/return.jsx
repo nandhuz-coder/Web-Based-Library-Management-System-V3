@@ -12,6 +12,7 @@ const BookReturn = ({ IfAdmin }) => {
     const [pages, setPages] = useState(0);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchBooks(filter, searchName, current);
@@ -26,9 +27,11 @@ const BookReturn = ({ IfAdmin }) => {
             const response = await axios.get(`/admin/bookReturn/${filter}/${value}/${page}`);
             setBooks(response.data.books);
             setPages(response.data.pages);
+            setLoading(false);
         } catch (error) {
             console.error(error);
             setError('Failed to fetch books');
+            setLoading(false);
         }
     }, []);
 
@@ -83,7 +86,6 @@ const BookReturn = ({ IfAdmin }) => {
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <Alert success={success} error={error} dismissAlert={dismissAlert} />
-
                 <header id="main-header" className="py-2 bg-primary text-white">
                     <div className="container">
                         <div className="row">
@@ -155,6 +157,7 @@ const BookReturn = ({ IfAdmin }) => {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {loading && <Loading />}
                                             {books.map(book => (
                                                 <tr key={book._id}>
                                                     <td>{book.book_info.title}</td>

@@ -13,6 +13,7 @@ const StockOut = ({ IfAdmin }) => {
     const [pages, setPages] = useState(0);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(true);
 
     const fetchBooksRef = useRef(() => { });
 
@@ -28,8 +29,10 @@ const StockOut = ({ IfAdmin }) => {
             const response = await axios.get(`/admin/bookstock/out/${filter}/${value}/${page}`);
             setBooks(response.data.books);
             setPages(response.data.pages);
+            setLoading(false);
         } catch (error) {
             console.error(error);
+            setLoading(false);
         }
     }, []);
 
@@ -149,6 +152,7 @@ const StockOut = ({ IfAdmin }) => {
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {loading && <Loading />}
                                                 {books.map(book => (
                                                     <tr key={book._id}>
                                                         <td>{book.title}</td>
