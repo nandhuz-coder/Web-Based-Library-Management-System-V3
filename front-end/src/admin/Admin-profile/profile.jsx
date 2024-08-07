@@ -71,7 +71,7 @@ const Profile = ({ IfAdmin }) => {
         axios.delete('/admin/delete-profile')
             .then(response => {
                 setSuccess('Account deleted successfully');
-                navigate('/auth/admin-signup');
+                navigate('/auth/admin-login');
             })
             .catch(error => {
                 console.error('Error deleting account:', error);
