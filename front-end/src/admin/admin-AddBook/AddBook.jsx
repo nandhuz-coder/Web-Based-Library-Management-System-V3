@@ -38,7 +38,6 @@ const AddBook = ({ IfAdmin }) => {
     const dismissAlert = (type) => {
         setAlerts({ ...alerts, [type]: '' });
     };
-
     return (
         <>
             <IfAdmin />
@@ -65,7 +64,6 @@ const AddBook = ({ IfAdmin }) => {
                             <div className="card-header text-center" style={{ background: 'rgb(100, 170, 236)' }}>
                                 <h4>Add Book</h4>
                             </div>
-
                             <form className="p-3" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-md-6">

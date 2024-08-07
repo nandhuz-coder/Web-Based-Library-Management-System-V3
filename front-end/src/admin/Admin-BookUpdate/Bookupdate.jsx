@@ -5,6 +5,7 @@ import Alert from '../../partials/Header/alert/alert';
 import Loading from '../../Loading/Loading';
 
 const EditBook = ({ IfAdmin }) => {
+    const [loading, setLoading] = useState(true);
     const { bookid } = useParams();
     const navigate = useNavigate();
     const [book, setBook] = useState({});
@@ -16,9 +17,11 @@ const EditBook = ({ IfAdmin }) => {
             try {
                 const response = await axios.get(`/admin/book/update/${bookid}`);
                 setBook(response.data.book);
+                setLoading(false);
             } catch (err) {
                 console.log(err);
                 setError('Error fetching book data');
+                setLoading(false);
             }
         };
 
@@ -65,6 +68,7 @@ const EditBook = ({ IfAdmin }) => {
                                 <h4>Edit Book</h4>
                             </div>
                             <Alert success={success} error={error} dismissAlert={dismissAlert} />
+                            {loading && <Loading />}
                             <form onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-md-6">

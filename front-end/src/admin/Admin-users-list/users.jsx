@@ -16,6 +16,8 @@ const UsersPage = ({ IfAdmin }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [loading, setLoading] = useState(false);
+    const [Render, setRender] = useState(true);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,7 +35,7 @@ const UsersPage = ({ IfAdmin }) => {
         } catch (err) {
             setError('Failed to fetch users.');
         } finally {
-            setLoading(false);
+            setRender(false);
         }
     };
 
@@ -53,6 +55,7 @@ const UsersPage = ({ IfAdmin }) => {
             setError('Search failed.');
         } finally {
             setLoading(false);
+            setRender(false);
         }
     };
 
@@ -207,6 +210,7 @@ const UsersPage = ({ IfAdmin }) => {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {Render && <Loading />}
                                             {users.map((user) => (
                                                 !user.isAdmin && (
                                                     <tr key={user._id}>

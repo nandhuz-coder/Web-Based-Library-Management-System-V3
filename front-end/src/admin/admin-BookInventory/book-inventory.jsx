@@ -117,102 +117,100 @@ const BookInventory = ({ IfAdmin }) => {
             </nav>
         );
     };
-
     return (
         <>
             <IfAdmin />
-            <React.Suspense fallback={<Loading />}>
-                <AdminNavbar />
-                <div>
-                    <header id="main-header" className="py-2 bg-primary text-white">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <h1><i className="fa fa-pencil"></i> Book Inventory</h1>
-                                </div>
+            <AdminNavbar />
+            <div>
+                <header id="main-header" className="py-2 bg-primary text-white">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <h1><i className="fa fa-pencil"></i> Book Inventory</h1>
                             </div>
                         </div>
-                    </header>
-                    <section id="search_bar" className="my-3 py-4 bg-light">
-                        <div className="container">
-                            <form onSubmit={handleSubmit}>
-                                <div className="row">
-                                    <div className="col-md-5 p-1">
-                                        <select name="filter" id="book_select" className="form-control" value={filter} onChange={handleFilterChange}>
-                                            <option value="all" disabled>Select Option...</option>
-                                            <option value="title">Title</option>
-                                            <option value="author">Author</option>
-                                            <option value="category">Category</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-md-5 p-1">
-                                        <input
-                                            name="searchName"
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Search Books"
-                                            value={searchName === 'all' ? '' : searchName}
-                                            onChange={handleSearchNameChange}
-                                        />
-                                    </div>
-                                    <div className="col-md-2 p-1">
-                                        <input
-                                            type="submit"
-                                            className="btn btn-outline-primary btn-block"
-                                            value="Search"
-                                        />
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
-                    <Alert success={success} error={error} dismissAlert={dismissAlert} />
-                    <section id="bookInventory" className="mt-2">
-                        <div className="container" style={{ width: '85%', maxWidth: 'none' }}>
+                    </div>
+                </header>
+                <section id="search_bar" className="my-3 py-4 bg-light">
+                    <div className="container">
+                        <form onSubmit={handleSubmit}>
                             <div className="row">
-                                <div className="col">
-                                    <div className="card">
-                                        <table className="table table-striped">
-                                            <thead className="thead-inverse">
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Author</th>
-                                                    <th>ISBN</th>
-                                                    <th>Category</th>
-                                                    <th>In Stock</th>
-                                                    <th>Edit</th>
+                                <div className="col-md-5 p-1">
+                                    <select name="filter" id="book_select" className="form-control" value={filter} onChange={handleFilterChange}>
+                                        <option value="all" disabled>Select Option...</option>
+                                        <option value="title">Title</option>
+                                        <option value="author">Author</option>
+                                        <option value="category">Category</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-5 p-1">
+                                    <input
+                                        name="searchName"
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Search Books"
+                                        value={searchName === 'all' ? '' : searchName}
+                                        onChange={handleSearchNameChange}
+                                    />
+                                </div>
+                                <div className="col-md-2 p-1">
+                                    <input
+                                        type="submit"
+                                        className="btn btn-outline-primary btn-block"
+                                        value="Search"
+                                    />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <Alert success={success} error={error} dismissAlert={dismissAlert} />
+                <section id="bookInventory" className="mt-2">
+                    <div className="container" style={{ width: '85%', maxWidth: 'none' }}>
+                        <div className="row">
+                            <div className="col">
+                                <div className="card">
+                                    <table className="table table-striped">
+                                        <thead className="thead-inverse">
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Author</th>
+                                                <th>ISBN</th>
+                                                <th>Category</th>
+                                                <th>In Stock</th>
+                                                <th>Edit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {loading && <Loading />}
+                                            {books.map((book) => (
+                                                <tr key={book._id}>
+                                                    <td>{book.title}</td>
+                                                    <td>{book.author}</td>
+                                                    <td>{book.ISBN}</td>
+                                                    <td>{book.category}</td>
+                                                    <td>{book.stock}</td>
+                                                    <td>
+                                                        <span>
+                                                            <Link to={`/admin/books/1/update/${book._id}`} className="btn btn-info btn-sm" id="to-update-book-btn"> Update </Link>
+                                                            <button
+                                                                onClick={(e) => { e.preventDefault(); DeleteBook(book._id) }}
+                                                                className="btn btn-sm btn-danger"
+                                                                id="to-delete-book-btn"> Delete
+                                                            </button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {books.map((book) => (
-                                                    <tr key={book._id}>
-                                                        <td>{book.title}</td>
-                                                        <td>{book.author}</td>
-                                                        <td>{book.ISBN}</td>
-                                                        <td>{book.category}</td>
-                                                        <td>{book.stock}</td>
-                                                        <td>
-                                                            <span>
-                                                                <Link to={`/admin/books/1/update/${book._id}`} className="btn btn-info btn-sm" id="to-update-book-btn"> Update </Link>
-                                                                <button
-                                                                    onClick={(e) => { e.preventDefault(); DeleteBook(book._id) }}
-                                                                    className="btn btn-sm btn-danger"
-                                                                    id="to-delete-book-btn"> Delete
-                                                                </button>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                        {pages > 0 && renderPagination()}
-                                    </div>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    {pages > 0 && renderPagination()}
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </div>
-            </React.Suspense>
+                    </div>
+                </section>
+            </div>
         </>
     );
 };

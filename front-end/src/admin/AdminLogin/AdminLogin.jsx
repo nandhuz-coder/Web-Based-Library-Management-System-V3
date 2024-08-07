@@ -10,7 +10,6 @@ const AdminLogin = ({ IfUser }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
     const handleLogin = async (e) => {
         e.preventDefault();
         try {

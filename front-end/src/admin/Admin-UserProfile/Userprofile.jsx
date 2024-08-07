@@ -14,6 +14,7 @@ const UserProfile = ({ IfAdmin }) => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [render, setRender] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get(`/admin/1/users/profile/${user_id}`)
@@ -31,7 +32,7 @@ const UserProfile = ({ IfAdmin }) => {
             .catch((error) => {
                 setError('Error fetching data');
                 console.error(error);
-            });
+            }).finally(() => setLoading(false))
     }, [user_id]);
 
     const dismissAlert = (type) => {
@@ -64,7 +65,7 @@ const UserProfile = ({ IfAdmin }) => {
                 <div className="container mt-5 pt-2">
                     {success && <Alert success={success} dismissAlert={dismissAlert} />}
                     {error && <Alert error={error} dismissAlert={dismissAlert} />}
-
+                    {loading && <Loading />}
                     <div className="row" style={{ marginBottom: '20px' }}>
                         <div className="col-md-3">
                             <img
