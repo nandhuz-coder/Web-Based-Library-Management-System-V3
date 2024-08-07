@@ -9,7 +9,7 @@ const Profile = ({ IfAdmin }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [passwords, setPasswords] = useState({
         oldPassword: '',
-        newPassword: '',
+        newPassword: null,
         confirmPassword: '',
     });
     const [success, setSuccess] = useState('');
@@ -17,7 +17,7 @@ const Profile = ({ IfAdmin }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('/admin/current-user')
+        axios.get('/admin/2/profile')
             .then(response => {
                 setCurrentUser(response.data);
             })
@@ -55,14 +55,14 @@ const Profile = ({ IfAdmin }) => {
             email: e.target.email.value,
         };
 
-        axios.post('/admin/profile', updatedProfile)
+        axios.post('/api/admin/edit/profile', updatedProfile)
             .then(response => {
-                setSuccess('Profile updated successfully');
+                setSuccess(response);
                 setCurrentUser(updatedProfile);
             })
             .catch(error => {
                 console.error('Error updating profile:', error);
-                setError('Error updating profile');
+                setError(error);
             });
     };
 

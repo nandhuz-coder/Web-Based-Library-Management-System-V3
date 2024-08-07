@@ -52,16 +52,9 @@ router.get(
 
 //admin -> profile
 router.get(
-  "/admin/profile",
+  "/admin/2/profile",
   middleware.isAdmin,
   adminController.getAdminProfile
-);
-
-//admin -> update profile
-router.post(
-  "/admin/profile",
-  middleware.isAdmin,
-  adminController.postUpdateAdminProfile
 );
 
 //admin -> update password

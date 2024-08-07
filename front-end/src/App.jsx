@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Footer from './partials/Footer/Footer';
 import Landing from './landing/Landing';
-import AdminLogin from './admin/AdminLogin/AdminLogin';
+import AdminLogin from './Auth/AdminLogin/AdminLogin';
 import AdminIndex from './admin/admin-main/index';
 import BooksPage from './book/books';
 import BooksDetails from './book/book-details';

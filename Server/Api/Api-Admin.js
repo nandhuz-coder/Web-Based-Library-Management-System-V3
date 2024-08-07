@@ -455,4 +455,18 @@ router.post("/api/admin/users/activities/:id", async (req, res, next) => {
   }
 });
 
+// admin -> update profile
+router.get("/api/admin/edit/profile", async (req, res, next) => {
+  try {
+    const user_id = req.user._id;
+    const update_info = req.body.admin;
+
+    await User.findByIdAndUpdate(user_id, update_info);
+    res.json({ success: "Successfully edited admin." });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: "error editing admin." });
+  }
+});
+
 module.exports = router;

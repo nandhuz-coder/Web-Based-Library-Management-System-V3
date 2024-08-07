@@ -191,25 +191,8 @@ exports.getUserAllActivities = async (req, res, next) => {
 };
 
 // admin -> get profile
-exports.getAdminProfile = async (req, res, next) => {
-  await res.render("admin/profile", {
-    global: await global(),
-  });
-};
-
-// admin -> update profile
-exports.postUpdateAdminProfile = async (req, res, next) => {
-  try {
-    const user_id = req.user._id;
-    const update_info = req.body.admin;
-
-    await User.findByIdAndUpdate(user_id, update_info);
-
-    res.redirect("/admin/profile");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
+exports.getAdminProfile = async (req, res) => {
+  await res.json({ username: req.user.username, email: req.user.email });
 };
 
 // admin -> update password
