@@ -97,9 +97,9 @@ const AdminNavbar = () => {
                                     <i className="fa fa-user"></i> Welcome {currentUser.username}
                                 </a>
                                 <div className="dropdown-menu">
-                                    <a href="/admin/profile" className="dropdown-item" id="profile-down">
+                                    <Link to={`/admin/1/profile`} title="profile" className="dropdown-item">
                                         <i className="fa fa-user-circle"></i> Profile
-                                    </a>
+                                    </Link>
                                     <form action="/auth/admin-logout" method="post">
                                         <button type="submit" className="dropdown-item">
                                             <i className="fa fa-user-times"></i> Logout
