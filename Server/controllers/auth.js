@@ -22,27 +22,21 @@ exports.postAdminSignUp = async (req, res, next) => {
         isAdmin: true,
       });
 
-      const user = await User.register(newAdmin, req.body.password);
-
+      await User.register(newAdmin, req.body.password);
       await passport.authenticate("local")(req, res, () => {
-        req.flash(
-          "success",
-          `Hello, ${user.username}! Welcome to Admin Dashboard`
-        );
         res.json({ success: "Admin registration successful" });
       });
     } else {
-      req.flash("error", "Secret code does not match!");
-      res.status(401).json({ error: "Secret code does not match!" });
+      res.json({ error: "Secret code does not match!" });
     }
   } catch (err) {
     console.error(err);
     if (err.name === "UserExistsError") {
-      req.flash("error", "Username or email already exists.");
+      req.json({ error: "Username or email already exists." });
     } else {
-      req.flash("error", "Failed to register admin. Please try again later.");
+      req.json({ error: "Failed to register admin. Please try again later." });
     }
-    res.status(500).json({ error: "Failed to register admin" });
+    res.json({ error: "Failed to register admin" });
   }
 };
 

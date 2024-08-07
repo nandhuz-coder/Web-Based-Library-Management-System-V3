@@ -1,12 +1,23 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Footer from './partials/Footer/Footer';
+
+//Landing
 import Landing from './landing/Landing';
+
+//Footer
+import Footer from './partials/Footer/Footer';
+
+//Auth
 import AdminLogin from './Auth/AdminLogin/AdminLogin';
-import AdminIndex from './admin/admin-main/index';
+import AdminSignUp from './Auth/AdminSignup/AdminSignup';
+
+//Books
 import BooksPage from './book/books';
 import BooksDetails from './book/book-details';
+
+//Admin
+import AdminIndex from './admin/admin-main/index';
 import BookInventory from './admin/admin-BookInventory/book-inventory';
 import EditBook from './admin/Admin-BookUpdate/Bookupdate';
 import UsersPage from './admin/Admin-users-list/users';
@@ -85,6 +96,7 @@ function App() {
           <Route path="/admin/users/activities/:userId" element={<UserActivities IfAdmin={IfAdmin} />} />
           <Route path="/admin/users/profile/:user_id" element={<UserProfile IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/profile" element={<Profile IfAdmin={IfAdmin} />} />
+          <Route path='/auth/admin-signup' element={<AdminSignUp />} />
         </Routes>
       </BrowserRouter>
       <Footer />

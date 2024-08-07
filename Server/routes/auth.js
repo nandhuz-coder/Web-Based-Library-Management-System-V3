@@ -34,12 +34,6 @@ router.post("/auth/admin-login", function (req, res, next) {
   }
 });
 
-// admin sign up handler
-router.get(
-  "/auth/admin-signup",
-  middleware.ifUser,
-  authController.getAdminSignUp
-);
 
 router.post(
   "/auth/admin-signup",
