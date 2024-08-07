@@ -74,7 +74,7 @@ const StockOut = ({ IfAdmin }) => {
     return (
         <>
             <IfAdmin />
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <Alert success={success} error={error} dismissAlert={dismissAlert} />
                 <div>

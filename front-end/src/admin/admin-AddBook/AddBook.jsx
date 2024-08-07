@@ -42,7 +42,7 @@ const AddBook = ({ IfAdmin }) => {
     return (
         <>
             <IfAdmin />
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading />}>
                 <AdminNAvbar />
                 <header id="main-header" className="py-2 bg-primary text-white">
                     <div className="container">

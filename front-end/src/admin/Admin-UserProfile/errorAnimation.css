@@ -1,0 +1,40 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes searching {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.error-section {
+  animation: fadeIn 1s ease-in;
+}
+
+.search-icon {
+  font-size: 50px;
+  animation: searching 2s infinite;
+}
+
+.error-text {
+  font-size: 32px;
+  color: #d9534f;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.error-description {
+  font-size: 18px;
+  color: #5a5a5a;
+  margin-top: 10px;
+}

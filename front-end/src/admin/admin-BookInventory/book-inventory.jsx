@@ -121,7 +121,7 @@ const BookInventory = ({ IfAdmin }) => {
     return (
         <>
             <IfAdmin />
-            <React.Suspense fallback={Loading}>
+            <React.Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <div>
                     <header id="main-header" className="py-2 bg-primary text-white">

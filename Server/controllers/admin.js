@@ -1,6 +1,6 @@
 // importing dependencies
-const fs = require("fs");
-const path = require("path");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 // importing models
 const Book = require("../models/book");
@@ -144,27 +144,32 @@ exports.getUserList = async (req, res, next) => {
 };
 
 // admin -> show one user
-exports.getUserProfile = async (req, res, next) => {
+exports.getUserProfile = async (req, res) => {
   try {
     const user_id = req.params.user_id;
 
+    if (!ObjectId.isValid(user_id)) {
+      return res.json({ error: "Invalid ID format", NoRender: true });
+    }
+
     const user = await User.findById(user_id);
+    if (!user) return res.json({ error: "no user found", NoRender: true });
+
     const issues = await Issue.find({ "user_id.id": user_id });
     const comments = await Comment.find({ "author.id": user_id });
     const activities = await Activity.find({ "user_id.id": user_id }).sort(
       "-entryTime"
     );
 
-    await res.render("admin/user", {
+    await res.json({
       user: user,
       issues: issues,
       activities: activities,
       comments: comments,
-      global: await global(),
     });
   } catch (err) {
     console.log(err);
-    res.redirect("back");
+    res.json({ error: "unknown error" });
   }
 };
 

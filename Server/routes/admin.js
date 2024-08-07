@@ -38,7 +38,7 @@ router.get(
 
 //admin -> show one user
 router.get(
-  "/admin/users/profile/:user_id",
+  "/admin/1/users/profile/:user_id",
   middleware.isAdmin,
   adminController.getUserProfile
 );

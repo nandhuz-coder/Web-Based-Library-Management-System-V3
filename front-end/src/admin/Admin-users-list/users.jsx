@@ -122,7 +122,7 @@ const UsersPage = ({ IfAdmin }) => {
     return (
         <>
             <IfAdmin />
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <header id="main-header" className="py-2 bg-primary text-white">
                     <div className="container">

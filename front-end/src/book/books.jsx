@@ -60,7 +60,7 @@ const Navbar = ({ currentUser, logout }) => (
     </nav>
 );
 
-const SearchBar = ({ handleSubmit, error, success }) => (
+const SearchBar = ({ handleSubmit }) => (
     <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
         <div className="container">
             <form action="/books/all/all/1" method="POST" onSubmit={handleSubmit}>
@@ -293,7 +293,7 @@ const BooksPage = () => {
     return (
         <div>
             <Navbar currentUser={currentUser} logout={logout} />
-            <SearchBar handleSubmit={handleSubmit} error={error} success={success} />
+            <SearchBar handleSubmit={handleSubmit} />
             <Alert error={error} success={success} dismissAlert={dismissAlert} />
             <Books books={books} currentUser={currentUser} handleRequest={handleRequest} current={current} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}

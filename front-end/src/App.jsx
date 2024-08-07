@@ -15,6 +15,7 @@ import StockOut from './admin/admin-StockOut/stockout';
 import BookRequestInventory from './admin/admin-RequestBook/RequestBook';
 import BookReturn from './admin/admin-return/return';
 import UserActivities from './admin/Admin-Activities/Activities';
+import UserProfile from './admin/Admin-UserProfile/Userprofile';
 
 const IfUser = () => {
   const navigate = useNavigate();
@@ -81,6 +82,7 @@ function App() {
           <Route path="/admin/1/book/request" element={<BookRequestInventory IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/book/return" element={<BookReturn IfAdmin={IfAdmin} />} />
           <Route path="/admin/users/activities/:userId" element={<UserActivities IfAdmin={IfAdmin} />} />
+          <Route path="/admin/users/profile/:user_id" element={<UserProfile IfAdmin={IfAdmin} />} />
         </Routes>
       </BrowserRouter>
       <Footer />

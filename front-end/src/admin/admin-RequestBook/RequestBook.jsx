@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Alert from '../../partials/Header/alert/alert';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
+import Loading from '../../Loading/Loading';
 
 const BookRequestInventory = ({ IfAdmin }) => {
     const [books, setBooks] = useState([]);
@@ -80,7 +80,7 @@ const BookRequestInventory = ({ IfAdmin }) => {
     return (
         <>
             <IfAdmin />
-            <Suspense fallback={IfAdmin}>
+            <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <header id="main-header" className="py-2 bg-primary text-white">
                     <div className="container">
