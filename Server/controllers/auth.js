@@ -8,10 +8,6 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config();
 // importing models
 const User = require("../models/user");
 
-exports.getAdminSignUp = (req, res, next) => {
-  res.render("signup");
-};
-
 exports.postAdminSignUp = async (req, res, next) => {
   try {
     if (req.body.adminCode === process.env.ADMIN_SECRET) {
@@ -52,10 +48,6 @@ exports.getUserLogout = async (req, res, next) => {
   });
 };
 
-exports.getUserSignUp = (req, res, next) => {
-  res.render("user/userSignup");
-};
-
 exports.postUserSignUp = async (req, res, next) => {
   try {
     const newUser = new User({
@@ -70,15 +62,13 @@ exports.postUserSignUp = async (req, res, next) => {
 
     const user = await User.register(newUser, req.body.password);
     await passport.authenticate("local")(req, res, () => {
-      req.flash("success", "Hello, " + user.username + " Welcome");
-      res.redirect("/user/1");
+      res.json({ success: `Hello, ${user.username}  Welcome` });
     });
   } catch (err) {
     console.log(err);
-    req.flash(
-      "error",
-      "Given info matches someone registered as User. Please provide different info for registering as User"
-    );
-    return res.redirect("/auth/user-signup");
+    return res.json({
+      error:
+        "Given info matches someone registered as User. Please provide different info for registering as User",
+    });
   }
 };

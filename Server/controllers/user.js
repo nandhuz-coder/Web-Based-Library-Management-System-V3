@@ -19,7 +19,7 @@ const deleteImage = require("../utils/delete_image");
 const PER_PAGE = 5;
 
 //user -> dashboard
-exports.getUserDashboard = async (req, res, next) => {
+exports.getUserDashboard = async (req, res) => {
   var page = req.params.page || 1;
   const user_id = req.user._id;
 

@@ -27,9 +27,9 @@ const Navbar = () => {
       </button>
       <div className="collapse navbar-collapse">
         <ul className="navbar-nav mr-auto">
-          <li className="nav-item"> <Link className='btn btn-success' to={'/auth/admin-login'}>Admin Login</Link></li>
+          <li className="nav-item"><Link className='btn btn-success' to={'/auth/admin-login'}>Admin Login</Link></li>
           <li className="nav-item pl-2"><a href="/auth/user-login" className="btn btn-success">User Login</a></li>
-          <li className="nav-item pl-2"><a href="/auth/user-signup" className="btn btn-success">User Sign Up</a></li>
+          <li className="nav-item pl-2"><Link className='btn btn-success' to={'/auth/user-signup'}>User Sign Up</Link></li>
           <li className="nav-item pl-2"><a href="/books/all/all/1" className="btn btn-success">Browse Books</a></li>
         </ul>
         <form className="form-inline my-2 my-lg-0">

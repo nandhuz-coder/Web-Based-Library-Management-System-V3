@@ -34,7 +34,6 @@ router.post("/auth/admin-login", function (req, res, next) {
   }
 });
 
-
 router.post(
   "/auth/admin-signup",
   middleware.ifUser,
@@ -70,13 +69,7 @@ router.post("/auth/user-login", function (req, res, next) {
 //user -> user logout handler
 router.get("/auth/user-logout", authController.getUserLogout);
 
-//user sign up handler
-router.get(
-  "/auth/user-signUp",
-  middleware.ifUser,
-  authController.getUserSignUp
-);
-
+//usser -> user signup post
 router.post(
   "/auth/user-signup",
   middleware.ifUser,

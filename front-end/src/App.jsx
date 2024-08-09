@@ -11,6 +11,7 @@ import Footer from './partials/Footer/Footer';
 //Auth
 import AdminLogin from './Auth/AdminLogin/AdminLogin';
 import AdminSignUp from './Auth/AdminSignup/AdminSignup';
+import UserSignUp from './Auth/UserSignup/userSignup';
 
 //Books
 import BooksPage from './book/books';
@@ -83,6 +84,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing IfUser={IfUser} />} />
           <Route path="/auth/admin-login" element={<AdminLogin IfUser={IfUser} />} />
+          <Route path='/auth/user-signup' element={<UserSignUp IfUser={IfUser} />} />
           <Route path="/admin/*" element={<AdminIndex IfAdmin={IfAdmin} />} />
           <Route path="/books/*" element={<BooksPage />} />
           <Route path="/books/details/:bookid" element={<BooksDetails />} />
