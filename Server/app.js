@@ -18,6 +18,7 @@ const express = require("express"),
   authRoutes = require("./routes/auth"),
   ApiAdmin = require("./Api/Api-Admin"),
   ApiBooks = require("./Api/Api-Book"),
+  ApiUser = require("./Api/Api-user"),
   ApiMiddleware = require("./middleware/middleware");
 
 // const Seed = require("./dev/seed");
@@ -109,6 +110,7 @@ app.use(adminRoutes);
 app.use(authRoutes);
 app.use(ApiAdmin);
 app.use(ApiBooks);
+app.use(ApiUser);
 app.use(ApiMiddleware);
 
 // Serve React App
