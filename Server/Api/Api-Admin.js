@@ -209,18 +209,18 @@ router.get("/api/admin/book/request/accept/:id", async (req, res) => {
   const book = await Book.findById(request.book_info.id);
 
   if (user.violationFlag) {
-    return req.json({
+    return res.json({
       error:
         "user are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
     });
   }
 
   if (user.bookIssueInfo.length >= 5) {
-    return req.json({ warning: "You can't issue more than 5 books at a time" });
+    return res.json({ error: "You can't issue more than 5 books at a time" });
   }
 
   if (book.stock <= 0) {
-    return req.json({ warning: "Book is not in stock" });
+    return res.json({ error: "Book is not in stock" });
   }
 
   try {

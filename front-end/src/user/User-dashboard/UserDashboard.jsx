@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import UserNav from '../../partials/Header/User-nav/user-nav';
 import Alert from '../../partials/Header/alert/alert';
 import Loading from '../../Loading/Loading';
@@ -90,6 +90,161 @@ const UserDashboard = ({ IsUser }) => {
                         </td>
                     </tr>
                 );
+            } else if (activity.category === 'Decline') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            Admin has <span className="table-text">declined</span> request for your
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                    </tr>
+                );
+            } else if (activity.category === 'Comment') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You <span className="table-text">commented</span> on
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                        <td>
+                            <a href={`/books/details/${activity.info.id}`} className="btn btn-sm btn-secondary">
+                                <i className="fa fa-angle-double-right"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Update Profile') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You have recently <span className="table-text">updated your profile info</span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                        <td>
+                            <a href="/user/1/profile" className="btn btn-sm btn-success" role="button">
+                                Visit Profile
+                            </a>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Update Password') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You have recently <span className="table-text">updated your password</span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                        <td>
+                            <button className="btn btn-sm btn-success">
+                                Changed Successfully!
+                            </button>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Upload Photo') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You have recently <span className="table-text">updated your profile picture</span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                        <td>
+                            <button className="btn btn-sm btn-success">
+                                Changed Successfully!
+                            </button>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Update Comment') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You have <span className="table-text">updated your comment</span> on
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                        <td>
+                            <a href={`/books/details/${activity.info.id}`} className="btn btn-sm btn-secondary">
+                                <i className="fa fa-angle-double-right"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Delete Comment') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You have <span className="table-text">deleted your comment</span> on
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                        <td>
+                            <a href={`/books/details/${activity.info.id}`} className="btn btn-sm btn-secondary">
+                                <i className="fa fa-angle-double-right"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Return apply') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You are <span className="table-text">ready to return</span>
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>
+                            <p>Return: {new Date(activity.entryTime).toDateString()}</p>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Return decline') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            Admin has <span className="table-text">declined</span> the request to return
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>
+                            <p>Return: {new Date(activity.entryTime).toDateString()}</p>
+                        </td>
+                    </tr>
+                );
+            } else if (activity.category === 'Request') {
+                return (
+                    <tr key={activity._id}>
+                        <td>
+                            You have <span className="table-text">requested </span>
+                            <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
+                                {activity.info.title}
+                            </span>
+                        </td>
+                        <td>{activity.category}</td>
+                        <td>{new Date(activity.entryTime).toDateString()}</td>
+                    </tr>
+                );
             }
             return null;
         });
@@ -116,7 +271,7 @@ const UserDashboard = ({ IsUser }) => {
             }
         }
         return (
-            <nav className="pagination-container">
+            <nav className="pagination-container d-flex justify-content-center">
                 <ul className="pagination">
                     {current === 1 ? (
                         <li className="page-item disabled"><span className="page-link">First</span></li>
@@ -133,6 +288,7 @@ const UserDashboard = ({ IsUser }) => {
             </nav>
         );
     };
+
     if (render) return (
         <>
             < IsUser />
@@ -157,14 +313,10 @@ const UserDashboard = ({ IsUser }) => {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-4">
-                            <a href="/books/all/all/1" className="btn btn-primary btn-block">
-                                <i className="fa fa-plus"></i> Request Book
-                            </a>
+                            <Link to={'/books/'} className='btn btn-primary btn-block'><i className="fa fa-plus"></i> Request Book</Link>
                         </div>
                         <div className="col-md-4">
-                            <a href="/books/return-renew" className="btn btn-info btn-block">
-                                <i className="fa fa-retweet"></i> Renew/Return Book
-                            </a>
+                            <Link className="btn btn-info btn-block" to={`/books/return-renew`} ><i className="fa fa-retweet"></i> Renew/Return Book</Link>
                         </div>
                         <div className="col-md-4">
                             <a

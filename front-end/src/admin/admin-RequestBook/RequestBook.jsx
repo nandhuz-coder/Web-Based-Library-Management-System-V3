@@ -154,11 +154,11 @@ const BookRequestInventory = ({ IfAdmin }) => {
                                                     <td>{book.book_info.title}</td>
                                                     <td>{book.book_info.author}</td>
                                                     <td>{book.book_info.ISBN}</td>
-                                                    <td>{book.book_info.stock}</td>
+                                                    <td>{book.book_info.id.stock}</td>
                                                     <td>{book.user_id.username}</td>
                                                     <td>
                                                         <span>
-                                                            {book.book_info.stock !== '0' ? (
+                                                            {book.book_info.id.stock !== '0' ? (
                                                                 <button
                                                                     onClick={(e) => HandleAccept(e, book._id)}
                                                                     className="btn btn-success btn-sm"

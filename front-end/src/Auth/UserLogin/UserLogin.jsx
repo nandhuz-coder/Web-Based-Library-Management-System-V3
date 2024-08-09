@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Alert from '../../partials/Header/alert/alert';
 import Navbar from '../../partials/Header/nav/nav';
+import { useNavigate } from 'react-router-dom';
 
 const UserLogin = ({ IfUser }) => {
+    const navigate = useNavigate();
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [formData, setFormData] = useState({
@@ -20,7 +22,10 @@ const UserLogin = ({ IfUser }) => {
         e.preventDefault();
         try {
             const response = await axios.post('/auth/user-login', formData);
-            if (response.data.success) setSuccess(response.data.success);
+            if (response.data.success) {
+                setSuccess(response.data.success)
+                navigate('/user/dashboard/1');
+            }
             else setError(response.data.error);
         } catch (error) {
             console.error('There was an error logging in:', error);
