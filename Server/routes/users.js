@@ -6,13 +6,6 @@ const express = require("express"),
 // importing controller
 const userController = require("../controllers/user");
 
-// user -> dashboard
-router.get(
-  "/user/:page",
-  middleware.isLoggedIn,
-  userController.getUserDashboard
-);
-
 // user -> profile
 router.get(
   "/user/:page/profile",

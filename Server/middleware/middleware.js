@@ -4,7 +4,7 @@ const express = require("express"),
 router.get("/middleware/ifuser", async (req, res) => {
   if (req.isAuthenticated()) {
     if (req.user.isAdmin) return res.json({ redirect: "/admin" });
-    else return res.json({ redirect: "/user" });
+    else return res.json({ redirect: "/user/dashboard/1" });
   } else {
     return res.json(true);
   }

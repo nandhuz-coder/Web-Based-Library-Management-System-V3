@@ -3,17 +3,24 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const UserNav = () => {
-    const [currentUser, setUser] = useState()
-    const fetchUser = useEffect(() => {
-        axios.get('/api/global/user').then((res) => {
-            setUser(res.data.user);
-        })
-    }, [])
-    fetchUser()
+    const [currentUser, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await axios.get('/api/global/user');
+                setUser(response.data.user);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUser();
+    }, []);
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0">
             <div className="container">
-                <Link className="navbar-brand" to="/user/1">Home</Link>
+                <Link className="navbar-brand" to="/user/dashboard/1">Home</Link>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -29,7 +36,7 @@ const UserNav = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav">
                         <li className="nav-item px-2">
-                            <Link className="nav-link" to="/books/all/all/1">Browse Books</Link>
+                            <Link className="nav-link" to="/books/">Browse Books</Link>
                         </li>
                     </ul>
 

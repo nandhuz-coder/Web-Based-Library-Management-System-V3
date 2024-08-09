@@ -31,6 +31,10 @@ import UserActivities from './admin/Admin-Activities/Activities';
 import UserProfile from './admin/Admin-UserProfile/Userprofile';
 import Profile from './admin/Admin-profile/profile';
 
+//user
+import UserDashboard from './user/User-dashboard/UserDashboard';
+
+
 const IfUser = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -69,7 +73,7 @@ const IsUser = () => {
     axios.get('/middleware/isuser')
       .then(res => {
         if (!res.data.flag) {
-          navigate('/');
+          navigate('/auth/user-login');
         }
       }).catch(err => {
         console.log('Error checking user:', err);
@@ -101,6 +105,7 @@ function App() {
           <Route path="/admin/users/profile/:user_id" element={<UserProfile IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/profile" element={<Profile IfAdmin={IfAdmin} />} />
           <Route path='/auth/admin-signup' element={<AdminSignUp />} />
+          <Route path='/user/dashboard/:page' element={<UserDashboard IsUser={IsUser} />} />
         </Routes>
       </BrowserRouter>
       <Footer />
