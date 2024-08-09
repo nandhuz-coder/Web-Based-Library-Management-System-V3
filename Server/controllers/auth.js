@@ -36,10 +36,6 @@ exports.postAdminSignUp = async (req, res, next) => {
   }
 };
 
-exports.getUserLoginPage = (req, res, next) => {
-  res.render("user/userLogin");
-};
-
 exports.getUserLogout = async (req, res, next) => {
   req.logout(async function (err) {
     if (err) return next(err);

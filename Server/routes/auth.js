@@ -6,9 +6,7 @@ const express = require("express"),
 // Import index controller
 const authController = require("../controllers/auth");
 
-// Import models
-const User = require("../models/user");
-
+// Admin Login
 router.post("/auth/admin-login", function (req, res, next) {
   try {
     passport.authenticate("local", function (err, user, info) {
@@ -41,33 +39,25 @@ router.post(
 );
 
 //user login handler
-router.get(
-  "/auth/user-login",
-  middleware.ifUser,
-  authController.getUserLoginPage
-);
-
 router.post("/auth/user-login", function (req, res, next) {
-  passport.authenticate("local", function (err, user, info) {
+  passport.authenticate("local", function (err, user) {
     if (err) {
       return next(err);
     }
     if (!user) {
-      req.flash("error", "Please provide Valid Username and password");
-      return res.redirect("/auth/user-login");
+      res.json({ error: "Please provide Valid Username and password" });
     }
     req.logIn(user, function (err) {
       if (err) {
         return next(err);
       }
-      req.flash("success", "Hello, " + user.username + " Welcome");
-      res.redirect("/user/1");
+      res.json({ success: `Hello, ${user.username} Welcome` });
     });
   })(req, res, next);
 });
 
 //user -> user logout handler
-router.get("/auth/user-logout", authController.getUserLogout);
+router.get("/auth/1/user-logout", authController.getUserLogout);
 
 //usser -> user signup post
 router.post(
