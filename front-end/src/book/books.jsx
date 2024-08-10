@@ -8,7 +8,7 @@ let fetchBooks;
 const Navbar = ({ currentUser, logout }) => (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
         <div className="container">
-            <Link className="navbar-brand" to={!currentUser ? "/" : currentUser.isAdmin ? "/admin" : "/user/1"}>Home</Link>
+            <Link className="navbar-brand" to={!currentUser ? "/" : currentUser.isAdmin ? "/admin" : "/user/dashboard/1"}>Home</Link>
             <button
                 className="navbar-toggler"
                 type="button"
