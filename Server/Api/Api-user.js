@@ -1,3 +1,8 @@
+// importing dependencies
+const sharp = require("sharp");
+const uid = require("uid");
+const fs = require("fs");
+const deleteImage = require("../utils/delete_image");
 const express = require("express"),
   router = express.Router(),
   PER_PAGE = 12;
@@ -180,6 +185,51 @@ router.post("/user/books/return/:id", async (req, res, next) => {
   } catch (err) {
     console.log(err);
     res.json({ error: `unknown error` });
+  }
+});
+
+// upload image
+router.put("/api/user/changeimage", async (req, res) => {
+  try {
+    const user_id = req.user._id;
+    const user = await User.findById(user_id);
+
+    let imageUrl;
+    if (req.file) {
+      imageUrl = `${uid()}__${req.file.originalname}`;
+      let filename = `public/image/user-profile/${imageUrl}`;
+      let previousImagePath = `public/image/user-profile/${user.image}`;
+      if (!previousImagePath == "public/image/user-profile/profile.png") {
+        const imageExist = fs.existsSync(previousImagePath);
+        if (imageExist) {
+          deleteImage(previousImagePath);
+        }
+      }
+      await sharp(req.file.path).rotate().resize(500, 500).toFile(filename);
+      fs.unlink(req.file.path, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    } else {
+      imageUrl = "profile.png";
+    }
+
+    user.image = imageUrl;
+    await user.save();
+
+    const activity = new Activity({
+      category: "Upload Photo",
+      user_id: {
+        id: req.user._id,
+        username: user.username,
+      },
+    });
+    await activity.save();
+    res.json({ success: "successfully changed image" });
+  } catch (err) {
+    console.log(err);
+    res.redirect("back");
   }
 });
 

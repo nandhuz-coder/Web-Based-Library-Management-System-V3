@@ -83,52 +83,6 @@ exports.putUpdateUserProfile = async (req, res, next) => {
   }
 };
 
-// upload image
-exports.postUploadUserImage = async (req, res, next) => {
-  try {
-    const user_id = req.user._id;
-    const user = await User.findById(user_id);
-
-    let imageUrl;
-    if (req.file) {
-      imageUrl = `${uid()}__${req.file.originalname}`;
-      let filename = `public/image/user-profile/${imageUrl}`;
-      let previousImagePath = `public/image/user-profile/${user.image}`;
-
-      const imageExist = fs.existsSync(previousImagePath);
-      if (imageExist) {
-        deleteImage(previousImagePath);
-      }
-      await sharp(req.file.path).rotate().resize(500, 500).toFile(filename);
-
-      fs.unlink(req.file.path, (err) => {
-        if (err) {
-          console.log(err);
-        }
-      });
-    } else {
-      imageUrl = "profile.png";
-    }
-
-    user.image = imageUrl;
-    await user.save();
-
-    const activity = new Activity({
-      category: "Upload Photo",
-      user_id: {
-        id: req.user._id,
-        username: user.username,
-      },
-    });
-    await activity.save();
-
-    res.redirect("/user/1/profile");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
-  }
-};
-
 //user -> notification
 exports.getNotification = async (req, res, next) => {
   res.render("user/notification");

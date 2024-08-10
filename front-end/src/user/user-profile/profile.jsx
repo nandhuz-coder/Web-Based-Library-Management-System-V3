@@ -10,6 +10,8 @@ const UserProfile1 = ({ IsUser }) => {
     const [error, setError] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(false);
     const [Render, setRender] = useState(true);
+    const [change, setChange] = useState(false);
+
     useEffect(() => {
         axios.get('/user/2/profile')
             .then(response => {
@@ -18,8 +20,9 @@ const UserProfile1 = ({ IsUser }) => {
             .catch(error => {
                 console.error('Error fetching user data:', error);
                 setError('Failed to load user data.');
-            }).finally(() => setRender(false))
-    }, []);
+            })
+            .finally(() => setRender(false));
+    }, [change]);
 
     const dismissAlert = (type) => {
         if (type === 'error') {
@@ -32,6 +35,28 @@ const UserProfile1 = ({ IsUser }) => {
     const handlePasswordChange = (e) => {
         setPasswordMatch(e.target.value === document.getElementById('password').value);
     };
+
+    // ChangePhoto function in UserProfile1.js
+    const ChangePhoto = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        const photoInput = document.querySelector('input[name="photo"]');
+        formData.append('image', photoInput.files[0]);
+
+        axios.put('/api/user/changeimage', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(response => {
+                setSuccess('Profile photo updated successfully.');
+                setChange(!change);
+            })
+            .catch(error => {
+                setError('Failed to update profile photo.');
+            });
+    };
+
 
     if (!currentUser || Render) {
         return <Loading />
@@ -203,10 +228,31 @@ const UserProfile1 = ({ IsUser }) => {
                                     <label htmlFor="confirmPassword" className="form-control-label">Confirm Password</label>
                                     <input id="confirmPassword" type="password" name="confirmPassword" className="form-control" onKeyUp={handlePasswordChange} />
                                     <span id="message" style={{ color: passwordMatch ? 'green' : 'red' }}>
-                                        {passwordMatch ? 'Matched' : 'Not matched!'}
+                                        {passwordMatch ? 'Matched' : 'Not Matched'}
                                     </span>
                                 </div>
-                                <button id="button" className={`btn btn-primary btn-block ${passwordMatch ? '' : 'd-none'}`}>Submit</button>
+                                <input type="submit" value="Submit" className="btn btn-primary btn-block" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Change Photo Modal */}
+            <div className="modal fade" id="changePhotoModal">
+                <div className="modal-dialog modal-lg">
+                    <div className="modal-content">
+                        <div className="modal-header bg-warning text-white">
+                            <h5 className="modal-title">Change Photo</h5>
+                            <button className="close" data-dismiss="modal"><span>&times;</span></button>
+                        </div>
+                        <div className="modal-body">
+                            <form onSubmit={ChangePhoto} encType="multipart/form-data">
+                                <div className="form-group">
+                                    <label htmlFor="photo" className="form-control-label">Upload Image</label>
+                                    <input type="file" name="photo" className="form-control-file" />
+                                </div>
+                                <button className="btn btn-primary btn-block">Submit</button>
                             </form>
                         </div>
                     </div>
@@ -218,45 +264,32 @@ const UserProfile1 = ({ IsUser }) => {
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header bg-warning text-white">
-                            <h5 className="modal-title">Edit Profile</h5>
+                            <h5 className="modal-title">Update Profile</h5>
                             <button className="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <div className="modal-body">
                             <form action="/user/1/update-profile?_method=PUT" method="POST">
                                 <div className="form-group">
+                                    <label htmlFor="firstName" className="form-control-label">First Name</label>
+                                    <input type="text" name="firstName" className="form-control" />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="lastName" className="form-control-label">Last Name</label>
+                                    <input type="text" name="lastName" className="form-control" />
+                                </div>
+                                <div className="form-group">
                                     <label htmlFor="username" className="form-control-label">Username</label>
-                                    <input id="username" type="text" name="username" className="form-control" />
+                                    <input type="text" name="username" className="form-control" />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="email" className="form-control-label">Email</label>
-                                    <input id="email" type="email" name="email" className="form-control" />
+                                    <input type="email" name="email" className="form-control" />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="address" className="form-control-label">Address</label>
-                                    <textarea id="address" name="address" className="form-control" rows="5"></textarea>
+                                    <input type="text" name="address" className="form-control" />
                                 </div>
-                                <button className="btn btn-warning btn-block">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Change Photo Modal */}
-            <div className="modal fade" id="changePhotoModal">
-                <div className="modal-dialog modal-lg">
-                    <div className="modal-content">
-                        <div className="modal-header bg-primary text-white">
-                            <h5 className="modal-title">Change Profile Photo</h5>
-                            <button className="close" data-dismiss="modal"><span>&times;</span></button>
-                        </div>
-                        <div className="modal-body">
-                            <form action="/user/1/update-photo?_method=PUT" method="POST" encType="multipart/form-data">
-                                <div className="form-group">
-                                    <label htmlFor="photo" className="form-control-label">Upload Image</label>
-                                    <input type="file" name="photo" className="form-control-file" />
-                                </div>
-                                <button className="btn btn-primary btn-block">Submit</button>
+                                <input type="submit" value="Submit" className="btn btn-warning btn-block" />
                             </form>
                         </div>
                     </div>

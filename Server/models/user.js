@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    default: "",
+    default: "profile.png",
   },
 
   // Book Request information

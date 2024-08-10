@@ -13,13 +13,6 @@ router.get(
   userController.getUserProfile
 );
 
-//user -> upload image
-router.post(
-  "/user/1/image",
-  middleware.isLoggedIn,
-  userController.postUploadUserImage
-);
-
 //user -> update password
 router.put(
   "/user/1/update-password",
