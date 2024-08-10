@@ -3,6 +3,7 @@ import axios from 'axios';
 import Loading from '../../Loading/Loading';
 import UserNav from '../../partials/Header/User-nav/user-nav';
 import Alert from '../../partials/Header/alert/alert';
+
 const RenewReturn = ({ IsUser }) => {
     const [books, setBooks] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
@@ -18,7 +19,8 @@ const RenewReturn = ({ IsUser }) => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-            }).finally(() => setRender(false))
+                setError('Failed to fetch books. Please try again later.');
+            }).finally(() => setRender(false));
     };
 
     useEffect(() => {
@@ -35,7 +37,8 @@ const RenewReturn = ({ IsUser }) => {
             })
             .catch(error => {
                 console.error('Error renewing book:', error);
-            });
+                setError('Failed to renew the book. Please try again later.');
+            }).finally(() => setRender(false));
     };
 
     const handleReturn = (bookId) => {
@@ -48,7 +51,8 @@ const RenewReturn = ({ IsUser }) => {
             })
             .catch(error => {
                 console.error('Error returning book:', error);
-            });
+                setError('Failed to return the book. Please try again later.');
+            }).finally(() => setRender(false));
     };
 
     const dismissAlert = (type) => {
@@ -59,11 +63,11 @@ const RenewReturn = ({ IsUser }) => {
         }
     };
 
-    <IsUser />
+    if (render) return <Loading />;
 
-    if (render) return (<Loading />);
     return (
         <>
+            <IsUser />
             <UserNav />
             <header id="main-header" className="py-2 bg-info text-white">
                 <div className="container">

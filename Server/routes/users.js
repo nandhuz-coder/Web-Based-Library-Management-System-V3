@@ -8,7 +8,7 @@ const userController = require("../controllers/user");
 
 // user -> profile
 router.get(
-  "/user/:page/profile",
+  "/user/2/profile",
   middleware.isLoggedIn,
   userController.getUserProfile
 );

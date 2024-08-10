@@ -34,7 +34,7 @@ import Profile from './admin/Admin-profile/profile';
 //user
 import UserDashboard from './user/User-dashboard/UserDashboard';
 import RenewReturn from './user/User-Return-Renew/Return-Renew';
-
+import UserProfile1 from './user/user-profile/profile';
 
 const IfUser = () => {
   const navigate = useNavigate();
@@ -108,6 +108,7 @@ function App() {
           <Route path='/auth/admin-signup' element={<AdminSignUp />} />
           <Route path='/user/dashboard/:page' element={<UserDashboard IsUser={IsUser} />} />
           <Route path='/books/return-renew' element={<RenewReturn IsUser={IsUser} />} />
+          <Route path='/user/1/profile' element={<UserProfile1 IsUser={IsUser} />} />
         </Routes>
       </BrowserRouter>
       <Footer />

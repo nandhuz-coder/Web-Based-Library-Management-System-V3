@@ -20,7 +20,7 @@ const PER_PAGE = 5;
 
 // user -> profile
 exports.getUserProfile = (req, res, next) => {
-  res.render("user/profile");
+  res.json({ currentuser: req.user });
 };
 
 // user -> update/change password
@@ -44,11 +44,10 @@ exports.putUpdatePassword = async (req, res, next) => {
     });
     await activity.save();
 
-    req.flash(
-      "success",
-      "Your password is recently updated. Please log in again to confirm"
-    );
-    res.redirect("/auth/user-login");
+    res.json({
+      success:
+        "Your password is recently updated. Please log in again to confirm",
+    });
   } catch (err) {
     console.log(err);
     return res.redirect("back");
