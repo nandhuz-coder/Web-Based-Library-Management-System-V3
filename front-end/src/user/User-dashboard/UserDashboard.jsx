@@ -31,7 +31,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">issued</span>
+                            You have <span className="table-text"> issued </span>
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -47,14 +47,14 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">returned</span>
+                            You have <span className="table-text"> returned </span>
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
                         </td>
                         <td>{activity.category}</td>
                         <td>
-                            <p>Return Date: {new Date(activity.time.returnDate).toLocaleDateString(undefined, dateOptions)}</p>
+                            <p>Return Date: {new Date(activity.entryTime).toLocaleDateString(undefined, dateOptions)}</p>
                         </td>
                     </tr>
                 );
@@ -62,7 +62,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">paid a fine</span>
+                            You have <span className="table-text"> paid a fine </span>
                             for <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -78,7 +78,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">renewed</span>
+                            You have <span className="table-text"> renewed </span>
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -94,7 +94,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            Admin has <span className="table-text">declined</span> request for your
+                            Admin has <span className="table-text"> declined </span> request for your
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -107,7 +107,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You <span className="table-text">commented</span> on
+                            You <span className="table-text"> commented </span> on
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -125,7 +125,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have recently <span className="table-text">updated your profile info</span>
+                            You have recently <span className="table-text"> updated your profile info </span>
                         </td>
                         <td>{activity.category}</td>
                         <td>{new Date(activity.entryTime).toDateString()}</td>
@@ -140,7 +140,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have recently <span className="table-text">updated your password</span>
+                            You have recently <span className="table-text"> updated your password </span>
                         </td>
                         <td>{activity.category}</td>
                         <td>{new Date(activity.entryTime).toDateString()}</td>
@@ -155,7 +155,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have recently <span className="table-text">updated your profile picture</span>
+                            You have recently <span className="table-text"> updated your profile picture </span>
                         </td>
                         <td>{activity.category}</td>
                         <td>{new Date(activity.entryTime).toDateString()}</td>
@@ -170,7 +170,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">updated your comment</span> on
+                            You have <span className="table-text"> updated your comment </span> on
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -188,7 +188,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">deleted your comment</span> on
+                            You have <span className="table-text"> deleted your comment </span> on
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -206,7 +206,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You are <span className="table-text">ready to return</span>
+                            You are <span className="table-text"> ready to return </span>
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -221,7 +221,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            Admin has <span className="table-text">declined</span> the request to return
+                            Admin has <span className="table-text"> declined </span> the request to return 
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -236,7 +236,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            You have <span className="table-text">requested </span>
+                            You have <span className="table-text"> requested </span>
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -291,7 +291,7 @@ const UserDashboard = ({ IsUser }) => {
 
     if (render) return (
         <>
-            < IsUser />
+            <IsUser />
             <Loading />
         </>
     );

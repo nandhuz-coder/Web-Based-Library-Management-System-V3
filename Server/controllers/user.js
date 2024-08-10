@@ -136,124 +136,14 @@ exports.getNotification = async (req, res, next) => {
 };
 
 // user -> show return-renew page
-exports.getShowRenewReturn = async (req, res, next) => {
+exports.getShowRenewReturn = async (req, res) => {
   const user_id = req.user._id;
   try {
     const issue = await Issue.find({ "user_id.id": user_id });
-    res.render("user/return-renew", { user: issue });
+    res.json({ user: issue, currentUser: req.user });
   } catch (err) {
     console.log(err);
-    return res.redirect("back");
-  }
-};
-
-// user -> renew book working procedure
-/*
-    1. construct the search object
-    2. fetch issues based on search object
-    3. increament return date by 7 days set isRenewed = true
-    4. Log the activity
-    5. save all db alteration
-    6. redirect to /books/return-renew
-*/
-exports.postRenewBook = async (req, res, next) => {
-  try {
-    const searchObj = {
-      "user_id.id": req.user._id,
-      "book_info.id": req.params.book_id,
-    };
-    const issue = await Issue.findOne(searchObj);
-    // adding extra 7 days to that issue
-    let time = issue.book_info.returnDate.getTime();
-    issue.book_info.returnDate = time + 7 * 24 * 60 * 60 * 1000;
-    issue.book_info.isRenewed = true;
-
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: issue._id,
-        title: issue.book_info.title,
-      },
-      category: "Renew",
-      time: {
-        id: issue._id,
-        issueDate: issue.book_info.issueDate,
-        returnDate: issue.book_info.returnDate,
-      },
-      user_id: {
-        id: req.user._id,
-        username: req.user.username,
-      },
-    });
-
-    await activity.save();
-    await issue.save();
-
-    res.redirect("/books/return-renew");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
-
-// user -> return book working procedure
-/*
-    1. Find the position of the book to be returned from user.bookIssueInfo
-    2. Fetch the book from db and increament its stock by 1
-    3. Remove issue record from db
-    4. Pop bookIssueInfo from user by position
-    5. Log the activity
-    6. refirect to /books/return-renew
-*/
-exports.postReturnBook = async (req, res, next) => {
-  try {
-    // finding user & book.
-    const user = await User.findById(req.user._id);
-    const book = await Book.findById(req.params.id);
-    const issue = await Issue.findOne({
-      "book_info.id": req.params.id,
-      "user_id.id": req.user._id,
-    });
-    const Book_return = new Return({
-      user_id: {
-        id: req.user._id,
-        username: req.user.username,
-      },
-      book_info: {
-        id: book._id,
-        title: book.title,
-        author: book.author,
-        category: book.category,
-      },
-      issue_id: {
-        id: issue._id,
-      },
-    });
-
-    await user.bookReturnInfo.push(book._id);
-    issue.book_info.isReturn = true;
-    const activity = new Activity({
-      info: {
-        id: Book_return.book_info.id,
-        title: Book_return.book_info.title,
-      },
-      category: "Return apply",
-      user_id: {
-        id: req.user._id,
-        username: req.user.username,
-      },
-    });
-
-    await Book_return.save();
-    await user.save();
-    await issue.save();
-    await activity.save();
-
-    // redirecting
-    res.redirect("/books/return-renew");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
+    res.status(500).json({ error: "unknown error" });
   }
 };
 
@@ -425,78 +315,5 @@ exports.deleteUserAccount = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     res.redirect("back");
-  }
-};
-
-//user -> request a book
-exports.postRequestbook = async (req, res, next) => {
-  if (req.user.violationFlag) {
-    return res.json({
-      error:
-        "You are flagged for violating rules/delay on returning books/paying fines. Untill the flag is lifted, You can't issue any books",
-    });
-  }
-
-  if (req.user.bookIssueInfo.length >= 5) {
-    return res.json({ error: "You can't issue more than 5 books at a time" });
-  }
-
-  try {
-    const book = await Book.findById(req.params.book_id);
-    const user = await User.findById(req.params.user_id);
-
-    if (book.stock == 0) {
-      req.flash("warning", "No stock available at this moment.");
-      return res.redirect("back");
-    }
-
-    // registering request
-
-    const request = new Request({
-      book_info: {
-        id: book._id,
-        title: book.title,
-        author: book.author,
-        ISBN: book.ISBN,
-        category: book.category,
-      },
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    // putting request record on individual user document
-    user.bookRequestInfo.push(book._id);
-
-    // logging the activity
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Request",
-      time: {
-        id: Request._id,
-      },
-      user_id: {
-        id: user._id,
-        username: user.username,
-      },
-    });
-
-    // await ensure to synchronously save all database alteration
-    await request.save();
-    await user.save();
-    await book.save();
-    await activity.save();
-
-    // api alert
-    return await res.json({
-      success: `${book.title} is successfully requested.`,
-    });
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
   }
 };

@@ -41,33 +41,11 @@ router.get(
   userController.getNotification
 );
 
-//user -> request a book
-router.post(
-  "/books/:book_id/request/:user_id",
-  middleware.isLoggedIn,
-  userController.postRequestbook
-);
-
 //user -> show return-renew page
 router.get(
-  "/books/return-renew",
+  "/user/books/1/return-renew",
   middleware.isLoggedIn,
   userController.getShowRenewReturn
-);
-
-//user -> renew book
-router.post(
-  "/books/:book_id/renew",
-  middleware.isLoggedIn,
-  middleware.isLoggedIn,
-  userController.postRenewBook
-);
-
-// user -> return book
-router.post(
-  "/books/return/:id",
-  middleware.isLoggedIn,
-  userController.postReturnBook
 );
 
 //user -> create new comment

@@ -69,4 +69,118 @@ router.get("/api/user/:page", async (req, res) => {
   }
 });
 
+// user -> renew book working procedure
+/*
+    1. construct the search object
+    2. fetch issues based on search object
+    3. increament return date by 7 days set isRenewed = true
+    4. Log the activity
+    5. save all db alteration
+    6. redirect to /books/return-renew
+*/
+router.post("/user/books/:book_id/renew", async (req, res) => {
+  try {
+    const searchObj = {
+      "user_id.id": req.user._id,
+      "book_info.id": req.params.book_id,
+    };
+
+    const issue = await Issue.findOne(searchObj);
+
+    // adding extra 7 days to that issue
+    let time = issue.book_info.returnDate.getTime();
+    issue.book_info.returnDate = time + 7 * 24 * 60 * 60 * 1000;
+    issue.book_info.isRenewed = true;
+
+    // logging the activity
+    const activity = new Activity({
+      info: {
+        id: issue._id,
+        title: issue.book_info.title,
+      },
+      category: "Renew",
+      time: {
+        id: issue._id,
+        issueDate: issue.book_info.issueDate,
+        returnDate: issue.book_info.returnDate,
+      },
+      user_id: {
+        id: req.user._id,
+        username: req.user.username,
+      },
+    });
+
+    await activity.save();
+    await issue.save();
+
+    res.json({ success: `${issue.book_info.title} has been renewed.` });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: `unknown error` });
+  }
+});
+
+// user -> return book working procedure
+/*
+    1. Find the position of the book to be returned from user.bookIssueInfo
+    2. Fetch the book from db and increament its stock by 1
+    3. Remove issue record from db
+    4. Pop bookIssueInfo from user by position
+    5. Log the activity
+    6. refirect to /books/return-renew
+*/
+router.post("/user/books/return/:id", async (req, res, next) => {
+  try {
+    // finding user & book.
+    const user = await User.findById(req.user._id);
+    const book = await Book.findById(req.params.id);
+    const issue = await Issue.findOne({
+      "book_info.id": req.params.id,
+      "user_id.id": req.user._id,
+    });
+    const Book_return = new Return({
+      user_id: {
+        id: req.user._id,
+        username: req.user.username,
+      },
+      book_info: {
+        id: book._id,
+        title: book.title,
+        author: book.author,
+        category: book.category,
+      },
+      issue_id: {
+        id: issue._id,
+      },
+    });
+
+    await user.bookReturnInfo.push(book._id);
+    issue.book_info.isReturn = true;
+    const activity = new Activity({
+      info: {
+        id: Book_return.book_info.id,
+        title: Book_return.book_info.title,
+      },
+      category: "Return apply",
+      user_id: {
+        id: req.user._id,
+        username: req.user.username,
+      },
+    });
+
+    await Book_return.save();
+    await user.save();
+    await issue.save();
+    await activity.save();
+
+    // redirecting
+    res.json({
+      success: `${issue.book_info.title} return appilication has been submitted.`,
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({ error: `unknown error` });
+  }
+});
+
 module.exports = router;

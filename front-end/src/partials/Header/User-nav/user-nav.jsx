@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const UserNav = () => {
     const [currentUser, setUser] = useState(null);
-
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -20,7 +19,7 @@ const UserNav = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0">
             <div className="container">
-                <Link className="navbar-brand" to="/user/dashboard/1">Home</Link>
+                <Link className="navbar-brand" to={"/user/dashboard/1"}>Home</Link>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -36,7 +35,7 @@ const UserNav = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav">
                         <li className="nav-item px-2">
-                            <Link className="nav-link" to="/books/">Browse Books</Link>
+                            <Link className="nav-link" to={"/books/"}>Browse Books</Link>
                         </li>
                     </ul>
 
@@ -53,18 +52,18 @@ const UserNav = () => {
                                     <i className="fa fa-user"></i> Welcome {currentUser.username}
                                 </a>
                                 <div className="dropdown-menu">
-                                    <Link to="/user/1/profile" className="dropdown-item">
+                                    <Link to={"/user/1/profile"} className="dropdown-item">
                                         <i className="fa fa-user-circle"></i> Profile
                                     </Link>
 
-                                    <Link to="/auth/user-logout" className="dropdown-item">
+                                    <Link to={"/auth/user-logout"} className="dropdown-item">
                                         <i className="fa fa-user-times"></i> Logout
                                     </Link>
                                 </div>
                             </li>
 
                             <li className="nav-item">
-                                <Link to="/user/1/notification" className="nav-link">
+                                <Link to={"/user/1/notification"} className="nav-link">
                                     <i className="fa fa-bell"></i>
                                     <span className="badge badge-danger badge-pill">2</span>
                                 </Link>

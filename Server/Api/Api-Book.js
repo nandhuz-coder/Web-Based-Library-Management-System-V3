@@ -69,7 +69,7 @@ router.post(
 
       if (req.user.bookIssueInfo.length >= 5) {
         return res.json({
-          error: "You can't issue more than 5 books at a time",
+          error: "You can't request more than 5 books at a time",
         });
       }
 
