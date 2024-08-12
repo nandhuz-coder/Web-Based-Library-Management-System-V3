@@ -30,6 +30,7 @@ import BookReturn from './admin/admin-return/return';
 import UserActivities from './admin/Admin-Activities/Activities';
 import UserProfile from './admin/Admin-UserProfile/Userprofile';
 import Profile from './admin/Admin-profile/profile';
+import MailConfigPage from './admin/Admin-mails/mails';
 
 //user
 import UserDashboard from './user/User-dashboard/UserDashboard';
@@ -109,6 +110,7 @@ function App() {
           <Route path='/user/dashboard/:page' element={<UserDashboard IsUser={IsUser} />} />
           <Route path='/books/return-renew' element={<RenewReturn IsUser={IsUser} />} />
           <Route path='/user/1/profile' element={<UserProfile1 IsUser={IsUser} />} />
+          <Route path='/admin/mail/config/1' element={<MailConfigPage IfAdmin={IfAdmin} />} />
         </Routes>
       </BrowserRouter>
       <Footer />

@@ -11,7 +11,8 @@ const Book = require("../models/book"),
   Issue = require("../models/issue"),
   Comment = require("../models/comment"),
   Request = require("../models/request"),
-  Return = require("../models/return");
+  Return = require("../models/return"),
+  MailConfig = require("../models/mail-config");
 
 // importing utilities
 const deleteImage = require("../utils/image/delete_image");
@@ -498,4 +499,14 @@ router.delete("/api/admin/delete-profile", async (req, res) => {
     return res.status(500).json(err);
   }
 });
+
+router.get("/api/admin/mails/config", async (req, res) => {
+  const mails = await MailConfig.find();
+  console.log(mails);
+  
+  res.json(mails);
+});
+
+
+
 module.exports = router;

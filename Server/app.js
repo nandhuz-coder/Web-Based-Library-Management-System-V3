@@ -23,6 +23,8 @@ const ApiUser = require("./Api/Api-user");
 const ApiMiddleware = require("./middleware/middleware");
 
 // Uncomment for initial seeding
+//const seedMail = require("./dev/seedMail");
+//seedMail(1);
 // const Seed = require("./dev/seed");
 // const seedUsers = require("./dev/seeduser");
 // Seed(555);
@@ -42,6 +44,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(compression());
 app.use(cookieParser());
+
+//cache collections
+const collection = {};
+collection.mails = new Map();
 
 // Database configuration
 mongoose
@@ -116,10 +122,9 @@ app.use((err, req, res, next) => {
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 100,
+  windowMs: 1 * 60 * 1000, //1 mint
+  max: 100, //100 req
 });
-
 app.use(limiter);
 
 // Routes

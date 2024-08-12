@@ -83,6 +83,11 @@ const AdminIndex = ({ IfAdmin }) => {
                         </div>
                     </div>
                 </section>
+                <section className='py-4'>
+                    <div className="container">
+                        <Link to={'/admin/mail/config/1'} className='btn btn-warning'>Mail config</Link>
+                    </div>
+                </section>
 
                 <section id="posts" className="my-5">
                     <div className="container">
@@ -187,7 +192,6 @@ const AdminIndex = ({ IfAdmin }) => {
 
                                 </div>
                             </div>
-
                             <div className="col-md-3 mt-5">
                                 <div className="card text-center bg-primary text-white p-3 mb-3">
                                     <div className="card-block">
