@@ -1,6 +1,5 @@
 const express = require("express"),
   router = express.Router(),
-  passport = require("passport"),
   middleware = require("../middleware");
 
 // importing controller

@@ -10,23 +10,10 @@ const Issue = require("../models/issue");
 const Comment = require("../models/comment");
 const Request = require("../models/request");
 const Return = require("../models/return");
-// importing utilities
-const deleteImage = require("../utils/delete_image");
 
 // GLOBAL_VARIABLES
 const PER_PAGE = 10;
 
-async function global() {
-  let value1 = (await Request.find().countDocuments()) || 0;
-  let value2 = (await Book.find().countDocuments({ stock: 0 })) || 0;
-  let value3 = (await Return.find().countDocuments()) || 0;
-  let value = {
-    reqbook: value1,
-    stock: value2,
-    return: value3,
-  };
-  return value;
-}
 // admin -> show dashboard working procedure
 /*
     1. Get user, book and activity count

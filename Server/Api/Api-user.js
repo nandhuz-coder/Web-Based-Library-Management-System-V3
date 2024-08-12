@@ -2,7 +2,7 @@
 const sharp = require("sharp");
 const uid = require("uid");
 const fs = require("fs");
-const deleteImage = require("../utils/delete_image");
+const deleteImage = require("../utils/image/delete_image");
 const express = require("express"),
   router = express.Router(),
   PER_PAGE = 12;

@@ -10,7 +10,6 @@ const express = require("express"),
   methodOverride = require("method-override"),
   localStrategy = require("passport-local"),
   MongoStore = require("connect-mongodb-session")(session),
-  flash = require("connect-flash"),
   bodyParser = require("body-parser"),
   User = require("./models/user"),
   userRoutes = require("./routes/users"),
@@ -21,10 +20,10 @@ const express = require("express"),
   ApiUser = require("./Api/Api-user"),
   ApiMiddleware = require("./middleware/middleware");
 
-// const Seed = require("./dev/seed");
+//uncomment below line for first time to seed database;
+//const Seed = require("./dev/seed");
 //const seedUsers = require("./dev/seeduser");
-// uncomment below line for first time to seed database;
-// Seed(555);
+//Seed(555);
 //seedUsers(223);
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
@@ -63,7 +62,6 @@ app.use(
   })
 );
 
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

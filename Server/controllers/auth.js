@@ -1,6 +1,5 @@
 // importing libraries
 const passport = require("passport"),
-  path = require("path"),
   bcrypt = require("bcrypt");
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();

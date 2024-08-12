@@ -14,7 +14,7 @@ const Book = require("../models/book"),
   Return = require("../models/return");
 
 // importing utilities
-const deleteImage = require("../utils/delete_image");
+const deleteImage = require("../utils/image/delete_image");
 
 // GLOBAL_VARIABLES
 const PER_PAGE = 10;
