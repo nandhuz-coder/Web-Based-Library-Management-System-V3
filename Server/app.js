@@ -66,8 +66,9 @@ app.use(
     resave: false,
     store: store,
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      secure: false,
+      httpOnly: true,
     },
   })
 );
