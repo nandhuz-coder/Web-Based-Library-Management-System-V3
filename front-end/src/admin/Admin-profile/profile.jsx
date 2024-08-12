@@ -68,7 +68,7 @@ const Profile = ({ IfAdmin }) => {
 
     const handleDeleteAccount = (e) => {
         e.preventDefault();
-        axios.delete('/admin/delete-profile')
+        axios.delete('/api/admin/delete-profile')
             .then(response => {
                 setSuccess('Account deleted successfully');
                 navigate('/auth/admin-login');

@@ -1,91 +1,13 @@
-// importing dependencies
-const sharp = require("sharp");
-const uid = require("uid");
-const fs = require("fs");
-
 // importing models
 const User = require("../models/user"),
   Activity = require("../models/activity"),
   Book = require("../models/book"),
   Issue = require("../models/issue"),
-  Comment = require("../models/comment"),
-  Request = require("../models/request"),
-  Return = require("../models/return");
-
-// importing utilities
-const deleteImage = require("../utils/delete_image");
-
-// GLOBAL_VARIABLES
-const PER_PAGE = 5;
+  Comment = require("../models/comment");
 
 // user -> profile
 exports.getUserProfile = (req, res, next) => {
   res.json({ currentuser: req.user });
-};
-
-// user -> update/change password
-exports.putUpdatePassword = async (req, res, next) => {
-  const username = req.user.username;
-  const oldPassword = req.body.oldPassword;
-  const newPassword = req.body.password;
-
-  try {
-    const user = await User.findByUsername(username);
-    await user.changePassword(oldPassword, newPassword);
-    await user.save();
-
-    // logging activity
-    const activity = new Activity({
-      category: "Update Password",
-      user_id: {
-        id: req.user._id,
-        username: req.user.username,
-      },
-    });
-    await activity.save();
-
-    res.json({
-      success:
-        "Your password is recently updated. Please log in again to confirm",
-    });
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
-
-// user -> update profile
-exports.putUpdateUserProfile = async (req, res, next) => {
-  try {
-    const userUpdateInfo = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      gender: req.body.gender,
-      address: req.body.address,
-    };
-    await User.findByIdAndUpdate(req.user._id, userUpdateInfo);
-
-    // logging activity
-    const activity = new Activity({
-      category: "Update Profile",
-      user_id: {
-        id: req.user._id,
-        username: req.user.username,
-      },
-    });
-    await activity.save();
-
-    res.redirect("back");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
-
-//user -> notification
-exports.getNotification = async (req, res, next) => {
-  res.render("user/notification");
 };
 
 // user -> show return-renew page
@@ -244,29 +166,5 @@ exports.deleteComment = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return res.redirect("back");
-  }
-};
-
-// user -> delete user account
-exports.deleteUserAccount = async (req, res, next) => {
-  try {
-    const user_id = req.user._id;
-
-    const user = await User.findById(user_id);
-    await user.remove();
-
-    let imagePath = `images/${user.image}`;
-    if (fs.existsSync(imagePath)) {
-      deleteImage(imagePath);
-    }
-
-    await Issue.deleteMany({ "user_id.id": user_id });
-    await Comment.deleteMany({ "author.id": user_id });
-    await Activity.deleteMany({ "user_id.id": user_id });
-
-    res.redirect("/");
-  } catch (err) {
-    console.log(err);
-    res.redirect("back");
   }
 };

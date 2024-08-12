@@ -233,4 +233,96 @@ router.put("/api/user/changeimage", async (req, res) => {
   }
 });
 
+// user -> delete/profile
+router.delete("/api/user/1/delete", async (req, res, next) => {
+  try {
+    const user_id = req.user._id;
+
+    const user = await User.findById(user_id);
+    await user.remove();
+
+    let imagePath = `public/image/user-profile/${user.image}`;
+
+    if (imagePath != "public/image/user-profile/profile.png") {
+      const imageExist = fs.existsSync(imagePath);
+      if (imageExist) {
+        deleteImage(imagePath);
+      }
+    }
+
+    await Issue.deleteMany({ "user_id.id": user_id });
+    await Comment.deleteMany({ "author.id": user_id });
+    await Activity.deleteMany({ "user_id.id": user_id });
+    await Return.deleteMany({ "user_id.id": user_id });
+    await Request.deleteMany({ "user_id.id": user_id });
+
+    res.json(true);
+  } catch (err) {
+    console.log(err);
+    res.redirect("back");
+  }
+});
+
+// user -> update/profile
+router.post("/api/user/profile/edit", async (req, res, next) => {
+  try {
+    const userUpdateInfo = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username,
+      email: req.body.email,
+      gender: req.body.gender,
+      address: req.body.address,
+    };
+    await User.findByIdAndUpdate(req.user._id, userUpdateInfo);
+
+    // logging activity
+    const activity = new Activity({
+      category: "Update Profile",
+      user_id: {
+        id: req.user._id,
+        username: req.user.username,
+      },
+    });
+    await activity.save();
+    res.json({
+      success: "profile data changed successfully.",
+      currentuser: req.user,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// user -> update/change password
+router.post("/api/user/1/changepassword", async (req, res) => {
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword;
+
+  try {
+    const user = await User.findById(req.user._id);
+    await user.changePassword(oldPassword, newPassword);
+    await user.save();
+
+    // logging activity
+    const activity = new Activity({
+      category: "Update Password",
+      user_id: {
+        id: req.user._id,
+        username: req.user.username,
+      },
+    });
+    await activity.save();
+
+    res.json({
+      success:
+        "Your password is recently updated. Please log in again to confirm",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
+
 module.exports = router;

@@ -56,21 +56,6 @@ exports.getDashboard = async (req, res) => {
   }
 };
 
-// admin -> delete profile working procedure
-/*
-    1. Find admin by user_id and remove
-    2. Redirect back to /
-*/
-exports.deleteAdminProfile = async (req, res, next) => {
-  try {
-    await User.findByIdAndRemove(req.user._id);
-    res.redirect("/");
-  } catch (err) {
-    console.log(err);
-    return res.redirect("back");
-  }
-};
-
 exports.getInventory = async (req, res) => {
   try {
     let page = req.params.page || 1;

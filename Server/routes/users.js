@@ -13,27 +13,6 @@ router.get(
   userController.getUserProfile
 );
 
-//user -> update password
-router.put(
-  "/user/1/update-password",
-  middleware.isLoggedIn,
-  userController.putUpdatePassword
-);
-
-//user -> update profile
-router.put(
-  "/user/1/update-profile",
-  middleware.isLoggedIn,
-  userController.putUpdateUserProfile
-);
-
-//user -> notification
-router.get(
-  "/user/1/notification",
-  middleware.isLoggedIn,
-  userController.getNotification
-);
-
 //user -> show return-renew page
 router.get(
   "/user/books/1/return-renew",
@@ -60,13 +39,6 @@ router.delete(
   "/books/details/:book_id/:comment_id",
   middleware.isLoggedIn,
   userController.deleteComment
-);
-
-// user -> delete user account
-router.delete(
-  "/user/1/delete-profile",
-  middleware.isLoggedIn,
-  userController.deleteUserAccount
 );
 
 module.exports = router;

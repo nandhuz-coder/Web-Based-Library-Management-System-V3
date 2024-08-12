@@ -9,13 +9,6 @@ const adminController = require("../controllers/admin");
 //admin -> dashboard
 router.get("/admin/:page", middleware.isAdmin, adminController.getDashboard);
 
-//admin -> delete profile
-router.delete(
-  "/admin/delete-profile",
-  middleware.isAdmin,
-  adminController.deleteAdminProfile
-);
-
 router.get(
   "/admin/bookInventory/:filter/:value/:page",
   middleware.isAdmin,

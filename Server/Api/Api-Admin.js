@@ -484,4 +484,18 @@ router.post("/admin/update-password", async (req, res) => {
   }
 });
 
+// admin -> delete profile working procedure
+/*
+    1. Find admin by user_id and remove
+    2. Redirect back to /
+*/
+router.delete("/api/admin/delete-profile", async (req, res) => {
+  try {
+    await User.findByIdAndRemove(req.user._id);
+    res.json(true);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
 module.exports = router;
