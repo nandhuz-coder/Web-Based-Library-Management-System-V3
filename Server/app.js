@@ -1,43 +1,49 @@
-const express = require("express"),
-  app = express(),
-  mongoose = require("mongoose"),
-  session = require("express-session"),
-  cors = require("cors"),
-  passport = require("passport"),
-  multer = require("multer"),
-  uid = require("uid"),
-  path = require("path"),
-  methodOverride = require("method-override"),
-  localStrategy = require("passport-local"),
-  MongoStore = require("connect-mongodb-session")(session),
-  bodyParser = require("body-parser"),
-  User = require("./models/user"),
-  userRoutes = require("./routes/users"),
-  adminRoutes = require("./routes/admin"),
-  authRoutes = require("./routes/auth"),
-  ApiAdmin = require("./Api/Api-Admin"),
-  ApiBooks = require("./Api/Api-Book"),
-  ApiUser = require("./Api/Api-user"),
-  ApiMiddleware = require("./middleware/middleware");
+const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const methodOverride = require("method-override");
+const path = require("path");
+const MongoStore = require("connect-mongodb-session")(session);
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const compression = require("compression");
+const uid = require("uid");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const cookieParser = require("cookie-parser");
+const User = require("./models/user");
+const userRoutes = require("./routes/users");
+const adminRoutes = require("./routes/admin");
+const authRoutes = require("./routes/auth");
+const ApiAdmin = require("./Api/Api-Admin");
+const ApiBooks = require("./Api/Api-Book");
+const ApiUser = require("./Api/Api-user");
+const ApiMiddleware = require("./middleware/middleware");
 
-//uncomment below line for first time to seed database;
-//const Seed = require("./dev/seed");
-//const seedUsers = require("./dev/seeduser");
-//Seed(555);
-//seedUsers(223);
+// Uncomment for initial seeding
+// const Seed = require("./dev/seed");
+// const seedUsers = require("./dev/seeduser");
+// Seed(555);
+// seedUsers(223);
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
-// app config
+const app = express();
+
+// App configuration
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "../front-end/build")));
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(helmet());
+app.use(compression());
+app.use(cookieParser());
 
-// db config
+// Database configuration
 mongoose
   .connect(process.env.DB_URL, {
     dbName: process.env.DB_NAME,
@@ -45,8 +51,7 @@ mongoose
   .then(() => console.log("MongoDB is connected"))
   .catch((error) => console.log(error));
 
-// PASSPORT CONFIGURATION
-
+// Session configuration
 const store = new MongoStore({
   uri: process.env.DB_URL,
   collection: "sessions",
@@ -55,10 +60,15 @@ const store = new MongoStore({
 
 app.use(
   session({
+    name: "library",
     secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
     store: store,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: true,
+    },
   })
 );
 
@@ -97,10 +107,19 @@ app.use(
 app.use("/images", express.static(path.join(__dirname, "public/image")));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
 
 // Routes
 app.use(userRoutes);
