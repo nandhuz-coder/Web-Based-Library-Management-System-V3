@@ -1,6 +1,6 @@
-const sharp = require('sharp');
-const uuidv4 = require('uuid');
-const path = require('path');
+const sharp = require("sharp");
+const uuidv4 = require("uuid");
+const path = require("path");
 
 class Resize {
   constructor(folder) {
@@ -13,10 +13,10 @@ class Resize {
     sharp(buffer)
       .resize(200, 200, {
         fit: sharp.fit.inside,
-        withoutEnlargement: true
+        withoutEnlargement: true,
       })
       .toFile(filepath);
-    
+
     return filename;
   }
   static filename() {

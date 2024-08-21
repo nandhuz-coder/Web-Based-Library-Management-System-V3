@@ -1,5 +1,5 @@
 const Book = require("../models/book.js"),
-  faker = require("faker"),
+  faker = require("@faker-js/faker"),
   category = [
     "Science",
     "Biology",

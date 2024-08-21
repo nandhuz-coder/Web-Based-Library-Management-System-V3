@@ -1,5 +1,5 @@
 const User = require("../models/user.js");
-const faker = require("faker");
+const faker = require("@faker-js/faker");
 
 async function seedUsers(limit) {
   for (let i = 0; i < limit; i++) {

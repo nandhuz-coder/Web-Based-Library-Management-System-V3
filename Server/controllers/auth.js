@@ -1,6 +1,5 @@
 // importing libraries
-const passport = require("passport"),
-  bcrypt = require("bcrypt");
+const passport = require("passport");
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
@@ -13,7 +12,6 @@ exports.postAdminSignUp = async (req, res, next) => {
       const newAdmin = new User({
         username: req.body.username,
         email: req.body.email,
-        password: await bcrypt.hash(req.body.password, 10),
         isAdmin: true,
       });
 
@@ -31,7 +29,6 @@ exports.postAdminSignUp = async (req, res, next) => {
     } else {
       req.json({ error: "Failed to register admin. Please try again later." });
     }
-    res.json({ error: "Failed to register admin" });
   }
 };
 
@@ -52,7 +49,6 @@ exports.postUserSignUp = async (req, res, next) => {
       email: req.body.email,
       gender: req.body.gender,
       address: req.body.address,
-      password: await bcrypt.hash(req.body.password, 10),
     });
 
     const user = await User.register(newUser, req.body.password);

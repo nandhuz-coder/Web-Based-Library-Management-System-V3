@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const methodOverride = require("method-override");
 const path = require("path");
-const MongoStore = require("connect-mongodb-session")(session);
+const MongoStore = require("connect-mongo");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const compression = require("compression");
@@ -57,11 +57,13 @@ mongoose
   .then(() => console.log("MongoDB is connected"))
   .catch((error) => console.log(error));
 
-// Session configuration
-const store = new MongoStore({
-  uri: process.env.DB_URL,
-  collection: "sessions",
-  databaseName: process.env.DB_NAME,
+// Session configuration with connect-mongo
+const store = MongoStore.create({
+  mongoUrl: process.env.DB_URL,
+  dbName: process.env.DB_NAME,
+  collectionName: "sessions",
+  autoRemove: "interval",
+  autoRemoveInterval: 7 * 24 * 60,
 });
 
 app.use(
@@ -122,7 +124,7 @@ app.use((err, req, res, next) => {
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, //1 mint
+  windowMs: 1 * 60 * 1000, //1 min
   max: 100, //100 req
 });
 app.use(limiter);

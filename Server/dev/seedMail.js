@@ -1,5 +1,5 @@
 const MailConfig = require("../models/mail-config");
-const faker = require("faker");
+const faker = require("@faker-js/faker");
 
 async function seedMailConfig(limit) {
   // Generate an array of toggles

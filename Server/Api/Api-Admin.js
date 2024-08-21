@@ -18,8 +18,6 @@ const Book = require("../models/book"),
 const deleteImage = require("../utils/image/delete_image");
 const EmailService = require("../utils/mail/configure-mails");
 
-// GLOBAL_VARIABLES
-const PER_PAGE = 10;
 
 async function global() {
   let value1 = (await Request.find().countDocuments()) || 0;
