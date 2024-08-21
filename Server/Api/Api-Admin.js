@@ -16,6 +16,7 @@ const Book = require("../models/book"),
 
 // importing utilities
 const deleteImage = require("../utils/image/delete_image");
+const EmailService = require("../utils/mail/configure-mails");
 
 // GLOBAL_VARIABLES
 const PER_PAGE = 10;
@@ -500,13 +501,65 @@ router.delete("/api/admin/delete-profile", async (req, res) => {
   }
 });
 
+// admin -> get mails config
 router.get("/api/admin/mails/config", async (req, res) => {
   const mails = await MailConfig.find();
-  console.log(mails);
-  
   res.json(mails);
 });
 
+// admin -> configure email
+router.post("/api/admin/mails/configure", async (req, res) => {
+  const { email, authKey } = req.body;
+  const emailService = new EmailService();
+  try {
+    emailService.initializeTransporter(email, authKey);
+    const result = await emailService.sendEmail(email);
+    res.json({ success: "Gmail added successfully", ...result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+// admin -> update mails config
+router.post("/api/admin/mails/update", async (req, res) => {
+  try {
+    const { toggles, selections } = req.body;
+    if (!toggles || !selections) {
+      return res.status(400).json({ error: "Invalid data provided." });
+    }
+    const config = await MailConfig.findOne();
+    if (!config) {
+      return res.status(404).json({ error: "No config found." });
+    }
+    config.updateToggles(toggles, selections);
+    await config.save();
+    res.status(200).json({ success: "Configuration successfully updated." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An unknown error occurred." });
+  }
+});
+
+// admin -> delete mails
+router.post("/api/admin/mails/delete", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: "Invalid email provided." });
+    }
+    const config = await MailConfig.findOne();
+    if (!config) {
+      return res.status(404).json({ error: "No config found." });
+    }
+    config.deleteMailAndUpdateToggles(email);
+    await config.save();
+    res
+      .status(200)
+      .json({ success: "Mail deleted and configuration updated." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An unknown error occurred." });
+  }
+});
 
 module.exports = router;
