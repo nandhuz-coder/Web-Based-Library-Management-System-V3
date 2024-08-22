@@ -5,9 +5,6 @@ import axios from 'axios';
 //Landing
 import Landing from './landing/Landing';
 
-//Footer
-import Footer from './partials/Footer/Footer';
-
 //Auth
 import AdminLogin from './Auth/AdminLogin/AdminLogin';
 import AdminSignUp from './Auth/AdminSignup/AdminSignup';
@@ -32,10 +29,13 @@ import UserProfile from './admin/Admin-UserProfile/Userprofile';
 import Profile from './admin/Admin-profile/profile';
 import MailConfigPage from './admin/Admin-mails/mails';
 
-//user
+//User
 import UserDashboard from './user/User-dashboard/UserDashboard';
 import RenewReturn from './user/User-Return-Renew/Return-Renew';
 import UserProfile1 from './user/user-profile/profile';
+
+//Footer
+import Footer from './partials/Footer/Footer';
 
 const IfUser = () => {
   const navigate = useNavigate();
@@ -112,8 +112,8 @@ function App() {
           <Route path='/user/1/profile' element={<UserProfile1 IsUser={IsUser} />} />
           <Route path='/admin/mail/config/1' element={<MailConfigPage IfAdmin={IfAdmin} />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   );
 }

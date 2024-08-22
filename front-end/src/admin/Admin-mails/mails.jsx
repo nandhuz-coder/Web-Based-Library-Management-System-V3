@@ -169,12 +169,11 @@ const MailConfigPage = ({ IfAdmin }) => {
 
     return (
         <>
-            <AdminNavbar />
+            < AdminNavbar />
             <div className="container mt-4">
                 <IfAdmin />
                 <Alert success={success} error={error} dismissAlert={dismissAlert} />
                 <h2 className="mb-4">Mail Configuration</h2>
-
                 <div className="card mb-4">
                     <div className="card-header bg-primary text-white">
                         <h4 className="mb-0">Authenticate Mails (G-mail)</h4>
@@ -287,7 +286,7 @@ const MailConfigPage = ({ IfAdmin }) => {
                                 </div>
                             </div>
                         ))}
-                        <button className="btn btn-primary d-block mx-auto" onClick={handleUpdate} disabled={loading}>
+                        <button className="btn btn-primary btn-lg d-block mx-auto" onClick={handleUpdate} disabled={loading}>
                             {loading ? (
                                 <div className="spinner-border spinner-border-sm text-light" role="status">
                                     <span className="sr-only">Loading...</span>
