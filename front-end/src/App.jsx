@@ -6,7 +6,6 @@ import axios from 'axios';
 import Landing from './landing/Landing';
 
 //Auth
-import AdminLogin from './Auth/AdminLogin/AdminLogin';
 import AdminSignUp from './Auth/AdminSignup/AdminSignup';
 import UserSignUp from './Auth/UserSignup/userSignup';
 import UserLogin from './Auth/UserLogin/UserLogin';
@@ -93,7 +92,6 @@ function App() {
           <Route path="/" element={<Landing IfUser={IfUser} />} />
 
           {/* Auth */}
-          <Route path="/auth/admin-login" element={<AdminLogin IfUser={IfUser} />} />
           <Route path='/auth/user-signup' element={<UserSignUp IfUser={IfUser} />} />
           <Route path='/auth/user-login' element={<UserLogin IfUser={IfUser} />} />
           <Route path='/auth/admin-signup' element={<AdminSignUp />} />

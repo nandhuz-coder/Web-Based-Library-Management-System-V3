@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import './Landing.css';
 import Navbar from '../partials/Header/nav/nav';
 import Loading from '../Loading/Loading';
@@ -6,82 +7,48 @@ import Loading from '../Loading/Loading';
 const Landing = ({ IfUser }) => {
     return (
         <>
-            <IfUser />
-            <Suspense fallback={<Loading />}>
-                <Navbar />
-                <div className="container-fluid" id="bannernbts">
-                    <div className="row">
-                        <div className="col-md-2" style={{ paddingTop: '15px' }}>
-                            <p className="para-blood">
-                                Libraries are synonymous with education and offer countless learning opportunities...
-                            </p>
-                        </div>
-                        <div className="col-md-8 text-center">
-                            <div className="banner">
-                                <div id="carouselExampleCaptions" className="carousel slide text-center" data-ride="carousel">
-                                    <ol className="carousel-indicators">
-                                        <li data-target="#carouselExampleCaptions" data-slide-to="0" className="active"></li>
-                                        <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-                                        <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
-                                        <li data-target="#carouselExampleCaptions" data-slide-to="3"></li>
-                                    </ol>
-                                    <div className="carousel-inner">
-                                        <div className="carousel-item active">
-                                            <img src="/image/other/1.jpg" className="d-block w-100" alt="Library Management System 1" />
-                                            <div className="carousel-caption d-none d-md-block">
-                                                <h5 className="heading">Library Management System</h5>
-                                                <p style={{ textAlign: 'justify' }}>
-                                                    Libraries are synonymous with education and offer countless learning opportunities...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="carousel-item">
-                                            <img src="/image/other/2.jpg" className="d-block w-100" alt="Library Management System 2" />
-                                            <div className="carousel-caption d-none d-md-block">
-                                                <h5 className="heading">Library Management System</h5>
-                                                <p>
-                                                    Libraries are synonymous with education and offer countless learning opportunities...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="carousel-item">
-                                            <img src="/image/other/3.jpg" className="d-block w-100" alt="Library Management System 3" />
-                                            <div className="carousel-caption d-none d-md-block">
-                                                <h5 className="heading">Library Management System</h5>
-                                                <p>
-                                                    Libraries are synonymous with education and offer countless learning opportunities...
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="carousel-item">
-                                            <img src="/image/other/4.jpg" className="d-block w-100" alt="Library Management System 4" />
-                                            <div className="carousel-caption d-none d-md-block">
-                                                <h5 className="heading">Library Management System</h5>
-                                                <p>
-                                                    Libraries are synonymous with education and offer countless learning opportunities...
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a className="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span className="sr-only">Previous</span>
-                                    </a>
-                                    <a className="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span className="sr-only">Next</span>
-                                    </a>
-                                </div>
+            <div className="body1">
+                <IfUser />
+                <Suspense fallback={<Loading />}>
+                    <Navbar />
+                    <div className="container-fluid" id="hero-section">
+                        <div className="row align-items-center">
+                            <div className="col-md-12 text-center text-md-leftc p-3">
+                                <h1 className="display-4">Welcome to Our Library</h1>
+                                <p className="lead">Explore a world of knowledge and culture.</p>
+                                <Link to="/books" className="btn btn-primary btn-lg">Browse Books</Link>
                             </div>
                         </div>
-                        <div className="col-md-2" style={{ paddingTop: '15px' }}>
-                            <p className="para-blood">
-                                As gateways to knowledge and culture, libraries play a fundamental role in society...
-                            </p>
+                    </div>
+                    <div className="container my-5" id="about-section">
+                        <div className="row">
+                            <div className="col-md-12 text-center">
+                                <h2>About Our Library</h2>
+                                <p className="lead">
+                                    As gateways to knowledge and culture, libraries play a fundamental role in society. The resources and services they offer create opportunities for learning, support literacy and education, and help shape the new ideas and perspectives that are central to a creative and innovative society.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </Suspense>
+                    <div className="container my-5" id="services-section">
+                        <div className="row">
+                            <div className="col-md-4 text-center">
+                                <h3>Our Services</h3>
+                                <p>We offer a wide range of services including book lending, digital resources, and community events.</p>
+                            </div>
+                            <div className="col-md-4 text-center">
+                                <h3>Testimonials</h3>
+                                <p>"The library has been a great resource for my studies. The staff are always helpful and the collection is extensive." - Jane Doe</p>
+                            </div>
+                            <div className="col-md-4 text-center">
+                                <h3>Join Us</h3>
+                                <p>Become a member today and start exploring the vast resources available at our library.</p>
+                                <Link to="/auth/user-signup" className="btn btn-secondary btn-lg">Sign Up</Link>
+                            </div>
+                        </div>
+                    </div>
+                </Suspense>
+            </div>
         </>
     );
 }
