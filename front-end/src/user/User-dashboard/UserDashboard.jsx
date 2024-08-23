@@ -316,7 +316,7 @@ const UserDashboard = ({ IsUser }) => {
                             <Link to={'/books/'} className='btn btn-primary btn-block'><i className="fa fa-plus"></i> Request Book</Link>
                         </div>
                         <div className="col-md-4">
-                            <Link className="btn btn-info btn-block" to={`/books/return-renew`} ><i className="fa fa-retweet"></i> Renew/Return Book</Link>
+                            <Link className="btn btn-info btn-block" to={`/user/books/return-renew`} ><i className="fa fa-retweet"></i> Renew/Return Book</Link>
                         </div>
                         <div className="col-md-4">
                             <a

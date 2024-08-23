@@ -89,15 +89,17 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          {/* Landing */}
           <Route path="/" element={<Landing IfUser={IfUser} />} />
+
+          {/* Auth */}
           <Route path="/auth/admin-login" element={<AdminLogin IfUser={IfUser} />} />
           <Route path='/auth/user-signup' element={<UserSignUp IfUser={IfUser} />} />
           <Route path='/auth/user-login' element={<UserLogin IfUser={IfUser} />} />
+          <Route path='/auth/admin-signup' element={<AdminSignUp />} />
+
+          {/* Admin */}
           <Route path="/admin/*" element={<AdminIndex IfAdmin={IfAdmin} />} />
-          <Route path="/books/*" element={<BooksPage />} />
-          <Route path="/books/details/:bookid" element={<BooksDetails />} />
-          <Route path="/admin/books/bookInventory/*" element={<BookInventory IfAdmin={IfAdmin} />} />
-          <Route path="/admin/books/1/update/:bookid" element={<EditBook IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/users/" element={<UsersPage IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/addbook" element={<AddBook IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/book/stockout" element={<StockOut IfAdmin={IfAdmin} />} />
@@ -106,14 +108,22 @@ function App() {
           <Route path="/admin/users/activities/:userId" element={<UserActivities IfAdmin={IfAdmin} />} />
           <Route path="/admin/users/profile/:user_id" element={<UserProfile IfAdmin={IfAdmin} />} />
           <Route path="/admin/1/profile" element={<Profile IfAdmin={IfAdmin} />} />
-          <Route path='/auth/admin-signup' element={<AdminSignUp />} />
+          <Route path="/admin/books/bookInventory/*" element={<BookInventory IfAdmin={IfAdmin} />} />
+          <Route path="/admin/books/1/update/:bookid" element={<EditBook IfAdmin={IfAdmin} />} />
+          <Route path="/admin/mail/config/1" element={<MailConfigPage IfAdmin={IfAdmin} />} />
+
+          {/* User */}
           <Route path='/user/dashboard/:page' element={<UserDashboard IsUser={IsUser} />} />
-          <Route path='/books/return-renew' element={<RenewReturn IsUser={IsUser} />} />
+          <Route path='/user/books/return-renew' element={<RenewReturn IsUser={IsUser} />} />
           <Route path='/user/1/profile' element={<UserProfile1 IsUser={IsUser} />} />
-          <Route path='/admin/mail/config/1' element={<MailConfigPage IfAdmin={IfAdmin} />} />
+
+          {/* Books */}
+          <Route path="/books/*" element={<BooksPage />} />
+          <Route path="/books/details/:bookid" element={<BooksDetails />} />
+
         </Routes>
         <Footer />
-      </BrowserRouter>
+      </BrowserRouter >
     </>
   );
 }
