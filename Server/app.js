@@ -1,3 +1,4 @@
+//*Import packages
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -7,16 +8,18 @@ const methodOverride = require("method-override");
 const path = require("path");
 const MongoStore = require("connect-mongo");
 const bodyParser = require("body-parser");
-const multer = require("multer");
 const compression = require("compression");
-const uid = require("uid");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const cookieParser = require("cookie-parser");
 const User = require("./models/user");
+
+//*Import Routes
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
 const authRoutes = require("./routes/auth");
+
+//*Api Routes
 const ApiAdmin = require("./Api/Api-Admin");
 const ApiBooks = require("./Api/Api-Book");
 const ApiUser = require("./Api/Api-user");
@@ -45,10 +48,6 @@ app.use(helmet());
 app.use(compression());
 app.use(cookieParser());
 
-//cache collections
-const collection = {};
-collection.mails = new Map();
-
 // Database configuration
 mongoose
   .connect(process.env.DB_URL, {
@@ -63,7 +62,7 @@ const store = MongoStore.create({
   dbName: process.env.DB_NAME,
   collectionName: "sessions",
   autoRemove: "interval",
-  autoRemoveInterval: 7 * 24 * 60,
+  autoRemoveInterval: 7 * 24 * 60, // 7 days
 });
 
 app.use(
@@ -88,36 +87,11 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Configure image file storage
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/image/user-profile");
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${uid()}-${file.originalname}`);
-  },
-});
-
-const filefilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-app.use(
-  multer({ storage: fileStorage, fileFilter: filefilter }).single("image")
-);
 app.use("/images", express.static(path.join(__dirname, "public/image")));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
@@ -129,17 +103,17 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Routes
-app.use(userRoutes);
-app.use(adminRoutes);
-app.use(authRoutes);
+//* Routes
+app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
+app.use("/auth", authRoutes);
 app.use(ApiAdmin);
 app.use(ApiBooks);
 app.use(ApiUser);
-app.use(ApiMiddleware);
+app.use("/middleware", ApiMiddleware);
 
 // Serve React App
-app.get("*", (req, res) => {
+app.get("*", (_req, res) => {
   res.sendFile(path.resolve(__dirname, "../front-end/build", "index.html"));
 });
 

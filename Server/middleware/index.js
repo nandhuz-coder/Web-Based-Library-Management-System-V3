@@ -1,42 +1,39 @@
 const multer = require("multer");
-
+const storage = multer.memoryStorage();
 const middleware = {};
 
 middleware.isLoggedIn = function (req, res, next) {
-  return next();
   if (req.isAuthenticated()) {
     return next();
   }
-  req.flash("error", "You need to be logged in first");
-  res.redirect("/");
+  return req.flash({ error: "You need to be logged in first", redirect: "/" });
 };
 
 middleware.isAdmin = function (req, res, next) {
-  return next();
   if (req.isAuthenticated() && req.user.isAdmin) {
     return next();
   }
-  res.json("error", "Sorry, this route is allowed for admin only");
+  return res.json({ error: "Sorry, this route is allowed for admin only" });
 };
 
-middleware.upload = multer({
-  limits: {
-    fileSize: 4 * 1024 * 1024,
-  },
-});
-
-middleware.ifUser = (req, res, next) => {
-  return next();
-  if (req.isAuthenticated()) {
-    if (req.user.isAdmin) {
-      return res.json({
-        redirect: "/admin",
-      });
-    }
-    return res.json({ redirect: "/user" });
+// Configure multer to use memory storage
+const fileFilter = (_req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
   } else {
-    return res.json({ redirect: "/" });
+    cb(null, false);
   }
 };
 
+middleware.upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 4 * 1024 * 1024, // 4 MB
+  },
+});
 module.exports = middleware;
