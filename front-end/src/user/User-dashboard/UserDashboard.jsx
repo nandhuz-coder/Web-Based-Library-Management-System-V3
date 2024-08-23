@@ -221,7 +221,7 @@ const UserDashboard = ({ IsUser }) => {
                 return (
                     <tr key={activity._id}>
                         <td>
-                            Admin has <span className="table-text"> declined </span> the request to return 
+                            Admin has <span className="table-text"> declined </span> the request to return
                             <span style={{ color: 'rgb(41, 0, 135)' }} className="table-text">
                                 {activity.info.title}
                             </span>
@@ -345,8 +345,8 @@ const UserDashboard = ({ IsUser }) => {
                                     <p>Name: {user.firstName} {user.lastName}</p>
                                     <p>Email: {user.email}</p>
                                     <p>Books Issued: {user.bookIssueInfo.length}</p>
-                                    <p>Due: ₹{user.fines}</p>
-                                    <p>Flagged: {user.violationFlag}</p>
+                                    <p>Due: ₹{user.fines || 0}</p>
+                                    <p>Flagged: {user.violationFlag.toString()}</p>
                                     <p>Joined: {new Date(user.joined).toLocaleDateString()}</p>
                                 </div>
                             </div>

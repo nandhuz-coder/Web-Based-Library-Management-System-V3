@@ -45,15 +45,18 @@ const UserProfile = ({ IfAdmin }) => {
 
     if (!render) {
         return (
-            <div className="container d-flex justify-content-center align-items-center min-vh-100">
-                <div className="error-section text-center">
-                    <div className="search-icon">🔍</div>
-                    <div className="error-text">User Not Available</div>
-                    <div className="error-description">
-                        We searched the entire database but couldn't find the user you were looking for.
+            <>
+                <AdminNav />
+                <div className="container d-flex justify-content-center align-items-center min-vh-100">
+                    <div className="error-section text-center">
+                        <div className="search-icon">🔍</div>
+                        <div className="error-text">User Not Available</div>
+                        <div className="error-description">
+                            We searched the entire database but couldn't find the user you were looking for.
+                        </div>
                     </div>
                 </div>
-            </div>
+            </>
         );
     };
 
@@ -91,7 +94,7 @@ const UserProfile = ({ IfAdmin }) => {
                                 </li>
                                 <li className="list-group-item">Address: {user.address}</li>
                                 <li className="list-group-item text-danger font-weight-bold">
-                                    Violation Flag: {user.violationFlag}
+                                    Violation Flag: {user?.violationFlag ? user.violationFlag.toString() : "False"}
                                 </li>
                                 <li className="list-group-item">Due Fines: ${user.fines}</li>
                             </ul>

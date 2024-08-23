@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import UserNav from '../../partials/Header/User-nav/user-nav';
 import Alert from '../../partials/Header/alert/alert';
@@ -139,11 +140,10 @@ const UserProfile1 = ({ IsUser }) => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-3 mr-auto">
-                                <a href="/user/1" className="btn btn-light btn-block">
+                                <Link to={'/user/dashboard/1'} className="btn btn-light btn-block">
                                     <i className="fa fa-arrow-left"></i> Back To Dashboard
-                                </a>
+                                </Link>
                             </div>
-
                             <div className="col-md-3">
                                 <button
                                     className="btn btn-primary btn-block"
@@ -201,7 +201,7 @@ const UserProfile1 = ({ IsUser }) => {
                                     alt="User"
                                 />
                                 <button
-                                    className="text-muted ml-5"
+                                    className="text-muted ml-5 btn btn-warning"
                                     data-toggle="modal"
                                     data-target="#changePhotoModal"
                                 >
@@ -221,7 +221,7 @@ const UserProfile1 = ({ IsUser }) => {
                                     <li className="list-group-item text-danger font-weight-bold">
                                         Violation Flag: {currentUser.violationFlag.toString()}
                                     </li>
-                                    <li className="list-group-item">Due Fines: ${currentUser.fines}</li>
+                                    <li className="list-group-item">Due Fines: ${currentUser.fines || 0}</li>
                                 </ul>
                             </div>
 
