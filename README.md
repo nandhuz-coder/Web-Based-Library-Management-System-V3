@@ -87,3 +87,9 @@ This module can be accessed by anyone
 
 - Show all books
 - Find books on filtered search
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="My Awesome Project" />
+<meta property="og:description" content="A brief description of My Awesome Project." />
+<meta property="og:url" content="https://github.com/nandhuz-coder/Web-Based-Library-Management-System-V3" />
+<meta property="og:image" content="https://mugshotbot.com/m/zjqQ3NIo">
+<meta property="twitter:card" content="summary_large_image">
