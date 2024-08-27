@@ -169,11 +169,21 @@ const MailConfigPage = ({ IfAdmin }) => {
 
     return (
         <>
+            <IfAdmin />
             < AdminNavbar />
+            <header id="main-header" className="py-2 bg-primary text-white">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <h1>
+                                <i className="fa fa-envelope"></i> Mail Configuration
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </header>
             <div className="container mt-4">
-                <IfAdmin />
                 <Alert success={success} error={error} dismissAlert={dismissAlert} />
-                <h2 className="mb-4">Mail Configuration</h2>
                 <div className="card mb-4">
                     <div className="card-header bg-primary text-white">
                         <h4 className="mb-0">Authenticate Mails (G-mail)</h4>

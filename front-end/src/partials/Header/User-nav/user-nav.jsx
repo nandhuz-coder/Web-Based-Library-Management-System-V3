@@ -48,6 +48,14 @@ const UserNav = () => {
                         </li>
                     </ul>
 
+                    {currentUser && currentUser.isAdmin && (
+                        <ul className="navbar-nav">
+                            <li className="nav-item px-2">
+                                <Link className="nav-link" to={"/admin"}>Admin Dashboard</Link>
+                            </li>
+                        </ul>
+                    )}
+
                     {currentUser && (
                         <ul className="navbar-nav ml-auto">
                             {currentUser.violationFlag && (

@@ -65,7 +65,7 @@ const AdminIndex = ({ IfAdmin }) => {
                     <div className="container">
                         <div className="row justify-content-end">
                             <div className="col-md-6">
-                                <form action="/admin" method="POST">
+                                <form onSubmit={(e) => null}>
                                     <div className="input-group">
                                         <input
                                             name="searchUser"

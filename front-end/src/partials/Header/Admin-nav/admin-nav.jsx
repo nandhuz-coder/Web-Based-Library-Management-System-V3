@@ -114,11 +114,15 @@ const AdminNavbar = () => {
                                     <a href="" onClick={(e) => getUserLogout(e)} className="dropdown-item">
                                         <i className="fa fa-user-times"></i> Logout
                                     </a>
+                                    <Link className="dropdown-item" to={"/user/dashboard/1"}>
+                                        <i className="fa fa-gear"></i> User Dashboard</Link>
                                 </div>
                             </li>
                         ) : (
                             <li className="nav-item">
-                                <a href="/login" className="nav-link">Login</a>
+                                <a href="/login" className="nav-link">
+                                    <i className="fa fa-gear"></i> ProfileLogin
+                                </a>
                             </li>
                         )}
                     </ul>

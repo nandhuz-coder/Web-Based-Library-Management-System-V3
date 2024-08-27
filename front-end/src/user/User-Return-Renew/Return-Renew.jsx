@@ -28,7 +28,7 @@ const RenewReturn = ({ IsUser }) => {
     }, []);
 
     const handleRenew = (bookId) => {
-        axios.post(`/user/books/${bookId}/renew`)
+        axios.post(`/api/user/books/${bookId}/renew`)
             .then(response => {
                 console.log('Book renewed successfully:', response.data);
                 fetchBook();
@@ -42,7 +42,7 @@ const RenewReturn = ({ IsUser }) => {
     };
 
     const handleReturn = (bookId) => {
-        axios.post(`/user/books/return/${bookId}`)
+        axios.post(`/api/user/books/return/${bookId}`)
             .then(response => {
                 console.log('Book returned successfully:', response.data);
                 fetchBook();

@@ -126,7 +126,7 @@ const BookInventory = ({ IfAdmin }) => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-6">
-                                <h1><i className="fa fa-pencil"></i> Book Inventory</h1>
+                                <h1><i className="fa fa-book"></i> Book Inventory</h1>
                             </div>
                         </div>
                     </div>

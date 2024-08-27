@@ -90,7 +90,7 @@ const BookReturn = ({ IfAdmin }) => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-6">
-                                <h1><i className="fa fa-pencil"></i> Stock out Book Inventory</h1>
+                                <h1><i className="fa fa-book"></i> Stock out Book Inventory</h1>
                             </div>
                         </div>
                     </div>

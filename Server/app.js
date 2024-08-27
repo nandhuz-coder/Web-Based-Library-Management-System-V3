@@ -24,6 +24,7 @@ const ApiAdmin = require("./Api/Api-Admin");
 const ApiBooks = require("./Api/Api-Book");
 const ApiUser = require("./Api/Api-user");
 const ApiMiddleware = require("./middleware/middleware");
+const suggestion = require("./Api/suggestions");
 
 // Uncomment for initial seeding
 //const seedMail = require("./dev/seedMail");
@@ -107,10 +108,11 @@ app.use(limiter);
 app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
-app.use(ApiAdmin);
-app.use(ApiBooks);
-app.use(ApiUser);
+app.use("/api/admin", ApiAdmin);
+app.use("/api/books", ApiBooks);
+app.use("/api/user", ApiUser);
 app.use("/middleware", ApiMiddleware);
+app.use(suggestion);
 
 // Serve React App
 app.get("*", (_req, res) => {

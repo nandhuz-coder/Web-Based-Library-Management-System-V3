@@ -1,77 +1,110 @@
-const express = require("express"),
-  router = express.Router(),
-  middleware = require("../middleware");
+const express = require("express");
+const router = express.Router();
+const middleware = require("../middleware");
 
 // importing controller
-const adminController = require("../controllers/admin");
+const adminController = require("../controllers/Routes/admin");
 
-//admin -> dashboard
-router.get("/admin/:page", middleware.isAdmin, adminController.getDashboard);
+/**
+ * @route GET /:page
+ * @description Admin dashboard
+ * @access Private (Admin only)
+ */
+router.get("/:page", middleware.isAdmin, adminController.getDashboard);
 
+/**
+ * @route GET /bookInventory/:filter/:value/:page
+ * @description Get book inventory based on filter and value
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/bookInventory/:filter/:value/:page",
+  "/bookInventory/:filter/:value/:page",
   middleware.isAdmin,
   adminController.getInventory
 );
 
-//admin -> show books to be updated
+/**
+ * @route GET /book/update/:book_id
+ * @description Show books to be updated
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/book/update/:book_id",
+  "/book/update/:book_id",
   middleware.isAdmin,
   adminController.getUpdateBook
 );
 
-//admin -> users list
-router.get(
-  "/admin/users/:page",
-  middleware.isAdmin,
-  adminController.getUserList
-);
+/**
+ * @route GET /users/:page
+ * @description Get users list
+ * @access Private (Admin only)
+ */
+router.get("/users/:page", middleware.isAdmin, adminController.getUserList);
 
-//admin -> show one user
+/**
+ * @route GET /1/users/profile/:user_id
+ * @description Show one user profile
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/1/users/profile/:user_id",
+  "/1/users/profile/:user_id",
   middleware.isAdmin,
   adminController.getUserProfile
 );
 
-//admin -> show all activities of one user
+/**
+ * @route GET /1/users/activities/:user_id
+ * @description Show all activities of one user
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/1/users/activities/:user_id",
+  "/1/users/activities/:user_id",
   middleware.isAdmin,
   adminController.getUserAllActivities
 );
 
-//admin -> profile
-router.get(
-  "/admin/2/profile",
-  middleware.isAdmin,
-  adminController.getAdminProfile
-);
+/**
+ * @route GET /2/profile
+ * @description Admin profile
+ * @access Private (Admin only)
+ */
+router.get("/2/profile", middleware.isAdmin, adminController.getAdminProfile);
 
-//admin book inventory
+/**
+ * @route GET /bookstock/out/:filter/:value/:page
+ * @description Get admin book stock
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/bookstock/out/:filter/:value/:page",
+  "/bookstock/out/:filter/:value/:page",
   middleware.isAdmin,
   adminController.getAdminStock
 );
 
-//admin stock out book inventory
+/**
+ * @route GET /bookRequest/:filter/:value/:page
+ * @description Get admin book requests
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/bookRequest/:filter/:value/:page",
+  "/bookRequest/:filter/:value/:page",
   middleware.isAdmin,
   adminController.getAdminRequest
 );
 
-// admin -> show return request books
+/**
+ * @route GET /bookReturn/:filter/:value/:page
+ * @description Show return request books
+ * @access Private (Admin only)
+ */
 router.get(
-  "/admin/bookReturn/:filter/:value/:page",
+  "/bookReturn/:filter/:value/:page",
   middleware.isAdmin,
   adminController.getAdminReturn
 );
 
 // //admin -> notifications
-// router.get("/admin/notifications", (req, res) => {
+// router.get("/notifications", (req, res) => {
 //    res.send("This route is still under development. will be added in next version");
 // });
 

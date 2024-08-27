@@ -47,7 +47,7 @@ const AddBook = ({ IfAdmin }) => {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-6">
-                                <h1><i className="fa fa-gear"></i> Dashboard</h1>
+                                <h1><i className="fa fa-book"></i> Add Book</h1>
                             </div>
                         </div>
                     </div>

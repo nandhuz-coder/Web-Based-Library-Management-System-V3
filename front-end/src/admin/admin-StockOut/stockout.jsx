@@ -79,18 +79,17 @@ const StockOut = ({ IfAdmin }) => {
             <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
-                <Alert success={success} error={error} dismissAlert={dismissAlert} />
-                <div>
-                    <header id="main-header" className="py-2 bg-primary text-white">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <h1><i className="fa fa-pencil"></i> Stock out Book Inventory</h1>
-                                </div>
+                <header id="main-header" className="py-2 bg-primary text-white">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <h1><i className="fa fa-book"></i> Stock out</h1>
                             </div>
                         </div>
-                    </header>
-
+                    </div>
+                </header>
+                <Alert success={success} error={error} dismissAlert={dismissAlert} />
+                <div>
                     {/* ACTIONS */}
                     <section id="search_bar" className="my-3 py-4 bg-light">
                         <div className="container">
