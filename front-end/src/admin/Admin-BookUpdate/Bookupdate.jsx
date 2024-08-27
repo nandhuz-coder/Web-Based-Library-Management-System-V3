@@ -4,7 +4,7 @@ import axios from 'axios';
 import Alert from '../../partials/Header/alert/alert';
 import Loading from '../../Loading/Loading';
 
-const EditBook = ({ IfAdmin }) => {
+const EditBook = () => {
     const [loading, setLoading] = useState(true);
     const { bookid } = useParams();
     const navigate = useNavigate();
@@ -59,7 +59,6 @@ const EditBook = ({ IfAdmin }) => {
 
     return (
         <>
-            {IfAdmin && <IfAdmin />}
             <Suspense fallback={<Loading />}>
                 <div className="container my-4">
                     <div className="row justify-content-center">

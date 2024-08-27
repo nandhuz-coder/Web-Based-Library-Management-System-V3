@@ -7,8 +7,8 @@ import Loading from '../Loading/Loading';
 const Landing = ({ IfUser }) => {
     return (
         <>
+            <IfUser />
             <div className="body1">
-                <IfUser />
                 <Suspense fallback={<Loading />}>
                     <Navbar />
                     <div className="container-fluid" id="hero-section">

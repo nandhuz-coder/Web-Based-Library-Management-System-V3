@@ -6,7 +6,7 @@ import Alert from '../../partials/Header/alert/alert';
 import Loading from '../../Loading/Loading';
 import { useNavigate } from 'react-router-dom';
 
-const UserProfile1 = ({ IsUser }) => {
+const UserProfile1 = () => {
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(null);
     const [success, setSuccess] = useState('');
@@ -116,7 +116,6 @@ const UserProfile1 = ({ IsUser }) => {
 
     return (
         <>
-            <IsUser />
             <Suspense fallback={<Loading />}>
                 <UserNav />
                 <style>

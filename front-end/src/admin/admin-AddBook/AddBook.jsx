@@ -1,10 +1,11 @@
 import React, { useState, Suspense } from 'react';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import Alert from '../../partials/Header/alert/alert';
-import Loading from '../../Loading/Loading'
-import AdminNAvbar from '../../partials/Header/Admin-nav/admin-nav'
+import Loading from '../../Loading/Loading';
+import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import axios from 'axios';
-const AddBook = ({ IfAdmin }) => {
+
+const AddBook = () => {
     const [alerts, setAlerts] = useState({ error: '', success: '', warning: '' });
     const [book, setBook] = useState({
         title: '',
@@ -15,6 +16,7 @@ const AddBook = ({ IfAdmin }) => {
         description: ''
     });
     const navigate = useNavigate();
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setBook({ ...book, [name]: value });
@@ -23,14 +25,14 @@ const AddBook = ({ IfAdmin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            axios.post("/api/admin/add/book", { book }).then((res => {
+            axios.post("/api/admin/add/book", { book }).then((res) => {
                 console.log(res.data);
                 if (res.data.success) setAlerts({ ...alerts, success: res.data.success, error: '', warning: '' });
                 if (res.data.error) setAlerts({ ...alerts, success: '', error: res.data.error, warning: '' });
-            }))
+            });
             navigate('/admin/books/bookInventory/');
         } catch (error) {
-            setAlerts({ ...alerts, error: error, success: '', warning: '' });
+            setAlerts({ ...alerts, error: error.message, success: '', warning: '' });
             console.log(error);
         }
     };
@@ -38,11 +40,11 @@ const AddBook = ({ IfAdmin }) => {
     const dismissAlert = (type) => {
         setAlerts({ ...alerts, [type]: '' });
     };
+
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
-                <AdminNAvbar />
+                <AdminNavbar />
                 <header id="main-header" className="py-2 bg-primary text-white">
                     <div className="container">
                         <div className="row">

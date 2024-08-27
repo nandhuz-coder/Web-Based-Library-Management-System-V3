@@ -5,7 +5,7 @@ import Loading from '../../Loading/Loading';
 import Alert from '../../partials/Header/alert/alert';
 import AdminNav from '../../partials/Header/Admin-nav/admin-nav';
 
-const Profile = ({ IfAdmin }) => {
+const Profile = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [passwords, setPasswords] = useState({
         oldPassword: '',
@@ -95,7 +95,6 @@ const Profile = ({ IfAdmin }) => {
 
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNav />
                 <header id="main-header" className="py-2 bg-primary text-white">

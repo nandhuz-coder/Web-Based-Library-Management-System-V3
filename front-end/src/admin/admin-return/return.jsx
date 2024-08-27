@@ -4,7 +4,7 @@ import Loading from '../../Loading/Loading';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import Alert from '../../partials/Header/alert/alert';
 
-const BookReturn = ({ IfAdmin }) => {
+const BookReturn = () => {
     const [books, setBooks] = useState([]);
     const [filter, setFilter] = useState('');
     const [searchName, setSearchName] = useState('');
@@ -82,7 +82,6 @@ const BookReturn = ({ IfAdmin }) => {
 
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <Alert success={success} error={error} dismissAlert={dismissAlert} />

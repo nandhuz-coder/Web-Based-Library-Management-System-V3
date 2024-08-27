@@ -6,7 +6,7 @@ import AdminNav from '../../partials/Header/Admin-nav/admin-nav';
 import Loading from '../../Loading/Loading';
 import './errorAnimation.css';
 
-const UserProfile = ({ IfAdmin }) => {
+const UserProfile = () => {
     const { user_id } = useParams();
     const [user, setUser] = useState({});
     const [issues, setIssues] = useState([]);
@@ -62,7 +62,6 @@ const UserProfile = ({ IfAdmin }) => {
 
     return (
         <div>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNav />
                 <div className="container mt-5 pt-2">

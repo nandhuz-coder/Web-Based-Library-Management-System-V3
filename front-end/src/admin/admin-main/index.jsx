@@ -5,7 +5,7 @@ import './index.css';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import Loading from '../../Loading/Loading';
 
-const AdminIndex = ({ IfAdmin }) => {
+const AdminIndex = () => {
     const [activities, setActivities] = useState([]);
     const [pages, setPages] = useState(0);
     const [current, setCurrent] = useState(1);
@@ -46,7 +46,6 @@ const AdminIndex = ({ IfAdmin }) => {
     }, []);
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <header id="main-header" className="py-2 bg-primary text-white">

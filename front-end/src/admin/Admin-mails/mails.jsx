@@ -3,7 +3,7 @@ import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import Alert from '../../partials/Header/alert/alert';
 import axios from 'axios';
 
-const MailConfigPage = ({ IfAdmin }) => {
+const MailConfigPage = () => {
     const [mailConfigs, setMailConfigs] = useState([]);
     const [toggles, setToggles] = useState({
         requestBooks: false,
@@ -169,7 +169,6 @@ const MailConfigPage = ({ IfAdmin }) => {
 
     return (
         <>
-            <IfAdmin />
             < AdminNavbar />
             <header id="main-header" className="py-2 bg-primary text-white">
                 <div className="container">

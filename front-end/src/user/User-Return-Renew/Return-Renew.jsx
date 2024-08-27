@@ -4,7 +4,7 @@ import Loading from '../../Loading/Loading';
 import UserNav from '../../partials/Header/User-nav/user-nav';
 import Alert from '../../partials/Header/alert/alert';
 
-const RenewReturn = ({ IsUser }) => {
+const RenewReturn = () => {
     const [books, setBooks] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [render, setRender] = useState(true);
@@ -67,7 +67,6 @@ const RenewReturn = ({ IsUser }) => {
 
     return (
         <>
-            <IsUser />
             <UserNav />
             <header id="main-header" className="py-2 bg-info text-white">
                 <div className="container">

@@ -1,0 +1,2 @@
+@keyframes fadeIn{0%{opacity:0}to{opacity:1}}@keyframes searching{0%,to{transform:scale(1)}50%{transform:scale(1.1)}}.error-section{animation:fadeIn 1s ease-in}.search-icon{animation:searching 2s infinite;font-size:50px}.error-text{color:#d9534f;font-size:32px;font-weight:700;margin-top:20px}.error-description{color:#5a5a5a;font-size:18px;margin-top:10px}
+/*# sourceMappingURL=946.c081eda5.chunk.css.map*/

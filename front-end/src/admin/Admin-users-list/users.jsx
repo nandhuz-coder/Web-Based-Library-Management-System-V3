@@ -6,7 +6,7 @@ import Alert from '../../partials/Header/alert/alert';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav'
 import Loading from '../../Loading/Loading';
 
-const UsersPage = ({ IfAdmin }) => {
+const UsersPage = () => {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -124,7 +124,6 @@ const UsersPage = ({ IfAdmin }) => {
 
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <header id="main-header" className="py-2 bg-primary text-white">

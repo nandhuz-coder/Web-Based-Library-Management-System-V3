@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import Alert from '../../partials/Header/alert/alert';
 import { Link } from 'react-router-dom';
 
-const BookInventory = ({ IfAdmin }) => {
+const BookInventory = () => {
     const [books, setBooks] = useState([]);
     const [pages, setPages] = useState(0);
     const [current, setCurrent] = useState(1);
@@ -119,7 +119,6 @@ const BookInventory = ({ IfAdmin }) => {
     };
     return (
         <>
-            <IfAdmin />
             <AdminNavbar />
             <div>
                 <header id="main-header" className="py-2 bg-primary text-white">

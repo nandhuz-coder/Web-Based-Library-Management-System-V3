@@ -1,128 +1,121 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-//Landing
-import Landing from './landing/Landing';
+// Import components
+import Loading from './Loading/Loading';
 
-//Auth
-import AdminSignUp from './Auth/AdminSignup/AdminSignup';
-import UserSignUp from './Auth/UserSignup/userSignup';
-import UserLogin from './Auth/UserLogin/UserLogin';
-
-//Books
-import BooksPage from './book/books';
-import BooksDetails from './book/book-details';
-
-//Admin
-import AdminIndex from './admin/admin-main/index';
-import BookInventory from './admin/admin-BookInventory/book-inventory';
-import EditBook from './admin/Admin-BookUpdate/Bookupdate';
-import UsersPage from './admin/Admin-users-list/users';
-import AddBook from './admin/admin-AddBook/AddBook';
-import StockOut from './admin/admin-StockOut/stockout';
-import BookRequestInventory from './admin/admin-RequestBook/RequestBook';
-import BookReturn from './admin/admin-return/return';
-import UserActivities from './admin/Admin-Activities/Activities';
-import UserProfile from './admin/Admin-UserProfile/Userprofile';
-import Profile from './admin/Admin-profile/profile';
-import MailConfigPage from './admin/Admin-mails/mails';
-
-//User
-import UserDashboard from './user/User-dashboard/UserDashboard';
-import RenewReturn from './user/User-Return-Renew/Return-Renew';
-import UserProfile1 from './user/user-profile/profile';
-
-//Footer
-import Footer from './partials/Footer/Footer';
+// Lazy load components
+const Landing = lazy(() => import('./landing/Landing'));
+const AdminSignUp = lazy(() => import('./Auth/AdminSignup/AdminSignup'));
+const UserSignUp = lazy(() => import('./Auth/UserSignup/userSignup'));
+const UserLogin = lazy(() => import('./Auth/UserLogin/UserLogin'));
+const BooksPage = lazy(() => import('./book/books'));
+const BooksDetails = lazy(() => import('./book/book-details'));
+const AdminIndex = lazy(() => import('./admin/admin-main/index'));
+const BookInventory = lazy(() => import('./admin/admin-BookInventory/book-inventory'));
+const EditBook = lazy(() => import('./admin/Admin-BookUpdate/Bookupdate')); // Ensure this path is correct
+const UsersPage = lazy(() => import('./admin/Admin-users-list/users'));
+const AddBook = lazy(() => import('./admin/admin-AddBook/AddBook'));
+const StockOut = lazy(() => import('./admin/admin-StockOut/stockout'));
+const BookRequestInventory = lazy(() => import('./admin/admin-RequestBook/RequestBook'));
+const BookReturn = lazy(() => import('./admin/admin-return/return'));
+const UserActivities = lazy(() => import('./admin/Admin-Activities/Activities'));
+const UserProfile = lazy(() => import('./admin/Admin-UserProfile/Userprofile'));
+const Profile = lazy(() => import('./admin/Admin-profile/profile'));
+const MailConfigPage = lazy(() => import('./admin/Admin-mails/mails'));
+const UserDashboard = lazy(() => import('./user/User-dashboard/UserDashboard'));
+const RenewReturn = lazy(() => import('./user/User-Return-Renew/Return-Renew'));
+const UserProfile1 = lazy(() => import('./user/user-profile/profile'));
+const Footer = lazy(() => import('./partials/Footer/Footer'));
 
 const IfUser = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    axios.get('/middleware/ifuser')
+    axios.get('/middleware/ifUser')
+      .then((res) => {
+        if (res.data?.isUser) {
+          navigate('/user/dashboard/1');
+        } else if (res.data?.isAdmin) {
+          navigate('/admin/1/profile');
+        }
+      })
+      .catch((err) => {
+        console.error('Error checking user:', err);
+      });
+  }, []);
+}
+
+function App() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState(null);
+
+  useEffect(() => {
+    axios.get(`/middleware/checkUserType`)
       .then(res => {
-        if (res.data.redirect) {
-          navigate(res.data.redirect);
+        if (res.data.isAdmin) {
+          setUserType('admin');
+        } else if (res.data.isUser) {
+          setUserType('user');
+        } else {
+          setUserType(null);
         }
       })
       .catch(err => {
-        console.log('Error checking user:', err);
+        console.error('Error checking user type:', err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [navigate]);
 
-  return null;
-};
+  if (loading) return <Loading />;
 
-const IfAdmin = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    axios.get('/middleware/ifadmin')
-      .then(res => {
-        if (!res.data.flag) {
-          navigate('/');
-        }
-      }).catch(err => {
-        console.log('Error checking user:', err);
-      });
-  }, [navigate]);
-  return null;
-};
-
-const IsUser = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    axios.get('/middleware/isuser')
-      .then(res => {
-        if (!res.data.flag) {
-          navigate('/auth/user-login');
-        }
-      }).catch(err => {
-        console.log('Error checking user:', err);
-      });
-  }, [navigate]);
-  return null;
-};
-
-function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          {/* Landing */}
-          <Route path="/" element={<Landing IfUser={IfUser} />} />
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        {/* Landing */}
+        <Route path="/" element={<Landing IfUser={IfUser} />} />
 
-          {/* Auth */}
-          <Route path='/auth/user-signup' element={<UserSignUp IfUser={IfUser} />} />
-          <Route path='/auth/user-login' element={<UserLogin IfUser={IfUser} />} />
-          <Route path='/auth/admin-signup' element={<AdminSignUp />} />
+        {/* Auth */}
+        <Route path='/auth/user-signup' element={<UserSignUp IfUser={IfUser} />} />
+        <Route path='/auth/user-login' element={<UserLogin IfUser={IfUser} />} />
+        <Route path='/auth/admin-signup' element={<AdminSignUp />} />
 
-          {/* Admin */}
-          <Route path="/admin/*" element={<AdminIndex IfAdmin={IfAdmin} />} />
-          <Route path="/admin/1/users/" element={<UsersPage IfAdmin={IfAdmin} />} />
-          <Route path="/admin/1/addbook" element={<AddBook IfAdmin={IfAdmin} />} />
-          <Route path="/admin/1/book/stockout" element={<StockOut IfAdmin={IfAdmin} />} />
-          <Route path="/admin/1/book/request" element={<BookRequestInventory IfAdmin={IfAdmin} />} />
-          <Route path="/admin/1/book/return" element={<BookReturn IfAdmin={IfAdmin} />} />
-          <Route path="/admin/users/activities/:userId" element={<UserActivities IfAdmin={IfAdmin} />} />
-          <Route path="/admin/users/profile/:user_id" element={<UserProfile IfAdmin={IfAdmin} />} />
-          <Route path="/admin/1/profile" element={<Profile IfAdmin={IfAdmin} />} />
-          <Route path="/admin/books/bookInventory/*" element={<BookInventory IfAdmin={IfAdmin} />} />
-          <Route path="/admin/books/1/update/:bookid" element={<EditBook IfAdmin={IfAdmin} />} />
-          <Route path="/admin/mail/config/1" element={<MailConfigPage IfAdmin={IfAdmin} />} />
+        {/* Admin */}
+        {userType === 'admin' && (
+          <>
+            <Route path="/admin/*" element={<AdminIndex />} />
+            <Route path="/admin/1/users/" element={<UsersPage />} />
+            <Route path="/admin/1/addbook" element={<AddBook />} />
+            <Route path="/admin/1/book/stockout" element={<StockOut />} />
+            <Route path="/admin/1/book/request" element={<BookRequestInventory />} />
+            <Route path="/admin/1/book/return" element={<BookReturn />} />
+            <Route path="/admin/users/activities/:userId" element={<UserActivities />} />
+            <Route path="/admin/users/profile/:user_id" element={<UserProfile />} />
+            <Route path="/admin/1/profile" element={<Profile />} />
+            <Route path="/admin/books/bookInventory/*" element={<BookInventory />} />
+            <Route path="/admin/books/1/update/:bookid" element={<EditBook />} /> {/* Ensure this path is correct */}
+            <Route path="/admin/mail/config/1" element={<MailConfigPage />} />
+          </>
+        )}
 
-          {/* User */}
-          <Route path='/user/dashboard/:page' element={<UserDashboard IsUser={IsUser} />} />
-          <Route path='/user/books/return-renew' element={<RenewReturn IsUser={IsUser} />} />
-          <Route path='/user/1/profile' element={<UserProfile1 IsUser={IsUser} />} />
+        {/* User */}
+        {userType === 'user' || userType === 'admin' && (
+          <>
+            <Route path='/user/dashboard/:page' element={<UserDashboard />} />
+            <Route path='/user/books/return-renew' element={<RenewReturn />} />
+            <Route path='/user/1/profile' element={<UserProfile1 />} />
+          </>
+        )}
 
-          {/* Books */}
-          <Route path="/books/*" element={<BooksPage />} />
-          <Route path="/books/details/:bookid" element={<BooksDetails />} />
-
-        </Routes>
-        <Footer />
-      </BrowserRouter >
-    </>
+        {/* Books */}
+        <Route path="/books/*" element={<BooksPage />} />
+        <Route path="/books/details/:bookid" element={<BooksDetails />} />
+      </Routes>
+      <Footer />
+    </Suspense>
   );
 }
 

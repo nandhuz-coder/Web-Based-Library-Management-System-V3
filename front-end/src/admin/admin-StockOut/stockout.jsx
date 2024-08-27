@@ -5,7 +5,7 @@ import Loading from '../../Loading/Loading';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import Alert from '../../partials/Header/alert/alert';
 
-const StockOut = ({ IfAdmin }) => {
+const StockOut = () => {
     const [books, setBooks] = useState([]);
     const [filter, setFilter] = useState(' ');
     const [searchName, setSearchName] = useState(' ');
@@ -76,7 +76,6 @@ const StockOut = ({ IfAdmin }) => {
 
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <header id="main-header" className="py-2 bg-primary text-white">

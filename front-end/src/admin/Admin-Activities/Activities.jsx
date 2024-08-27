@@ -5,8 +5,8 @@ import Alert from '../../partials/Header/alert/alert';
 import AdminNavbar from '../../partials/Header/Admin-nav/admin-nav';
 import Loading from '../../Loading/Loading';
 
-const UserActivities = ({ IfAdmin }) => {
-    const { userId } = useParams()
+const UserActivities = () => {
+    const { userId } = useParams();
     const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -57,7 +57,6 @@ const UserActivities = ({ IfAdmin }) => {
 
     return (
         <>
-            <IfAdmin />
             <Suspense fallback={<Loading />}>
                 <AdminNavbar />
                 <Alert success={success} error={error} dismissAlert={dismissAlert} />
@@ -125,67 +124,67 @@ const UserActivities = ({ IfAdmin }) => {
                                                     <td>
                                                         {activity.category === "Issue" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} issued {activity.info.title}
+                                                                {activity.user_id.username} issued {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Return" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} returned {activity.info.title}
+                                                                {activity.user_id.username} returned {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Request" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} requested {activity.info.title}
+                                                                {activity.user_id.username} requested {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Decline" && (
                                                             <>
-                                                                Admin declined {activity.info.title} request of {activity.user_id.username || 'This user'}
+                                                                Admin declined {activity.info.title} request of {activity.user_id.username}
                                                             </>
                                                         )}
                                                         {activity.category === "Return apply" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} applied to return {activity.info.title}
+                                                                {activity.user_id.username} applied to return {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Return decline" && (
                                                             <>
-                                                                Admin declined {activity.info.title} request to return {activity.user_id.username || 'This user'}
+                                                                Admin declined {activity.info.title} request to return {activity.user_id.username}
                                                             </>
                                                         )}
                                                         {activity.category === "Renew" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} renewed {activity.info.title}
+                                                                {activity.user_id.username} renewed {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Update Profile" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} updated profile
+                                                                {activity.user_id.username} updated profile
                                                             </>
                                                         )}
                                                         {activity.category === "Update Password" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} updated password
+                                                                {activity.user_id.username} updated password
                                                             </>
                                                         )}
                                                         {activity.category === "Upload Photo" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} updated/uploaded profile
+                                                                {activity.user_id.username} updated/uploaded profile
                                                             </>
                                                         )}
                                                         {activity.category === "Comment" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} commented on {activity.info.title}
+                                                                {activity.user_id.username} commented on {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Update Comment" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} updated comment on {activity.info.title}
+                                                                {activity.user_id.username} updated comment on {activity.info.title}
                                                             </>
                                                         )}
                                                         {activity.category === "Delete Comment" && (
                                                             <>
-                                                                {activity.user_id.username || 'This user'} deleted comment on {activity.info.title}
+                                                                {activity.user_id.username} deleted comment on {activity.info.title}
                                                             </>
                                                         )}
                                                     </td>
@@ -204,5 +203,4 @@ const UserActivities = ({ IfAdmin }) => {
         </>
     );
 };
-
 export default UserActivities;

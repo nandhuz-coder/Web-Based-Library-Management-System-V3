@@ -5,7 +5,7 @@ import UserNav from '../../partials/Header/User-nav/user-nav';
 import Alert from '../../partials/Header/alert/alert';
 import Loading from '../../Loading/Loading';
 
-const UserDashboard = ({ IsUser }) => {
+const UserDashboard = () => {
     const { page } = useParams();
     const [user, setUser] = useState(null);
     const [activities, setActivities] = useState([]);
@@ -291,13 +291,11 @@ const UserDashboard = ({ IsUser }) => {
 
     if (render) return (
         <>
-            <IsUser />
             <Loading />
         </>
     );
     return (
         <div className="dashboard-container">
-            <IsUser />
             <UserNav />
             <header id="main-header" className="py-2 bg-primary text-white">
                 <div className="container">
