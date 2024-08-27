@@ -1,72 +1,92 @@
 # Library Management System V3
+## Library Management System
 
-## Following feature will be added in this repo
+This repository contains a comprehensive Library Management System that simplifies library operations, offering seamless book management, user authentication, and inventory tracking. Built using modern web technologies for efficiency and scalability.
 
-1. Server side caching
-2. Server side validation
+## Features
+
+The following features have been added to this repository:
+
+1. Server-side caching
+2. Server-side validation
 3. Scalable image upload
-4. Api rendering
+4. API rendering
 
-## Techonologies used in this application
+## Technologies Used
 
 ### Front-end
 
-1. React.js
-2. Bootstrap
+- React.js
+- Bootstrap
 
 ### Back-end
 
-1. Node.js
-2. Express.js
-3. MongoDB
-4. Passport.js
+- Node.js
+- Express.js
+- MongoDB
+- Passport.js
 
-## Install dependencies
+## Installation
 
-Open git bash or command line tools at application file and run following npm command `npm install` if you have `package.json` file.
+To install the dependencies, open Git Bash or command line tools in the application directory and run the following npm command:
 
-### Install dev dependencies if needed
+```
+npm install
+```
 
-`npm install faker --save-dev`
+If you need to install dev dependencies, run the following command:
 
-## Run the application
+```
+npm install faker --save-dev
+```
 
-- create a `.env` file in app directory
-- add `SESSION_SECRET=<your session secret>`, `ADMIN_SECRET=<your admin secret>`, `DB_URL=<your mongodb url>` and `DB_NAME=<database_name>` into that file. or
-- rename `.env.example` to `.env`
-- run `npm run dev`
-- App will open at [http://localhost:3000]
+## Running the Application
 
-## Functionalitites
+To run the application:
 
-Whole app is divided into three modules.
+1. Create a `.env` file in the app directory.
+2. Add the following environment variables to the `.env` file:
+    - `SESSION_SECRET=<your session secret>`
+    - `ADMIN_SECRET=<your admin secret>`
+    - `DB_URL=<your MongoDB URL>`
+    - `DB_NAME=<database name>`
+    - Alternatively, rename `.env.example` to `.env` and update the values.
+3. Run the following command:
+    ```
+    npm run dev
+    ```
+4. The application will open at [http://localhost:3000](http://localhost:3000).
 
-- Admin
-- User
-- Browse books
+## Functionality
 
-### Admin module functionalities
+The application is divided into three modules:
 
-- Sign up (This route is hidden. only accessible by typing the route manually and when admin log in)
+### Admin Module
+
+The admin module provides the following functionalities:
+
+- Sign up (This route is hidden and only accessible by typing the route manually when an admin is logged in)
 - Login
 - Logout
-- Track all users activities
+- Track all user activities
 - Add books
 - Update books
 - Delete books
 - Out of stock books
 - Search books by category, title, author, ISBN
-- Find users by firstname, lastname, email and username
-- Delete user acount
-- Restrict individual user if violate any terms and conditions
+- Find users by first name, last name, email, and username
+- Delete user accounts
+- Restrict individual users if they violate any terms and conditions
 - Browse books showcase
 - Update admin profile and password
 - Add new admin
-- Delete currently logged in admin profile
-- Apporval and decline request books
-- Accept and decline return request
+- Delete currently logged-in admin profile
+- Approve and decline book requests
+- Accept and decline return requests
 
-### User module functionalities
+### User Module
+
+The user module provides the following functionalities:
 
 - Sign up
 - Login
@@ -76,21 +96,21 @@ Whole app is divided into three modules.
 - Renew books
 - Return books
 - Browse books showcase
-- Add, edit and delete comment on any books comment section
-- Upload/Update profile picture
+- Add, edit, and delete comments on any book's comment section
+- Upload/update profile picture
 - Update profile and password
 - Delete account
 
-### Browse books module functionalities
+### Browse Books Module
 
-This module can be accessed by anyone
+This module can be accessed by anyone and provides the following functionalities:
 
 - Show all books
-- Find books on filtered search
+- Find books using filtered search
 
 <!-- Open Graph Meta Tags -->
-<meta property="og:title" content="Web Based Library Management System" />
-<meta property="og:description" content="A comprehensive Web-Based Library Management System that simplifies library operations, offering seamless book management, user authentication, and inventory tracking. Built using modern web technologies for efficiency and scalability." />
-<meta property="og:url" content="https://github.com/nandhuz-coder/Web-Based-Library-Management-System-V3" />
+<meta property="og:title" content="Library Management System" />
+<meta property="og:description" content="A comprehensive Library Management System that simplifies library operations, offering seamless book management, user authentication, and inventory tracking. Built using modern web technologies for efficiency and scalability." />
+<meta property="og:url" content="https://github.com/nandhuz-coder/Library-Management-System" />
 <meta property="og:image" content="https://mugshotbot.com/m/zjqQ3NIo">
 <meta property="twitter:card" content="summary_large_image">
