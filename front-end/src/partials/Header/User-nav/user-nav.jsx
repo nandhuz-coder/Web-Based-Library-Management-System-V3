@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const UserNav = () => {
@@ -15,7 +15,16 @@ const UserNav = () => {
         };
         fetchUser();
     }, []);
-
+    const navigate = useNavigate();
+    const getUserLogout = async (e) => {
+        try {
+            e.preventDefault();
+            await axios.get('/auth/1/user-logout');
+            navigate('/');
+        } catch (error) {
+            navigate('/');
+        }
+    }
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0">
             <div className="container">
@@ -55,10 +64,9 @@ const UserNav = () => {
                                     <Link to={"/user/1/profile"} className="dropdown-item">
                                         <i className="fa fa-user-circle"></i> Profile
                                     </Link>
-
-                                    <Link to={"/auth/user-logout"} className="dropdown-item">
+                                    <a href="" className="dropdown-item" onClick={(e) => getUserLogout(e)}>
                                         <i className="fa fa-user-times"></i> Logout
-                                    </Link>
+                                    </a>
                                 </div>
                             </li>
 

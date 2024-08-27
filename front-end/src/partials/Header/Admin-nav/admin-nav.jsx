@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const AdminNavbar = () => {
     const [global, setGlobal] = useState([]);
     const [currentUser, setCurrentUser] = useState();
@@ -23,6 +23,17 @@ const AdminNavbar = () => {
         }, 60000);
         return () => clearInterval(interval);
     }, []);
+
+    const navigate = useNavigate();
+    const getUserLogout = async (e) => {
+        try {
+            e.preventDefault();
+            await axios.get('/auth/1/user-logout');
+            navigate('/');
+        } catch (error) {
+            navigate('/');
+        }
+    }
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0 sticky-top">
@@ -100,11 +111,9 @@ const AdminNavbar = () => {
                                     <Link to={`/admin/1/profile`} title="profile" className="dropdown-item">
                                         <i className="fa fa-user-circle"></i> Profile
                                     </Link>
-                                    <form action="/auth/admin-logout" method="post">
-                                        <button type="submit" className="dropdown-item">
-                                            <i className="fa fa-user-times"></i> Logout
-                                        </button>
-                                    </form>
+                                    <a href="" onClick={(e) => getUserLogout(e)} className="dropdown-item">
+                                        <i className="fa fa-user-times"></i> Logout
+                                    </a>
                                 </div>
                             </li>
                         ) : (
