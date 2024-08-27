@@ -1,3 +1,11 @@
+/**
+ * @file users.js
+ * @router /user
+ * @description This file defines the routes for user operations.
+ * @module middleware needed for user authentication and authorization
+ * @exports router
+ */
+
 // importing modules
 const express = require("express");
 const router = express.Router();

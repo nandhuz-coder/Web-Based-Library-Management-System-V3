@@ -1,8 +1,15 @@
+/**
+ * This module contains the controller functions for the user routes.
+ * @module userController
+ * @description Controller for handling user-related operations.
+ */
+
 // importing models
 const Activity = require("../../models/activity");
 const Book = require("../../models/book");
 const Issue = require("../../models/issue");
 const Comment = require("../../models/comment");
+
 // user -> profile
 /**
  * Retrieves the profile of the currently authenticated user.

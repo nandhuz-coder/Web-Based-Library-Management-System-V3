@@ -1,3 +1,8 @@
+/**
+ * @api true
+ * @todo Add JSDocs
+ * @todo need to add some functionality and error handling
+ */
 const User = require("../models/user");
 const express = require("express");
 const router = express.Router();

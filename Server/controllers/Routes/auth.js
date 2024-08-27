@@ -1,4 +1,9 @@
-// importing libraries
+/**
+ * @module authController
+ * @description Controller for handling authentication-related operations.
+ */
+
+// importing dependencies
 const passport = require("passport");
 
 if (process.env.NODE_ENV !== "production") require("dotenv").config();

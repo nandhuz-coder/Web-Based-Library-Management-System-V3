@@ -1,3 +1,9 @@
+/**
+ * This module contains the controller functions for the admin routes.
+ * @module adminController
+ * @description Controller functions for handling admin-related operations.
+ */
+
 // importing dependencies
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;

@@ -1,3 +1,9 @@
+/**
+ * @file middleware.js is responsible for user authentication and authorization fetching using api calls.
+ * @module middleware
+ * @description This file defines middleware functions for user authentication and authorization.
+ */
+
 const express = require("express");
 const router = express.Router();
 

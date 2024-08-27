@@ -30,13 +30,13 @@ The following features have been added to this repository:
 
 To install the dependencies, open Git Bash or command line tools in the application directory and run the following npm command:
 
-```
+```bash
 npm install
 ```
 
 If you need to install dev dependencies, run the following command:
 
-```
+```bash
 npm install faker --save-dev
 ```
 
@@ -52,7 +52,7 @@ To run the application:
     - `DB_NAME=<database name>`
     - Alternatively, rename `.env.example` to `.env` and update the values.
 3. Run the following command:
-    ```
+    ```bash
     npm run dev
     ```
 4. The application will open at [http://localhost:3000](http://localhost:3000).

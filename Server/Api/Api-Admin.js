@@ -1,3 +1,12 @@
+/**
+ * @file Api-Admin.js
+ * @api true
+ * @router /api/admin
+ * @description This file defines routes for admin operations
+ * @module adminController needed for admin operations
+ * 
+ */
+
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/api/admin");

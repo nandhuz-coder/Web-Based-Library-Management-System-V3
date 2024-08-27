@@ -1,3 +1,10 @@
+/**
+ * Middleware module.
+ * @file index.js is responsible for user authentication and authorization
+ * @module middleware
+ * @description Middleware for handling user authentication and authorization.
+ */
+
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const middleware = {};

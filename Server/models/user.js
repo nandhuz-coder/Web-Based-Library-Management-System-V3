@@ -1,5 +1,28 @@
-const mongoose = require("mongoose"),
-  passportLocalMongoose = require("passport-local-mongoose");
+/**
+ * @module user
+ * @description Mongoose schema for storing user information in the database.
+ */
+
+const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
+
+/**
+ * @typedef {Object} User
+ * @property {String} email - The email address of the user.
+ * @property {Boolean} isAdmin - Flag indicating if the user is an admin.
+ * @property {String} firstName - The first name of the user.
+ * @property {String} lastName - The last name of the user.
+ * @property {String} username - The username of the user.
+ * @property {String} gender - The gender of the user.
+ * @property {String} address - The address of the user.
+ * @property {String} image - The profile image of the user.
+ * @property {Array<Object>} bookRequestInfo - Information about the books requested by the user.
+ * @property {Array<Object>} bookIssueInfo - Information about the books issued by the user.
+ * @property {Array<Object>} bookReturnInfo - Information about the books returned by the user.
+ * @property {Date} joined - The date when the user joined.
+ * @property {Boolean} violationFlag - Flag indicating if the user has any violations.
+ * @property {Number} fines - The amount of fines the user has.
+ */
 
 const userSchema = new mongoose.Schema({
   // Authentication fields

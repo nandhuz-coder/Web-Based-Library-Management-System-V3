@@ -1,3 +1,11 @@
+/**
+ * @file auth.js
+ * @router /auth
+ * @description This file defines the routes for user authentication.
+ * @module authController needed for user authentication
+ * @module passport needed for user authentication
+ * @exports router
+ */
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");

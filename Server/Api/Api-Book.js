@@ -1,3 +1,11 @@
+/**
+ * @file Api-Book.js
+ * @api true
+ * @router /api/book
+ * @description This file defines routes for book operations.
+ * @module bookController needed for book operations
+ */
+
 const express = require("express");
 const router = express.Router();
 const bookController = require("../controllers/api/books");

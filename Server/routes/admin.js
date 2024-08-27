@@ -1,3 +1,11 @@
+/**
+ * @file admin.js
+ * @router /admin
+ * @description This file defines the routes for admin operations.
+ * @module adminController needed for admin operations
+ * @module middleware needed for user authentication and authorization
+ * @exports router
+ */
 const express = require("express");
 const router = express.Router();
 const middleware = require("../middleware");

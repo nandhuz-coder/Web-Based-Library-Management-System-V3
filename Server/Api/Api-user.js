@@ -1,3 +1,11 @@
+/**
+ * @file Api-user.js is the route file for user related API calls.
+ * @api true
+ * @router /api/user
+ * @description This file defines the routes for user operations.
+ * @module userController needed for user operations
+ */
+
 const express = require("express");
 const router = express.Router();
 const middleware = require("../middleware/index");

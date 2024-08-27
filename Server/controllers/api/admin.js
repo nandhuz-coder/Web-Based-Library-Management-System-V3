@@ -1,3 +1,9 @@
+/**
+ * @module adminController
+ * @description This module handles the admin operations.
+ */
+
+// Importing required models
 const Book = require("../../models/book");
 const User = require("../../models/user");
 const Activity = require("../../models/activity");
@@ -6,6 +12,8 @@ const Comment = require("../../models/comment");
 const Request = require("../../models/request");
 const Return = require("../../models/return");
 const MailConfig = require("../../models/mail-config");
+
+//importing utils
 const deleteImage = require("../../utils/image/delete_image");
 const EmailService = require("../../utils/mail/configure-mails");
 const fs = require("fs");

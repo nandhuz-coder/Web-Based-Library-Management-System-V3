@@ -1,4 +1,33 @@
+/**
+ * @module mail-config
+ * @description Mongoose schema for storing mail configuration settings in the database.
+ */
+
 const mongoose = require("mongoose");
+
+/**
+ * @typedef {Object} MailConfig
+ * @property {Object} toggles - Configuration toggles for various mail settings.
+ * @property {Object} toggles.requestBooks - Toggle for request books mail setting.
+ * @property {Boolean} toggles.requestBooks.switches - Switch for request books mail setting.
+ * @property {String} toggles.requestBooks.mail - Mail address for request books setting.
+ * @property {Object} toggles.issueBooks - Toggle for issue books mail setting.
+ * @property {Boolean} toggles.issueBooks.switches - Switch for issue books mail setting.
+ * @property {String} toggles.issueBooks.mail - Mail address for issue books setting.
+ * @property {Object} toggles.passwordUpdateOtp - Toggle for password update OTP mail setting.
+ * @property {Boolean} toggles.passwordUpdateOtp.switches - Switch for password update OTP mail setting.
+ * @property {String} toggles.passwordUpdateOtp.mail - Mail address for password update OTP setting.
+ * @property {Object} toggles.signupOtp - Toggle for signup OTP mail setting.
+ * @property {Boolean} toggles.signupOtp.switches - Switch for signup OTP mail setting.
+ * @property {String} toggles.signupOtp.mail - Mail address for signup OTP setting.
+ * @property {Object} toggles.signinOtp - Toggle for signin OTP mail setting.
+ * @property {Boolean} toggles.signinOtp.switches - Switch for signin OTP mail setting.
+ * @property {String} toggles.signinOtp.mail - Mail address for signin OTP setting.
+ * @property {Array<Object>} mails - Array of mail configurations.
+ * @property {String} mails.email - Email address.
+ * @property {String} mails.authKey - Authentication key for the email.
+ * @property {Boolean} mails.configured - Flag indicating if the mail is configured.
+ */
 
 const mailConfigSchema = new mongoose.Schema({
   toggles: {
@@ -32,7 +61,16 @@ const mailConfigSchema = new mongoose.Schema({
   ],
 });
 
-//* Method to update toggles and set mail to null if switch is false
+/**
+ * @function updateToggles
+ * @description Updates the toggles and sets mail to null if the switch is false.
+ * @param {Object} toggles - The new toggle settings.
+ * @param {Object} selections - The new mail selections.
+ *
+ * Workflow:
+ * 1. Update each toggle setting with the new value.
+ * 2. If the toggle is false, set the corresponding mail to null.
+ */
 mailConfigSchema.methods.updateToggles = function (toggles, selections) {
   this.toggles.requestBooks = {
     switches: toggles.requestBooks,
@@ -56,7 +94,15 @@ mailConfigSchema.methods.updateToggles = function (toggles, selections) {
   };
 };
 
-//* Method to delete a mail and update toggles
+/**
+ * @function deleteMailAndUpdateToggles
+ * @description Deletes a mail and updates the toggles accordingly.
+ * @param {String} email - The email to be deleted.
+ *
+ * Workflow:
+ * 1. Filter out the mail to be deleted from the mails array.
+ * 2. For each toggle, if the mail matches the email to be deleted, set the toggle to false and mail to null.
+ */
 mailConfigSchema.methods.deleteMailAndUpdateToggles = function (email) {
   this.mails = this.mails.filter((mail) => mail.email !== email);
   if (this.toggles.requestBooks.mail === email) {

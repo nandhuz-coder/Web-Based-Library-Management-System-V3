@@ -1,5 +1,13 @@
+/**
+ * @module controllers/api/users
+ * @description Controller for handling user-related operations.
+ */
+
+// importing modules
 const path = require("path");
 const fs = require("fs");
+
+//importing utils
 const deleteImage = require("../../utils/image/delete_image");
 const Resize = require("../../utils/image/resize");
 
@@ -14,6 +22,21 @@ const Return = require("../../models/return");
 
 const PER_PAGE = 12;
 
+/**
+ * @function getUserPage
+ * @description Fetches the user's page with their information and activities.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - Returns a JSON response with user info, activities, and warnings.
+ *
+ * Workflow:
+ * 1. Extract user ID from the request.
+ * 2. Fetch user info from the database.
+ * 3. Check if the user has overdue issues and update violation flag if necessary.
+ * 4. Fetch user activities with pagination.
+ * 5. Send JSON response with user info, activities, and warnings.
+ * 6. Handle errors by logging them and sending an error response.
+ */
 exports.getUserPage = async (req, res) => {
   try {
     let warning = [];
@@ -66,6 +89,22 @@ exports.getUserPage = async (req, res) => {
   }
 };
 
+/**
+ * @function renewBook
+ * @description Renews a book for the user by extending the return date.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - Returns a JSON response indicating success or error.
+ *
+ * Workflow:
+ * 1. Construct search object to find the issue.
+ * 2. Fetch the issue from the database.
+ * 3. Extend the return date by 7 days and mark the book as renewed.
+ * 4. Log the renewal activity.
+ * 5. Save the updated issue and activity to the database.
+ * 6. Send JSON response indicating the success of the renewal.
+ * 7. Handle errors by logging them and sending an error response.
+ */
 exports.renewBook = async (req, res) => {
   try {
     const searchObj = {
@@ -108,6 +147,24 @@ exports.renewBook = async (req, res) => {
   }
 };
 
+/**
+ * @function returnBook
+ * @description Handles the return of a book by the user.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} _next - Express next middleware function.
+ * @returns {Promise<void>} - Returns a JSON response indicating success or error.
+ *
+ * Workflow:
+ * 1. Find the user and book from the database.
+ * 2. Find the issue related to the book and user.
+ * 3. Create a return record and update the user's return info.
+ * 4. Mark the book as returned in the issue.
+ * 5. Log the return activity.
+ * 6. Save the return record, user, issue, and activity to the database.
+ * 7. Send JSON response indicating the success of the return application.
+ * 8. Handle errors by logging them and sending an error response.
+ */
 exports.returnBook = async (req, res, _next) => {
   try {
     // finding user & book.
@@ -154,7 +211,7 @@ exports.returnBook = async (req, res, _next) => {
 
     // redirecting
     res.json({
-      success: `${issue.book_info.title} return appilication has been submitted.`,
+      success: `${issue.book_info.title} return application has been submitted.`,
     });
   } catch (err) {
     console.log(err);
@@ -162,6 +219,24 @@ exports.returnBook = async (req, res, _next) => {
   }
 };
 
+/**
+ * @function changeImage
+ * @description Changes the user's profile image.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - Returns a JSON response indicating success or error.
+ *
+ * Workflow:
+ * 1. Extract user ID from the request.
+ * 2. Fetch user info from the database.
+ * 3. Handle image upload and resizing.
+ * 4. Delete the previous image if it exists and is not the default profile image.
+ * 5. Update the user's profile image.
+ * 6. Log the image change activity.
+ * 7. Save the updated user and activity to the database.
+ * 8. Send JSON response indicating the success of the image change.
+ * 9. Handle errors by logging them and sending an error response.
+ */
 exports.changeImage = async (req, res) => {
   try {
     const user_id = req.user._id;
@@ -205,6 +280,23 @@ exports.changeImage = async (req, res) => {
   }
 };
 
+/**
+ * @function deleteProfile
+ * @description Deletes the user's profile and associated data.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} _next - Express next middleware function.
+ * @returns {Promise<void>} - Returns a JSON response indicating success or error.
+ *
+ * Workflow:
+ * 1. Extract user ID from the request.
+ * 2. Fetch user info from the database.
+ * 3. Delete the user's profile image if it exists and is not the default profile image.
+ * 4. Remove the user from the database.
+ * 5. Delete all associated issues, comments, activities, returns, and requests.
+ * 6. Send JSON response indicating the success of the profile deletion.
+ * 7. Handle errors by logging them and redirecting back.
+ */
 exports.deleteProfile = async (req, res, _next) => {
   try {
     const user_id = req.user._id;
@@ -234,6 +326,22 @@ exports.deleteProfile = async (req, res, _next) => {
   }
 };
 
+/**
+ * @function updateProfile
+ * @description Updates the user's profile information.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} _next - Express next middleware function.
+ * @returns {Promise<void>} - Returns a JSON response indicating success or error.
+ *
+ * Workflow:
+ * 1. Extract updated profile information from the request body.
+ * 2. Update the user's profile information in the database.
+ * 3. Log the profile update activity.
+ * 4. Save the activity to the database.
+ * 5. Send JSON response indicating the success of the profile update.
+ * 6. Handle errors by logging them and sending an error response.
+ */
 exports.updateProfile = async (req, res, _next) => {
   try {
     const userUpdateInfo = {
@@ -265,6 +373,23 @@ exports.updateProfile = async (req, res, _next) => {
   }
 };
 
+/**
+ * @function changePassword
+ * @description Changes the user's password.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - Returns a JSON response indicating success or error.
+ *
+ * Workflow:
+ * 1. Extract old and new passwords from the request body.
+ * 2. Fetch the user from the database.
+ * 3. Change the user's password.
+ * 4. Save the updated user to the database.
+ * 5. Log the password change activity.
+ * 6. Save the activity to the database.
+ * 7. Send JSON response indicating the success of the password change.
+ * 8. Handle errors by logging them and sending an error response.
+ */
 exports.changePassword = async (req, res) => {
   const oldPassword = req.body.oldPassword;
   const newPassword = req.body.newPassword;
