@@ -5,6 +5,7 @@
 
 const nodemailer = require("nodemailer");
 const MailConfig = require("../../models/mail-config");
+const createEmailTemplate = require("./html/template-generator");
 
 /**
  * @class EmailService
@@ -80,6 +81,7 @@ class EmailService {
       to: to,
       subject: "Verify",
       text: "Auth Successfully verified.",
+      html: createEmailTemplate("configure", { email: to }),
     };
 
     try {

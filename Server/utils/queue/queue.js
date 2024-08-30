@@ -17,7 +17,7 @@ require("./verify-mail");
  * 3. Define an asynchronous function `startAgenda` to start the Agenda job scheduler.
  * 4. Inside the function:
  *    a. Attempt to start the Agenda instance using `agenda.start()`.
- *    b. Schedule a recurring job named "check auth verification" to run every minute using `agenda.every("1 minute", "check auth verification")`.
+ *    b. Schedule a recurring job named "check auth verification" to run every minute using `agenda.every("12 am", "check auth verification")`.
  *    c. If both operations succeed, return true.
  *    d. If an error occurs, log the error message to the console and return false.
  * 5. Export the `startAgenda` function for use in other parts of the application.
@@ -25,7 +25,7 @@ require("./verify-mail");
 async function startAgenda() {
   try {
     await agenda.start();
-    await agenda.every("1 minute", "check auth verification");
+    await agenda.every("0 0 12 * * *", "check auth verification");
     return true;
   } catch (error) {
     console.error("Failed to start agenda:", error.message);
