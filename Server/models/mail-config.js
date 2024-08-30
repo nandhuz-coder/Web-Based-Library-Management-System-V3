@@ -1,9 +1,10 @@
+const mongoose = require("mongoose");
+const collection = require("../utils/handler/collection");
+
 /**
  * @module mail-config
  * @description Mongoose schema for storing mail configuration settings in the database.
  */
-
-const mongoose = require("mongoose");
 
 /**
  * @typedef {Object} MailConfig
@@ -126,5 +127,17 @@ mailConfigSchema.methods.deleteMailAndUpdateToggles = function (email) {
     this.toggles.signinOtp.mail = null;
   }
 };
+
+// Middleware to update the in-memory collection on save
+mailConfigSchema.post("save", function (doc) {
+  collection.mails.clear();
+  collection.mails.set(0, doc);
+});
+
+// Middleware to update the in-memory collection on delete
+mailConfigSchema.post("remove", function (doc) {
+  collection.mails.delete(0);
+  collection.mails.clear();
+});
 
 module.exports = mongoose.model("MailConfig", mailConfigSchema);

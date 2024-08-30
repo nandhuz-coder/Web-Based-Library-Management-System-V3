@@ -25,6 +25,15 @@ const serveStatic = require("serve-static");
 //* Import models
 const User = require("./models/user");
 
+//* Import collections
+const collection = require("./utils/handler/collection");
+
+//* Import handlers
+const MailHandler = require("./utils/handler/config-mails");
+
+//* Import queue
+const startAgenda = require("./utils/queue/queue");
+
 //* Import Routes
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
@@ -37,8 +46,19 @@ const ApiUser = require("./Api/Api-user");
 const ApiMiddleware = require("./middleware/middleware");
 const suggestion = require("./Api/suggestions");
 
+//* Initialize collections
+/**
+ * Initialize the mails collection as a Map.
+ */
+collection.mails = new Map();
+
+//* Environment variables
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
 
+//* Express application
+/**
+ * Creates an Express application.
+ */
 const app = express();
 
 //* App configuration
@@ -63,6 +83,7 @@ app.use(mongoSanitize());
 app.use(hpp());
 app.use(methodOverride("_method"));
 app.use(cookieParser());
+
 //* Database configuration
 /**
  * Connects to the MongoDB database using Mongoose.
@@ -74,7 +95,32 @@ mongoose
   .connect(process.env.DB_URL, {
     dbName: process.env.DB_NAME,
   })
-  .then(() => console.log("MongoDB is connected"))
+  .then(async () => {
+    console.log("MongoDB is connected");
+
+    /**
+     * Call the MailHandler function when the server starts.
+     * The MailHandler function collects mail configurations from the database
+     * and saves them in the collection.mails Map.
+     * The result of the operation is logged to the console.
+     */
+    await MailHandler().then((result) => {
+      if (result) console.log("\x1b[34mMails collected successfully\x1b[0m");
+      else console.log("\x1b[31mError collecting mails\x1b[0m");
+    });
+
+    /**
+     * Start the agenda when the server starts.
+     * The startAgenda function initializes and starts the agenda for processing jobs.
+     * The result of the operation is logged to the console
+     * as either "Agenda started successfully" or "Error starting agenda".
+     * The agenda is used to schedule and process jobs, such as sending verification emails.
+     */
+    await startAgenda().then((result) => {
+      if (result) console.log("\x1b[34mAgenda started successfully\x1b[0m");
+      else console.log("\x1b[31mError starting agenda\x1b[0m");
+    });
+  })
   .catch((error) => console.log(error));
 
 //* Session configuration with connect-mongo

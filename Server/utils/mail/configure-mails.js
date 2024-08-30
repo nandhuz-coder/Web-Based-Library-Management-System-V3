@@ -11,16 +11,19 @@ const MailConfig = require("../../models/mail-config");
  * @description Service class for handling email configuration and sending.
  * @property {Object} transporter - The nodemailer transporter object.
  * @method initializeTransporter - Initializes the nodemailer transporter with the provided email and authentication key.
- * @method sendEmail - Sends an email with a static subject and body to the specified recipient.
+ * @method VerifyMail - Sends a verification email to the specified recipient and updates the mail configuration in the database.
  * @example
  * const emailService = new EmailService();
  * emailService.initializeTransporter("your-email@gmail.com", "your-auth-key"); // Initialize the transporter
- * emailService.sendEmail("recipient-email@gmail.com"); // Send an email
- * @see {@link https://nodemailer.com/about/|Nodemailer Documentation}
- * @see {@link https://mongoosejs.com/docs/|Mongoose Documentation}
+ * emailService.VerifyMail("recipient-email@gmail.com"); // Send a verification email
+ * @see {@link https://nodemailer.com/about/ |Nodemailer Documentation}
+ * @see {@link https://mongoosejs.com/docs/ |Mongoose Documentation}
  */
 class EmailService {
   constructor() {
+    /**
+     * @property {Object} transporter - The nodemailer transporter object.
+     */
     this.transporter = null;
   }
 
@@ -45,8 +48,8 @@ class EmailService {
   }
 
   /**
-   * @function sendEmail
-   * @description Sends an email with a static subject and body to the specified recipient.
+   * @function VerifyMail
+   * @description Sends a verification email to the specified recipient and updates the mail configuration in the database.
    * @param {string} to - The recipient email address.
    * @returns {Promise<Object>} - Returns a promise that resolves with a success message if the email is sent successfully.
    *
@@ -60,9 +63,14 @@ class EmailService {
    *    c. If not found, create a new mail configuration entry.
    * 5. Save the updated or new mail configuration to the database.
    * 6. Return a success message.
-   * 7. Handle any errors that occur during the email sending process, including specific handling for authentication errors.
+   * 7. Handle any errors that occur during the email sending process:
+   *    a. Find the existing mail configuration.
+   *    b. If found, update the existing mail entry to set `configured` to `false`.
+   *    c. Save the updated mail configuration to the database.
+   *    d. If the error response code is 535, throw an error indicating that the auth key needs to be changed.
+   *    e. For other errors, log the error message and throw a generic error.
    */
-  async sendEmail(to) {
+  async VerifyMail(to) {
     if (!this.transporter) {
       throw new Error("Transporter is not initialized");
     }
@@ -106,6 +114,15 @@ class EmailService {
       }
       return { message: "Auth key verified" };
     } catch (error) {
+      let mailConfig = await MailConfig.findOne();
+      if (mailConfig) {
+        const existingMail = mailConfig.mails.find(
+          (mail) => mail.email === this.transporter.options.auth.user
+        );
+        if (existingMail) existingMail.configured = false;
+
+        await mailConfig.save();
+      }
       if (error.responseCode === 535) {
         throw new Error("Change auth key");
       } else {

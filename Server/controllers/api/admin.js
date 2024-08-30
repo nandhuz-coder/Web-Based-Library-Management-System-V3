@@ -18,6 +18,9 @@ const deleteImage = require("../../utils/image/delete_image");
 const EmailService = require("../../utils/mail/configure-mails");
 const fs = require("fs");
 
+//importing collections
+const collection = require("../../utils/handler/collection");
+
 /**
  * Deletes a book from the database.
  *
@@ -810,17 +813,18 @@ exports.deleteProfile = async (req, res) => {
  *
  * @description
  * workflow:
- * This function retrieves the mail configuration settings from the database. It performs the following steps:
- * 1. Queries the database to retrieve all mail configuration settings.
+ * This function retrieves the mail configuration settings from the in-memory collection. It performs the following steps:
+ * 1. Retrieves the mail configuration settings from the collection.mails Map.
  * 2. Sends the retrieved mail configuration settings as a JSON response.
  * 3. Handles any errors that occur during the process by logging the error and sending a JSON response with an error message.
  */
 exports.getMailsConfig = async (req, res) => {
   try {
-    // Step 1: Query the database to retrieve all mail configuration settings
-    const mails = await MailConfig.find();
-    // Step 2: Send the retrieved mail configuration settings as a JSON response
-    res.json(mails);
+    // Step 1: Retrieve the mail configuration settings from the collection.mails Map
+    const mails = collection.mails.get(0) || [];
+
+    // Step 2: Ensure mails is an array and send the retrieved mail configuration settings as a JSON response
+    res.json(Array.isArray(mails) ? mails : [mails]);
   } catch (err) {
     // Step 3: Handle any errors that occur during the process
     console.log(err);
@@ -861,7 +865,7 @@ exports.configureEmail = async (req, res) => {
     emailService.initializeTransporter(email, authKey);
 
     // Step 3: Send a test email to verify the configuration
-    const result = await emailService.sendEmail(email);
+    const result = await emailService.VerifyMail(email);
 
     // Step 4: Send a JSON response indicating success and the result of the test email
     res.json({ success: "Gmail added successfully", ...result });
