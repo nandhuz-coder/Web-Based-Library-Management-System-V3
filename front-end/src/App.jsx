@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Import components
@@ -43,7 +43,7 @@ const IfUser = () => {
       .catch((err) => {
         console.error('Error checking user:', err);
       });
-  }, []);
+  }, [navigate]);
 }
 
 function App() {
@@ -54,9 +54,9 @@ function App() {
   useEffect(() => {
     axios.get(`/middleware/checkUserType`)
       .then(res => {
-        if (res.data.isAdmin) {
+        if (res.data?.isAdmin) {
           setUserType('admin');
-        } else if (res.data.isUser) {
+        } else if (res.data?.isUser) {
           setUserType('user');
         } else {
           setUserType(null);
@@ -83,33 +83,39 @@ function App() {
         <Route path='/auth/user-login' element={<UserLogin IfUser={IfUser} />} />
         <Route path='/auth/admin-signup' element={<AdminSignUp />} />
 
-        {/* Admin */}
-        {userType === 'admin' && (
+        {/* Verified path */}
+        {userType === null ? (
+          <Route path="*" element={<Navigate to="/" />} />
+        ) : (
           <>
-            <Route path="/admin/*" element={<AdminIndex />} />
-            <Route path="/admin/1/users/" element={<UsersPage />} />
-            <Route path="/admin/1/addbook" element={<AddBook />} />
-            <Route path="/admin/1/book/stockout" element={<StockOut />} />
-            <Route path="/admin/1/book/request" element={<BookRequestInventory />} />
-            <Route path="/admin/1/book/return" element={<BookReturn />} />
-            <Route path="/admin/users/activities/:userId" element={<UserActivities />} />
-            <Route path="/admin/users/profile/:user_id" element={<UserProfile />} />
-            <Route path="/admin/1/profile" element={<Profile />} />
-            <Route path="/admin/books/bookInventory/*" element={<BookInventory />} />
-            <Route path="/admin/books/1/update/:bookid" element={<EditBook />} /> {/* Ensure this path is correct */}
-            <Route path="/admin/mail/config/1" element={<MailConfigPage />} />
+            {/* Admin */}
+            {userType === 'admin' && (
+              <>
+                <Route path="/admin/*" element={<AdminIndex />} />
+                <Route path="/admin/1/users/" element={<UsersPage />} />
+                <Route path="/admin/1/addbook" element={<AddBook />} />
+                <Route path="/admin/1/book/stockout" element={<StockOut />} />
+                <Route path="/admin/1/book/request" element={<BookRequestInventory />} />
+                <Route path="/admin/1/book/return" element={<BookReturn />} />
+                <Route path="/admin/users/activities/:userId" element={<UserActivities />} />
+                <Route path="/admin/users/profile/:user_id" element={<UserProfile />} />
+                <Route path="/admin/1/profile" element={<Profile />} />
+                <Route path="/admin/books/bookInventory/*" element={<BookInventory />} />
+                <Route path="/admin/books/1/update/:bookid" element={<EditBook />} />
+                <Route path="/admin/mail/config/1" element={<MailConfigPage />} />
+              </>
+            )}
+
+            {/* User */}
+            {(userType === 'user' || userType === 'admin') && (
+              <>
+                <Route path='/user/dashboard/:page' element={<UserDashboard />} />
+                <Route path='/user/books/return-renew' element={<RenewReturn />} />
+                <Route path='/user/1/profile' element={<UserProfile1 />} />
+              </>
+            )}
           </>
         )}
-
-        {/* User */}
-        {userType === 'user' || userType === 'admin' && (
-          <>
-            <Route path='/user/dashboard/:page' element={<UserDashboard />} />
-            <Route path='/user/books/return-renew' element={<RenewReturn />} />
-            <Route path='/user/1/profile' element={<UserProfile1 />} />
-          </>
-        )}
-
         {/* Books */}
         <Route path="/books/*" element={<BooksPage />} />
         <Route path="/books/details/:bookid" element={<BooksDetails />} />

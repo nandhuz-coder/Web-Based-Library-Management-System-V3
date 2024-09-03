@@ -22,7 +22,7 @@ router.post("/admin-signup", authController.postAdminSignUp);
 
 /**
  * @route POST /user-login
- * @description User login handler
+ * @description Handles user login
  * @access Public
  *
  * Workflow:
@@ -35,22 +35,28 @@ router.post("/admin-signup", authController.postAdminSignUp);
  * 7. If login is successful, a JSON response with a success message and the username is sent.
  */
 router.post("/user-login", function (req, res, next) {
+  if (req.user?.session) req.session.destroy();
+  // Step 2: Authenticate user credentials
   passport.authenticate("local", function (err, user) {
     if (err) {
       // Step 3: Handle authentication error
+      console.log(err);
       return next(err);
     }
     if (!user) {
       // Step 4: Handle invalid username or password
-      return res.json({ error: "Please provide Valid Username and password" });
+      return res.json({
+        error: "Please provide a valid username and password",
+      });
     }
     req.logIn(user, function (err) {
       if (err) {
         // Step 6: Handle login error
+        console.log(err);
         return next(err);
       }
       // Step 7: Send success response
-      return res.json({ success: `Hello, ${user.username} Welcome` });
+      return res.json({ success: `Hello, ${user.username}. Welcome!` });
     });
   })(req, res, next);
 });

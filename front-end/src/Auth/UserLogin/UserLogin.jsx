@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Alert from '../../partials/Header/alert/alert';
 import Navbar from '../../partials/Header/nav/nav';
 import { useNavigate } from 'react-router-dom';
+import './styles.css';
 
 const UserLogin = ({ IfUser }) => {
     const navigate = useNavigate();
@@ -12,10 +13,90 @@ const UserLogin = ({ IfUser }) => {
         username: '',
         password: '',
     });
+    const [otpRequired, setOtpRequired] = useState(false);
+    const [otpSent, setOtpSent] = useState(false);
+    const [cooldown, setCooldown] = useState(false);
+    const [cooldownTime, setCooldownTime] = useState(60);
+    const [attempts, setAttempts] = useState(0);
+    const [otpVerified, setOtpVerified] = useState(false);
+    const [Sendotp, setSendOtp] = useState(false);
+    const [otpInput, setOtpInput] = useState('');
+    const [otpSecret, setOtpSecret] = useState('');
+
+    useEffect(() => {
+        axios.get('/api/auth/otp-login').then((response) => {
+            setOtpRequired(response.data.otp);
+        });
+    }, []);
+
+    useEffect(() => {
+        let timer;
+        if (cooldown) {
+            timer = setInterval(() => {
+                setCooldownTime((prevTime) => {
+                    if (prevTime <= 1) {
+                        clearInterval(timer);
+                        setCooldown(false);
+                        return 60;
+                    }
+                    return prevTime - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [cooldown]);
+
+    const generateOTP = async () => {
+        if (cooldown) return;
+        try {
+            setSendOtp(true);
+            const response = await axios.post('/api/auth/generate-otp', formData);
+            if (response.data.error) return setError(response.data.error);
+            else if (response.data.success) setSuccess(response.data.success);
+            setOtpSecret(response.data.secret);
+            setSendOtp(false);
+            setOtpSent(true);
+            setCooldown(true);
+            setAttempts(0);
+        } catch (error) {
+            console.error('There was an error generating OTP:', error);
+            setError('There was an error generating OTP.');
+            setSendOtp(false);
+        }
+    };
+
+    const matchOTP = async () => {
+        if (attempts >= 5) {
+            setError('Maximum verification attempts reached.');
+            return;
+        }
+        try {
+            setSendOtp(true);
+            const response = await axios.post('/api/auth/verify-otp', { otp: otpInput, secret: otpSecret });
+            if (response.data.valid) {
+                setSuccess('OTP matched successfully!');
+                setOtpSent(false);
+                setOtpVerified(true);
+            } else {
+                setError('OTP did not match!');
+                setOtpVerified(false);
+            }
+            setSendOtp(false);
+        } catch (error) {
+            console.error('There was an error matching OTP:', error);
+            setError('There was an error matching OTP.');
+            setSendOtp(false);
+        }
+        setAttempts(attempts + 1);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleOtpChange = (e) => {
+        setOtpInput(e.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -23,13 +104,16 @@ const UserLogin = ({ IfUser }) => {
         try {
             const response = await axios.post('/auth/user-login', formData);
             if (response.data.success) {
-                setSuccess(response.data.success)
-                navigate('/user/dashboard/1');
+                setSuccess(response.data.success);
+                setTimeout(() => {
+                    navigate('/user/dashboard/1');
+                }, 700);
+            } else {
+                setError(response.data.error);
             }
-            else setError(response.data.error);
         } catch (error) {
             console.error('There was an error logging in:', error);
-            setError(error);
+            setError('There was an error logging in.');
         }
     };
 
@@ -90,10 +174,54 @@ const UserLogin = ({ IfUser }) => {
                                             onChange={handleChange}
                                         />
                                     </div>
+                                    {otpRequired && (
+                                        <div>
+                                            <button
+                                                type="button"
+                                                onClick={generateOTP}
+                                                disabled={cooldown || Sendotp}
+                                                className="btn btn-primary btn-block"
+                                            >
+                                                {Sendotp ? (
+                                                    <>
+                                                        <div className="spinner" role="status"></div>
+                                                        <span className="sr-only">Loading...</span>
+                                                    </>
+                                                ) : cooldown ? `Wait ${cooldownTime} seconds` : 'Get OTP'}
+                                            </button>
+                                            {otpSent && (
+                                                <div className="form-group">
+                                                    <label htmlFor="otp" className="form-control-label">OTP</label>
+                                                    <input
+                                                        type="text"
+                                                        id="otp"
+                                                        name="otp"
+                                                        placeholder="OTP"
+                                                        className="form-control"
+                                                        required
+                                                        value={otpInput}
+                                                        onChange={handleOtpChange}
+                                                        maxLength={6}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={matchOTP}
+                                                        disabled={otpInput.length !== 6 || Sendotp}
+                                                        className="btn btn-secondary btn-block"
+                                                    >
+                                                        {Sendotp ? (
+                                                            <div className="spinner" role="status"></div>
+                                                        ) : 'Verify OTP'}
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
                                     <button
                                         type="submit"
                                         id="submit_btn"
                                         className="btn btn-success btn-block"
+                                        disabled={otpRequired && !otpVerified}
                                     >
                                         Login!
                                     </button>

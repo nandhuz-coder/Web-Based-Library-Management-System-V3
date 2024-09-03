@@ -43,6 +43,7 @@ const authRoutes = require("./routes/auth");
 const ApiAdmin = require("./Api/Api-Admin");
 const ApiBooks = require("./Api/Api-Book");
 const ApiUser = require("./Api/Api-user");
+const ApiAuth = require("./Api/Api-Auth");
 const ApiMiddleware = require("./middleware/middleware");
 const suggestion = require("./Api/suggestions");
 
@@ -231,6 +232,7 @@ app.use("/auth", authRoutes);
 app.use("/api/admin", ApiAdmin);
 app.use("/api/books", ApiBooks);
 app.use("/api/user", ApiUser);
+app.use("/api/auth", ApiAuth);
 app.use("/middleware", ApiMiddleware);
 app.use(suggestion);
 
