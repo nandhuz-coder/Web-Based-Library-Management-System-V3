@@ -473,7 +473,8 @@ exports.getAdminRequest = async (req, res) => {
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the list of return documents.
- *
+ * @description This function retrieves a paginated list of return documents based on the search criteria provided in the request parameters. 
+ * 
  * Workflow:
  * 1. Extract the page number, filter, and value from the request parameters.
  * 2. Adjust the filter key if necessary (e.g., for username or book information).

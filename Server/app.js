@@ -22,6 +22,10 @@ const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 const serveStatic = require("serve-static");
 
+//* Import Logger
+const Logger = require("./logs/logs");
+const logs = new Logger("app");
+
 //* Import models
 const User = require("./models/user");
 
@@ -97,6 +101,7 @@ mongoose
     dbName: process.env.DB_NAME,
   })
   .then(async () => {
+    logs.log("info", "MongoDB is connected");
     console.log("MongoDB is connected");
 
     /**
@@ -270,5 +275,6 @@ const PORT = process.env.PORT || 3000;
  * - Logs a message to the console indicating that the server is running and on which port.
  */
 app.listen(PORT, () => {
+  logs.log("info", `Server is running on port ${PORT}`);
   console.log(`Server is running on port ${PORT}`);
 });

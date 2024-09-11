@@ -6,6 +6,7 @@
 const nodemailer = require("nodemailer");
 const MailConfig = require("../../models/mail-config");
 const createEmailTemplate = require("./html/template-generator");
+const Logger = require("../../logs/logs");
 
 /**
  * @class EmailService
@@ -114,6 +115,8 @@ class EmailService {
         });
         await newMailConfig.save();
       }
+      const logs = new Logger("email");
+      logs.log("Email", "Auth key verified");
       return { message: "Auth key verified" };
     } catch (error) {
       let mailConfig = await MailConfig.findOne();
@@ -125,10 +128,13 @@ class EmailService {
 
         await mailConfig.save();
       }
+      const logs = new Logger("email");
       if (error.responseCode === 535) {
+        logs.log("Email", `Change auth key for ${to}`);
         throw new Error("Change auth key");
       } else {
         console.log("Error:", error.message);
+        logs.log("Email", `${error.message} for ${to}`);
         throw new Error(error.message);
       }
     }
