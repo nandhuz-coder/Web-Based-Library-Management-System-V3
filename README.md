@@ -118,4 +118,4 @@ This module can be accessed by anyone and provides the following functionalities
 To run the application, use the following commands:
 
 - For deployment: `npm start`
-- For developer checks: `npm run dev`
+- For development: `npm run dev`
