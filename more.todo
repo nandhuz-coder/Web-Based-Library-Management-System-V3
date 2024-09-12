@@ -45,7 +45,7 @@
 - [x] Fix edit comment.
 - [x] Fix delete comment.
 - [x] Add Admin comment force delete.
-- [ ] Fix comment redirection from user profile.
+- [x] Fix comment redirection from user profile.
 - [ ] Add suggestion on every search.
 - [ ] Add notification.
 - [ ] Make alert more user friendly.

@@ -478,14 +478,10 @@ exports.postNewComment = async (req, res) => {
     // Log the activity
     const activity = new Activity({
       info: {
-        id: newComment._id,
+        id: book._id,
         title: book.title,
       },
       category: "Comment",
-      time: {
-        id: newComment._id,
-        date: newComment.date,
-      },
       user_id: {
         id: userId,
         username: username,
