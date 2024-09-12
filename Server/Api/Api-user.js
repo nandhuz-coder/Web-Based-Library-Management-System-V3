@@ -73,4 +73,17 @@ router.post(
   userController.postNewComment
 );
 
+/**
+ * @route POST /user/books/details/:book_id/:comment_id
+ * @description Update existing comment
+ * @access Private (Logged in users only)
+ * @param {string} book_id - The ID of the book to comment on
+ * @param {string} comment_id - The ID of the comment to update
+ */
+router.post(
+  "/books/details/edit/:book_id/:comment_id",
+  middleware.isLoggedIn,
+  userController.postUpdateComment
+);
+
 module.exports = router;

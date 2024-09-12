@@ -33,17 +33,6 @@ router.get(
 );
 
 /**
- * @route POST /user/books/details/:book_id/:comment_id
- * @description Update existing comment
- * @access Private (Logged in users only)
- */
-router.post(
-  "/books/details/:book_id/:comment_id",
-  middleware.isLoggedIn,
-  userController.postUpdateComment
-);
-
-/**
  * @route DELETE /user/books/details/:book_id/:comment_id
  * @description Delete existing comment
  * @access Private (Logged in users only)

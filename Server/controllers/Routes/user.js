@@ -67,62 +67,6 @@ exports.getShowRenewReturn = async (req, res) => {
   }
 };
 
-
-
-// user -> update existing comment working procedure
-/**
- * Updates an existing comment and logs the activity.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Promise<void>} - A promise that resolves to sending a JSON response indicating success or failure.
- *
- * Workflow:
- * 1. Extract the comment ID, comment text, book ID, username, and user ID from the request.
- * 2. Fetch the comment to be updated from the database and update it.
- * 3. Fetch the book to be commented on for logging the book ID and title in the activity.
- * 4. Log the activity by creating a new Activity instance and saving it to the database.
- * 5. Send a JSON response indicating success.
- * 6. Handle any errors that occur during the process and log them to the console.
- */
-exports.postUpdateComment = async (req, res, _next) => {
-  try {
-    // Step 1: Extract the comment ID, comment text, book ID, username, and user ID from the request
-    const comment_id = req.params.comment_id;
-    const comment_text = req.body.comment;
-    const book_id = req.params.book_id;
-    const username = req.user.username;
-    const user_id = req.user._id;
-
-    // Step 2: Fetch the comment to be updated from the database and update it
-    await Comment.findByIdAndUpdate(comment_id, { text: comment_text });
-
-    // Step 3: Fetch the book to be commented on for logging the book ID and title in the activity
-    const book = await Book.findById(book_id);
-
-    // Step 4: Log the activity by creating a new Activity instance and saving it to the database
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Update Comment",
-      user_id: {
-        id: user_id,
-        username: username,
-      },
-    });
-    await activity.save();
-
-    // Step 5: Send a JSON response indicating success
-    res.json({ success: "Comment updated successfully" });
-  } catch (err) {
-    // Step 6: Handle any errors that occur during the process and log them to the console
-    console.error("Error updating comment:", err);
-    return res.json({ error: "Failed to update comment" });
-  }
-};
-
 // user -> delete existing comment working procedure
 /**
  * Deletes an existing comment and logs the activity.

@@ -9,6 +9,7 @@ const BooksDetails = () => {
     const { bookid } = useParams();
     const [book, setBook] = useState({});
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const [user, setUser] = useState(false);
     const [comment, setComment] = useState('');
@@ -46,6 +47,7 @@ const BooksDetails = () => {
         try {
             const { data } = await axios.post(`/api/user/books/details/${book._id}/comment`, { comment });
             if (data.error) return setError(data.error);
+            setSuccess(data.success);
             setComments(data.comments);
             setComment('');
         } catch (error) {
@@ -65,8 +67,9 @@ const BooksDetails = () => {
     const handleEditComment = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.put(`/api/books/${book._id}/comments/${editCommentId}`, { text: editCommentText });
+            const { data } = await axios.post(`/api/user/books/details/edit/${book._id}/${editCommentId}`, { text: editCommentText });
             setComments(data.comments);
+            setSuccess(data.success);
             setEditCommentId(null);
             setEditCommentText('');
         } catch (error) {
@@ -87,6 +90,7 @@ const BooksDetails = () => {
         <>
             {user ? (<UserNav />) : (<Navbar />)}
             <Alert error={error} dismissAlert={() => setError('')} />
+            <Alert success={success} dismissAlert={() => setSuccess('')} />
             <div className="container mt-3">
                 <div className="row justify-content-center">
                     <div className="col-md-10">

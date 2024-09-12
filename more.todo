@@ -1,6 +1,46 @@
+# Library Management System V3
+
+## Task List
+
 - [x] Fix images in profile.
 - [x] Fix violation flag on user dashboard.
 - [x] Fix violation flag display in admin user profile.
+- [x] Fix admin user profile image rendering.
+- [x] Implement server-side validation.
+- [x] Implement scalable image upload.
+- [x] Implement API rendering.
+- [x] Create admin sign-up route.
+- [x] Create auth login route.
+- [x] Create auth logout route.
+- [x] Track all user activities for admin.
+- [x] Implement add books functionality for admin.
+- [x] Implement update books functionality for admin.
+- [x] Implement delete books functionality for admin.
+- [x] Display out of stock books for admin.
+- [x] Implement search books by category, title, author, ISBN for admin.
+- [x] Implement find users by first name, last name, email, and username for admin.
+- [x] Implement delete user accounts for admin.
+- [x] Implement restrict individual users for admin.
+- [x] Implement browse books showcase for admin.
+- [x] Implement update admin profile and password.
+- [x] Implement add new admin functionality.
+- [x] Implement delete currently logged-in admin profile.
+- [x] Implement approve and decline book requests for admin.
+- [x] Implement accept and decline return requests for admin.
+- [x] Create user sign-up route.
+- [x] Create user login route.
+- [x] Create user logout route.
+- [x] Track own activities for user.
+- [x] Implement request books functionality for user.
+- [x] Implement renew books functionality for user.
+- [x] Implement return books functionality for user.
+- [x] Implement browse books showcase for user.
+- [x] Implement add, edit, and delete comments on any book's comment section for user.
+- [x] Implement upload/update profile picture for user.
+- [x] Implement update profile and password for user.
+- [x] Implement delete account for user.
+- [x] Implement show all books functionality for browse books module.
+- [x] Implement find books using filtered search for browse books module.
 - [x] Add comment in book.
 - [ ] Fix edit comment.
 - [ ] Fix delete comment.
@@ -8,7 +48,6 @@
 - [ ] Add suggestion on every search.
 - [ ] Add notification.
 - [ ] Make alert more user friendly.
-- [x] Fix admin user profile image rendering.
 - [ ] Add mail verification on signup.
 - [ ] Add mail verification on user profile edit.
 - [ ] Fix admin profile (delete, edit).
@@ -23,3 +62,4 @@
 - [ ] Add forget password functionality.
 - [ ] Add mails for forget password.
 - [ ] Add mail limit (421, 450 error codes).
+- [ ] Implement server-side caching.

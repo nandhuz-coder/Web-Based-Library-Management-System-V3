@@ -11,6 +11,7 @@ The following features have been added to this repository:
 2. Server-side validation
 3. Scalable image upload
 4. API rendering
+5. Mailing system
 
 ## Technologies Used
 
