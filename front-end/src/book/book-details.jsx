@@ -13,21 +13,23 @@ const BooksDetails = () => {
     const [user, setUser] = useState(false);
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
+    const [editCommentId, setEditCommentId] = useState(null);
+    const [editCommentText, setEditCommentText] = useState('');
 
     useEffect(() => {
         const fetchBookDetails = async () => {
             try {
-                await axios.get(`/api/books/details/${bookid}`).then(async (res) => {
-                    const data = await res.data
-                    if (data.error) {
-                        setUser(data.IsUser);
-                        setError(data.error);
-                        return;
-                    }
-                    setBook(data.book);
-                    setCurrentUser(data.user);
-                    setComments(data.book.comments ? data.book.comments : []);
-                })
+                const res = await axios.get(`/api/books/details/${bookid}`);
+                const data = await res.data;
+                if (data.error) {
+                    setUser(data.IsUser);
+                    setError(data.error);
+                    return;
+                }
+                setUser(data.IsUser);
+                setBook(data.book);
+                setCurrentUser(data.user);
+                setComments(data.book.comments ? data.book.comments : []);
             } catch (error) {
                 console.log("Error fetching book details:", error);
             }
@@ -42,7 +44,8 @@ const BooksDetails = () => {
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post(`/api/books/${book._id}/comment`, { comment });
+            const { data } = await axios.post(`/api/user/books/details/${book._id}/comment`, { comment });
+            if (data.error) return setError(data.error);
             setComments(data.comments);
             setComment('');
         } catch (error) {
@@ -52,20 +55,32 @@ const BooksDetails = () => {
 
     const handleDeleteComment = async (commentId) => {
         try {
-            const { data } = await axios.delete(`/api/books/${book._id}/comments/${commentId}`);
+            const { data } = await axios.delete(`/api/users/books/${book._id}/comments/${commentId}`);
             setComments(data.comments);
         } catch (error) {
             console.error("Error deleting comment:", error);
         }
     };
 
-    const handleEditComment = async (commentId, text) => {
+    const handleEditComment = async (e) => {
+        e.preventDefault();
         try {
-            const { data } = await axios.put(`/api/books/${book._id}/comments/${commentId}`, { text });
+            const { data } = await axios.put(`/api/books/${book._id}/comments/${editCommentId}`, { text: editCommentText });
             setComments(data.comments);
+            setEditCommentId(null);
+            setEditCommentText('');
         } catch (error) {
             console.error("Error editing comment:", error);
         }
+    };
+
+    const handleEditCommentChange = (e) => {
+        setEditCommentText(e.target.value);
+    };
+
+    const toggleEditCommentBox = (commentId, text) => {
+        setEditCommentId(commentId);
+        setEditCommentText(text);
     };
 
     return (
@@ -129,7 +144,11 @@ const BooksDetails = () => {
 
                                         {user && currentUser && comment.author.id === currentUser._id && (
                                             <>
-                                                <button id="edit" className="btn btn-primary px-1 py-0">
+                                                <button
+                                                    id="edit"
+                                                    className="btn btn-primary px-1 py-0"
+                                                    onClick={() => toggleEditCommentBox(comment._id, comment.text)}
+                                                >
                                                     <i className="fa fa-pencil"></i>
                                                 </button>
 
@@ -139,12 +158,19 @@ const BooksDetails = () => {
                                                     </button>
                                                 </form>
 
-                                                <div className="d-none" id="editCommentBox">
-                                                    <form onSubmit={(e) => { e.preventDefault(); handleEditComment(comment._id, comment.text); }}>
-                                                        <textarea name="comment[text]" className="form-control" defaultValue={comment.text}></textarea>
-                                                        <input type="submit" className="btn btn-outline-success btn-sm m-1 float-right" />
-                                                    </form>
-                                                </div>
+                                                {editCommentId === comment._id && (
+                                                    <div id="editCommentBox">
+                                                        <form onSubmit={handleEditComment}>
+                                                            <textarea
+                                                                name="comment[text]"
+                                                                className="form-control"
+                                                                value={editCommentText}
+                                                                onChange={handleEditCommentChange}
+                                                            ></textarea>
+                                                            <input type="submit" className="btn btn-outline-success btn-sm m-1 float-right" />
+                                                        </form>
+                                                    </div>
+                                                )}
                                             </>
                                         )}
                                     </li>

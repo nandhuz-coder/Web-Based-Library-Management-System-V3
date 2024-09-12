@@ -6,7 +6,7 @@
  */
 
 const Book = require("../models/book.js");
-const faker = require("@faker-js/faker");
+const { faker } = require("@faker-js/faker");
 
 const category = [
   "Science",
@@ -22,8 +22,8 @@ const category = [
   "Technology",
 ];
 
-const adjectives = Array.from({ length: 5000 }, () => faker.random.word());
-const nouns = Array.from({ length: 5000 }, () => faker.random.word());
+const adjectives = Array.from({ length: 5000 }, () => faker.word.adjective());
+const nouns = Array.from({ length: 5000 }, () => faker.word.noun());
 
 /**
  * @function generateTitle
@@ -69,9 +69,9 @@ async function seed(limit) {
     try {
       const book = new Book({
         title,
-        ISBN: faker.random.uuid(),
+        ISBN: faker.string.uuid(),
         stock: Math.floor(Math.random() * 15),
-        author: faker.name.findName(),
+        author: faker.person.fullName(),
         description: faker.lorem.paragraphs(3),
         category: category[index1],
       });

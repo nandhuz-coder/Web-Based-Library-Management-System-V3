@@ -4,6 +4,7 @@
  */
 
 // importing modules
+const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
 
@@ -20,6 +21,7 @@ const Comment = require("../../models/comment");
 const Request = require("../../models/request");
 const Return = require("../../models/return");
 
+// global Variables
 const PER_PAGE = 12;
 
 /**
@@ -416,5 +418,92 @@ exports.changePassword = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);
+  }
+};
+
+/**
+ * Creates a new comment for a book and logs the activity.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response indicating success or failure.
+ *
+ * Workflow:
+ * 1. Extract the comment text, user ID, and username from the request.
+ * 2. Check if the book ID is a valid MongoDB ObjectId.
+ * 3. Fetch the book to be commented on by its ID.
+ * 4. Create a new Comment instance and fill in the information.
+ * 5. Save the comment to the database.
+ * 6. Push the comment ID to the book's comments array and save the book.
+ * 7. Log the activity by creating a new Activity instance and saving it to the database.
+ * 8. Populate the comments array with comment details.
+ * 9. Send a JSON response indicating success.
+ * 10. Handle any errors that occur during the process and log them to the console.
+ */
+exports.postNewComment = async (req, res) => {
+  try {
+    const { comment } = req.body;
+    const userId = req.user._id;
+    const username = req.user.username;
+    const bookId = req.params.book_id;
+
+    // Check if the bookId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(bookId)) {
+      return res.json({ error: "Invalid book ID" });
+    }
+
+    // Fetch the book to be commented on
+    const book = await Book.findById(bookId);
+    if (!book) {
+      return res.json({ error: "Book not found" });
+    }
+
+    // Create a new Comment instance
+    const newComment = new Comment({
+      text: comment,
+      author: {
+        id: userId,
+        username: username,
+      },
+      book: bookId,
+    });
+
+    // Save the comment to the database
+    await newComment.save();
+
+    // Push the comment ID to the book's comments array and save the book
+    book.comments.push(newComment._id);
+    await book.save();
+
+    // Log the activity
+    const activity = new Activity({
+      info: {
+        id: newComment._id,
+        title: book.title,
+      },
+      category: "Comment",
+      time: {
+        id: newComment._id,
+        date: newComment.date,
+      },
+      user_id: {
+        id: userId,
+        username: username,
+      },
+    });
+
+    await activity.save();
+
+    // Populate the comments array with comment details
+    await book.populate("comments");
+
+    // Send a JSON response indicating success
+    res.json({
+      success: "Comment added successfully",
+      comments: book.comments,
+    });
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    res.json({ error: "Unknown error occurred" });
   }
 };

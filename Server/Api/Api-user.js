@@ -61,4 +61,16 @@ router.post("/profile/edit", userController.updateProfile);
  */
 router.post("/1/changepassword", userController.changePassword);
 
+/**
+ * @route POST /api/user/books/details/:book_id/comment
+ * @description Create new comment
+ * @param {string} book_id - The ID of the book to comment on
+ * @access Private (Logged in users only)
+ */
+router.post(
+  "/books/details/:book_id/comment",
+  middleware.isLoggedIn,
+  userController.postNewComment
+);
+
 module.exports = router;

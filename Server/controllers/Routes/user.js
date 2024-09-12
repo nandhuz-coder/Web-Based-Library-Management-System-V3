@@ -67,77 +67,7 @@ exports.getShowRenewReturn = async (req, res) => {
   }
 };
 
-//! user -> create new comment working procedure
-/**
- * Creates a new comment for a book and logs the activity.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Promise<void>} - A promise that resolves to sending a JSON response indicating success or failure.
- *
- * Workflow:
- * 1. Extract the comment text, user ID, and username from the request.
- * 2. Fetch the book to be commented on by its ID.
- * 3. Create a new Comment instance and fill in the information.
- * 4. Save the comment to the database.
- * 5. Push the comment ID to the book's comments array and save the book.
- * 6. Log the activity by creating a new Activity instance and saving it to the database.
- * 7. Send a JSON response indicating success.
- * 8. Handle any errors that occur during the process and log them to the console.
- */
-exports.postNewComment = async (req, res) => {
-  try {
-    // Step 1: Extract the comment text, user ID, and username from the request
-    const comment_text = req.body.comment;
-    const user_id = req.user._id;
-    const username = req.user.username;
 
-    // Step 2: Fetch the book to be commented on by its ID
-    const book_id = req.params.book_id;
-    const book = await Book.findById(book_id);
-
-    // Step 3: Create a new Comment instance and fill in the information
-    const comment = new Comment({
-      text: comment_text,
-      author: {
-        id: user_id,
-        username: username,
-      },
-      book: {
-        id: book._id,
-        title: book.title,
-      },
-    });
-
-    // Step 4: Save the comment to the database
-    await comment.save();
-
-    // Step 5: Push the comment ID to the book's comments array and save the book
-    book.comments.push(comment._id);
-    await book.save();
-
-    // Step 6: Log the activity by creating a new Activity instance and saving it to the database
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Comment",
-      user_id: {
-        id: user_id,
-        username: username,
-      },
-    });
-    await activity.save();
-
-    // Step 7: Send a JSON response indicating success
-    res.json({ success: "Comment added successfully" });
-  } catch (err) {
-    // Step 8: Handle any errors that occur during the process and log them to the console
-    console.error("Error adding comment:", err);
-    return res.json({ error: "Failed to add comment" });
-  }
-};
 
 // user -> update existing comment working procedure
 /**
