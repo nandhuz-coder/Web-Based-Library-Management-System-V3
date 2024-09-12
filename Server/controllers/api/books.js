@@ -3,6 +3,8 @@
  * @description Controller for handling book-related operations.
  */
 
+const mongoose = require("mongoose");
+
 // Importing required models
 const User = require("../../models/user");
 const Activity = require("../../models/activity");
@@ -71,25 +73,42 @@ exports.getBooks = async (req, res) => {
  * @returns {Promise<void>} - Returns a JSON response with book details and user details.
  *
  * Workflow:
- * 1. Extract book_id from request parameters.
- * 2. Fetch book details from the database, including comments.
- * 3. Send JSON response with book details and user details.
- * 4. Handle errors by logging them and redirecting back.
+ * 1. Check if the user is logged in and set the IsUser flag.
+ * 2. Extract book_id from request parameters.
+ * 3. Validate if book_id is a valid Mongoose ObjectId.
+ * 4. Fetch book details from the database, including comments.
+ * 5. Check if the book exists.
+ * 6. Send JSON response with book details, user details, and IsUser flag.
+ * 7. Handle errors by logging them and sending appropriate error responses.
  */
 exports.getBookDetails = async (req, res) => {
   try {
-    // Extract book_id from request parameters
+    // Step 1: Check if the user is logged in and set the IsUser flag
+    let IsUser = false;
+    if (req.user) IsUser = true;
+
+    // Step 2: Extract book_id from request parameters
     const book_id = req.params.bookid;
 
-    // Fetch book details from the database, including comments
+    // Step 3: Validate if book_id is a valid Mongoose ObjectId
+    if (!mongoose.Types.ObjectId.isValid(book_id)) {
+      return res.json({ error: "Invalid book ID", IsUser: IsUser });
+    }
+
+    // Step 4: Fetch book details from the database, including comments
     const book = await Book.findById(book_id).populate("comments");
 
-    // Send JSON response with book details and user details
-    return res.json({ book: book, user: req.user });
+    // Step 5: Check if the book exists
+    if (!book) {
+      return res.json({ error: "Book not found", IsUser: IsUser });
+    }
+
+    // Step 6: Send JSON response with book details, user details, and IsUser flag
+    return res.json({ book: book, user: req.user, IsUser: IsUser });
   } catch (err) {
-    // Handle errors by logging them and redirecting back
+    // Step 7: Handle errors by logging them and sending appropriate error responses
     console.log(err);
-    return res.redirect("back");
+    return res.json({ error: "Internal server error" });
   }
 };
 
