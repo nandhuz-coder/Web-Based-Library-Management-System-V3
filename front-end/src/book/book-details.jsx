@@ -57,7 +57,9 @@ const BooksDetails = () => {
 
     const handleDeleteComment = async (commentId) => {
         try {
-            const { data } = await axios.delete(`/api/users/books/${book._id}/comments/${commentId}`);
+            const { data } = await axios.delete(`/api/user/books/details/delete/${book._id}/${commentId}`);
+            if (data.error) return setError(data.error);
+            setSuccess(data.success);
             setComments(data.comments);
         } catch (error) {
             console.error("Error deleting comment:", error);
@@ -68,6 +70,7 @@ const BooksDetails = () => {
         e.preventDefault();
         try {
             const { data } = await axios.post(`/api/user/books/details/edit/${book._id}/${editCommentId}`, { text: editCommentText });
+            if (data.error) return setError(data.error);
             setComments(data.comments);
             setSuccess(data.success);
             setEditCommentId(null);

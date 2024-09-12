@@ -5,10 +5,7 @@
  */
 
 // importing models
-const Activity = require("../../models/activity");
-const Book = require("../../models/book");
 const Issue = require("../../models/issue");
-const Comment = require("../../models/comment");
 
 // user -> profile
 /**
@@ -67,63 +64,3 @@ exports.getShowRenewReturn = async (req, res) => {
   }
 };
 
-// user -> delete existing comment working procedure
-/**
- * Deletes an existing comment and logs the activity.
- *
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Promise<void>} - A promise that resolves to sending a JSON response indicating success or failure.
- *
- * Workflow:
- * 1. Extract the book ID, comment ID, user ID, and username from the request.
- * 2. Fetch the book information for logging purposes.
- * 3. Find the position of the comment ID in the book's comments array and remove it.
- * 4. Find the comment by its ID and remove it from the Comment collection.
- * 5. Log the activity by creating a new Activity instance and saving it to the database.
- * 6. Send a JSON response indicating success.
- * 7. Handle any errors that occur during the process and log them to the console.
- */
-exports.deleteComment = async (req, res, _next) => {
-  try {
-    // Step 1: Extract the book ID, comment ID, user ID, and username from the request
-    const book_id = req.params.book_id;
-    const comment_id = req.params.comment_id;
-    const user_id = req.user._id;
-    const username = req.user.username;
-
-    // Step 2: Fetch the book information for logging purposes
-    const book = await Book.findById(book_id);
-
-    // Step 3: Find the position of the comment ID in the book's comments array and remove it
-    const pos = book.comments.indexOf(comment_id);
-    if (pos > -1) {
-      book.comments.splice(pos, 1);
-      await book.save();
-    }
-
-    // Step 4: Find the comment by its ID and remove it from the Comment collection
-    await Comment.findByIdAndDelete(comment_id);
-
-    // Step 5: Log the activity by creating a new Activity instance and saving it to the database
-    const activity = new Activity({
-      info: {
-        id: book._id,
-        title: book.title,
-      },
-      category: "Delete Comment",
-      user_id: {
-        id: user_id,
-        username: username,
-      },
-    });
-    await activity.save();
-
-    // Step 6: Send a JSON response indicating success
-    res.json({ success: "Comment deleted successfully" });
-  } catch (err) {
-    // Step 7: Handle any errors that occur during the process and log them to the console
-    console.error("Error deleting comment:", err);
-    return res.json({ error: "Failed to delete comment" });
-  }
-};

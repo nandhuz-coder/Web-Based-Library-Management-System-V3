@@ -86,4 +86,14 @@ router.post(
   userController.postUpdateComment
 );
 
+/**
+ * @route DELETE /user/books/details/:book_id/:comment_id
+ * @description Delete existing comment
+ * @access Private (Logged in users only)
+ */
+router.delete(
+  "/books/details/delete/:book_id/:comment_id",
+  middleware.isLoggedIn,
+  userController.deleteComment
+);
 module.exports = router;

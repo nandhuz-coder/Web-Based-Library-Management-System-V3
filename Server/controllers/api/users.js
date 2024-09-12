@@ -518,11 +518,13 @@ exports.postNewComment = async (req, res) => {
  *
  * Workflow:
  * 1. Extract the comment ID, comment text, book ID, username, and user ID from the request.
- * 2. Fetch the comment to be updated from the database and update it.
- * 3. Fetch the book to be commented on for logging the book ID and title in the activity.
- * 4. Log the activity by creating a new Activity instance and saving it to the database.
- * 5. Send a JSON response indicating success.
- * 6. Handle any errors that occur during the process and log them to the console.
+ * 2. Validate the comment ID and book ID to ensure they are valid MongoDB ObjectIds.
+ * 3. Fetch the comment to be updated from the database and update it.
+ * 4. Fetch the book to be commented on for logging the book ID and title in the activity.
+ * 5. Log the activity by creating a new Activity instance and saving it to the database.
+ * 6. Populate the comments array with comment details.
+ * 7. Send a JSON response indicating success.
+ * 8. Handle any errors that occur during the process and log them to the console.
  */
 exports.postUpdateComment = async (req, res, _next) => {
   try {
@@ -533,13 +535,24 @@ exports.postUpdateComment = async (req, res, _next) => {
     const username = req.user.username;
     const user_id = req.user._id;
 
-    // Step 2: Fetch the comment to be updated from the database and update it
+    // Step 2: Validate the comment ID and book ID to ensure they are valid MongoDB ObjectIds
+    if (
+      !mongoose.Types.ObjectId.isValid(comment_id) ||
+      !mongoose.Types.ObjectId.isValid(book_id)
+    ) {
+      return res.json({ error: "Invalid comment ID or book ID" });
+    }
+
+    // Step 3: Fetch the comment to be updated from the database and update it
     await Comment.findByIdAndUpdate(comment_id, { text: comment_text });
 
-    // Step 3: Fetch the book to be commented on for logging the book ID and title in the activity
+    // Step 4: Fetch the book to be commented on for logging the book ID and title in the activity
     const book = await Book.findById(book_id);
+    if (!book) {
+      return res.json({ error: "Book not found" });
+    }
 
-    // Step 4: Log the activity by creating a new Activity instance and saving it to the database
+    // Step 5: Log the activity by creating a new Activity instance and saving it to the database
     const activity = new Activity({
       info: {
         id: book._id,
@@ -553,16 +566,97 @@ exports.postUpdateComment = async (req, res, _next) => {
     });
     await activity.save();
 
+    // Step 6: Populate the comments array with comment details
     await book.populate("comments");
 
-    // Step 5: Send a JSON response indicating success
+    // Step 7: Send a JSON response indicating success
     await res.json({
       success: "Comment updated successfully",
       comments: book.comments,
     });
   } catch (err) {
-    // Step 6: Handle any errors that occur during the process and log them to the console
+    // Step 8: Handle any errors that occur during the process and log them to the console
     console.error("Error updating comment:", err);
     return res.json({ error: "Failed to update comment" });
+  }
+};
+
+// user -> delete existing comment working procedure
+/**
+ * Deletes an existing comment and logs the activity.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response indicating success or failure.
+ *
+ * Workflow:
+ * 1. Extract the book ID, comment ID, user ID, and username from the request.
+ * 2. Validate the book ID and comment ID to ensure they are valid MongoDB ObjectIds.
+ * 3. Fetch the book information for logging purposes.
+ * 4. Find the position of the comment ID in the book's comments array and remove it.
+ * 5. Find the comment by its ID and remove it from the Comment collection.
+ * 6. Log the activity by creating a new Activity instance and saving it to the database.
+ * 7. Populate the comments array with comment details.
+ * 8. Send a JSON response indicating success.
+ * 9. Handle any errors that occur during the process and log them to the console.
+ */
+exports.deleteComment = async (req, res, _next) => {
+  try {
+    // Step 1: Extract the book ID, comment ID, user ID, and username from the request
+    const book_id = req.params.book_id;
+    const comment_id = req.params.comment_id;
+    const user_id = req.user._id;
+    const username = req.user.username;
+
+    // Step 2: Validate the book ID and comment ID to ensure they are valid MongoDB ObjectIds
+    if (
+      !mongoose.Types.ObjectId.isValid(book_id) ||
+      !mongoose.Types.ObjectId.isValid(comment_id)
+    ) {
+      return res.json({ error: "Invalid book ID or comment ID" });
+    }
+
+    // Step 3: Fetch the book information for logging purposes
+    const book = await Book.findById(book_id);
+    if (!book) {
+      return res.json({ error: "Book not found" });
+    }
+
+    // Step 4: Find the position of the comment ID in the book's comments array and remove it
+    const pos = book.comments.indexOf(comment_id);
+    if (pos > -1) {
+      book.comments.splice(pos, 1);
+      await book.save();
+    }
+
+    // Step 5: Find the comment by its ID and remove it from the Comment collection
+    await Comment.findByIdAndDelete(comment_id);
+
+    // Step 6: Log the activity by creating a new Activity instance and saving it to the database
+    const activity = new Activity({
+      info: {
+        id: book._id,
+        title: book.title,
+      },
+      category: "Delete Comment",
+      user_id: {
+        id: user_id,
+        username: username,
+      },
+    });
+    await activity.save();
+
+    // Step 7: Populate the comments array with comment details
+    await book.populate("comments");
+
+    // Step 8: Send a JSON response indicating success
+    await res.json({
+      success: "Comment deleted successfully",
+      comments: book.comments,
+    });
+  } catch (err) {
+    // Step 9: Handle any errors that occur during the process and log them to the console
+    console.error("Error deleting comment:", err);
+    return res.json({ error: "Failed to delete comment" });
   }
 };
