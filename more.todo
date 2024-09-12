@@ -42,8 +42,9 @@
 - [x] Implement show all books functionality for browse books module.
 - [x] Implement find books using filtered search for browse books module.
 - [x] Add comment in book.
-- [ ] Fix edit comment.
-- [ ] Fix delete comment.
+- [x] Fix edit comment.
+- [x] Fix delete comment.
+- [x] Add Admin comment force delete.
 - [ ] Fix comment redirection from user profile.
 - [ ] Add suggestion on every search.
 - [ ] Add notification.

@@ -149,7 +149,7 @@ const BooksDetails = () => {
                                         <span><em> at {new Date(comment.date).toDateString()}</em></span>
                                         <p>{comment.text}</p>
 
-                                        {user && currentUser && comment.author.id === currentUser._id && (
+                                        {user && currentUser && ((comment.author.id === currentUser._id) || (currentUser.isAdmin)) && (
                                             <>
                                                 <button
                                                     id="edit"
