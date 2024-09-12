@@ -1,0 +1,25 @@
+- [x] Fix images in profile.
+- [x] Fix violation flag on user dashboard.
+- [x] Fix violation flag display in admin user profile.
+- [x] Add comment in book.
+- [ ] Fix edit comment.
+- [ ] Fix delete comment.
+- [ ] Fix comment redirection from user profile.
+- [ ] Add suggestion on every search.
+- [ ] Add notification.
+- [ ] Make alert more user friendly.
+- [x] Fix admin user profile image rendering.
+- [ ] Add mail verification on signup.
+- [ ] Add mail verification on user profile edit.
+- [ ] Fix admin profile (delete, edit).
+- [ ] Fix gender in submission.
+- [ ] Fix user profile delete.
+- [ ] Cache user suggestion.
+- [ ] Add mails on book request.
+- [ ] Add mails on book return.
+- [ ] Add mails on book issue.
+- [ ] Add OTP mails on signup.
+- [ ] Add OTP mails on password edit.
+- [ ] Add forget password functionality.
+- [ ] Add mails for forget password.
+- [ ] Add mail limit (421, 450 error codes).
