@@ -47,6 +47,7 @@
 - [x] Add Admin comment force delete.
 - [x] Fix comment redirection from user profile.
 - [ ] Add suggestion on every search.
+- [ ] Add catogaries on add books.
 - [ ] Add notification.
 - [ ] Make alert more user friendly.
 - [ ] Add mail verification on signup.

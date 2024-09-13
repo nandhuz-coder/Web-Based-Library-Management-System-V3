@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Alert from '../partials/Header/alert/alert';
 import Loading from '../Loading/Loading';
+import BooksSearchBar from '../components/Suggestions/books';
+
 let fetchBooks;
 
 const Navbar = ({ currentUser, logout }) => (
@@ -58,43 +60,6 @@ const Navbar = ({ currentUser, logout }) => (
             </div>
         </div>
     </nav>
-);
-
-const SearchBar = ({ handleSubmit }) => (
-    <section id="search_bar" className="my-3 py-4" style={{ background: 'rgb(52, 185, 174)' }}>
-        <div className="container">
-            <form action="/books/all/all/1" method="POST" onSubmit={handleSubmit}>
-                <div className="row">
-                    <div className="col-md-5 p-1">
-                        <select name="filter" id="filter" className="form-control">
-                            <option selected disabled>Select Filter...</option>
-                            <option value="title">Title</option>
-                            <option value="author">Author</option>
-                            <option value="category">Category</option>
-                            <option value="ISBN">ISBN</option>
-                        </select>
-                    </div>
-                    <div className="col-md-5 p-1">
-                        <input
-                            name="searchName"
-                            id="searchName"
-                            type="text"
-                            className="form-control"
-                            placeholder="Search Books"
-                        />
-                    </div>
-                    <div className="col-md-2 p-1">
-                        <input
-                            type="submit"
-                            id="search-book-btn"
-                            className="btn btn-warning btn-block"
-                            value="Search"
-                        />
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
 );
 
 const BookCard = ({ book, currentUser, handleRequest, current }) => (
@@ -214,16 +179,15 @@ const BooksPage = () => {
         }
     }, []);
 
-    const handleSubmit = useCallback(async (event) => {
+    const handleSubmit = useCallback(async (event, filters, values) => {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        const searchParams = new URLSearchParams(formData).toString();
         try {
-            const response = await axios.post(event.target.action, searchParams, {
+            const response = await axios.get(`/api/books/${filters}/${values}/1`, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
+            console.log(response.data);
             if (response.data.error) return setError(response.data.error);
             const { books, current, pages, filter, value } = response.data;
             setBooks(books);
@@ -293,7 +257,7 @@ const BooksPage = () => {
     return (
         <div>
             <Navbar currentUser={currentUser} logout={logout} />
-            <SearchBar handleSubmit={handleSubmit} />
+            <BooksSearchBar handleSubmit={handleSubmit} />
             <Alert error={error} success={success} dismissAlert={dismissAlert} />
             <Books books={books} currentUser={currentUser} handleRequest={handleRequest} current={current} />
             {pages > 0 && <Pagination pages={pages} current={current} filter={filter} value={value} handlePagination={handlePagination} />}
