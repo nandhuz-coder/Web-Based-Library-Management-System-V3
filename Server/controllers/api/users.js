@@ -245,7 +245,7 @@ exports.changeImage = async (req, res) => {
     const user = await User.findById(user_id);
     let imageUrl;
     if (req.file) {
-      const imageDir = path.join(__dirname, "../public/image/user-profile");
+      const imageDir = path.join(__dirname, "../../public/image/user-profile");
       const resize = new Resize(imageDir);
       const filename = await resize.save(req.file.buffer); // Save the image and get the filename
       imageUrl = filename;

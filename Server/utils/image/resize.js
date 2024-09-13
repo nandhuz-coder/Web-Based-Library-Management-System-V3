@@ -14,7 +14,6 @@ const path = require("path");
  * @constructor
  * @returns {object} - An instance of the Resize class.
  */
-
 class Resize {
   /**
    * @constructor
@@ -51,17 +50,24 @@ class Resize {
 
     const size = 500;
     const circleSvg = Buffer.from(
-      `<svg><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" /></svg>`
+      `<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${
+        size / 2
+      }" r="${size / 2}" /></svg>`
     );
 
     try {
-      await sharp(buffer)
+      const resizedBuffer = await sharp(buffer)
         .resize(size, size, {
           fit: sharp.fit.cover,
           withoutEnlargement: true,
         })
+        .toBuffer();
+
+      await sharp(resizedBuffer)
+        .resize(size, size) // Ensure the final image has the same dimensions
         .composite([{ input: circleSvg, blend: "dest-in" }])
         .toFile(filepath);
+
       return filename;
     } catch (error) {
       console.error("Error processing image:", error);
