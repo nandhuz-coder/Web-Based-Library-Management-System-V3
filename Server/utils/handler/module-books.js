@@ -71,3 +71,20 @@ exports.findBookTitlesByQuery = async (query, limit = 10) => {
   }
 };
 
+/**
+ * Finds book authors by a search query.
+ * @param {string} query - The search query.
+ * @param {number} limit - The maximum number of results to return.
+ * @returns {Promise<Array>} - A promise that resolves to an array of book authors.
+ */
+exports.findBookAuthorsByQuery = async (query, limit = 10) => {
+  try {
+    const regex = new RegExp(query, "i");
+    let booksArray = Array.from(collection.books.values());
+    let books = booksArray.filter((book) => regex.test(book.author));
+    return books.slice(0, limit).map((book) => book.author);
+  } catch (err) {
+    console.error("Error fetching book authors:", err);
+    throw new Error("Server error");
+  }
+};

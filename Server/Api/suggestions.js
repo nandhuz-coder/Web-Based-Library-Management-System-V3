@@ -93,4 +93,25 @@ router.get("/api/suggestion/books", async (req, res) => {
   }
 });
 
+/**
+ * Controller to get book author suggestions.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the list of book authors.
+ */
+router.get("/api/suggestion/authors", async (req, res) => {
+  try {
+    const searchValue = req.query.q;
+    if (!searchValue || searchValue.length < 3) {
+      return res.json([]);
+    }
+    const authors = await modulebooks.findBookAuthorsByQuery(searchValue);
+    res.json(authors);
+  } catch (err) {
+    console.error(err);
+    res.json({ error: "Server error" });
+  }
+});
+
+
 module.exports = router;

@@ -187,7 +187,6 @@ const BooksPage = () => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-            console.log(response.data);
             if (response.data.error) return setError(response.data.error);
             const { books, current, pages, filter, value } = response.data;
             setBooks(books);

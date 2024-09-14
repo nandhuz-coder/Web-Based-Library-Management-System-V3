@@ -91,11 +91,11 @@ const BooksDetails = () => {
 
     return (
         <>
-            {user ? (<UserNav />) : (<Navbar />)}
+            {user ? <UserNav /> : <Navbar />}
             <Alert error={error} dismissAlert={() => setError('')} />
             <Alert success={success} dismissAlert={() => setSuccess('')} />
-            <div className="container mt-3">
-                <div className="row justify-content-center">
+            <div className="container mt-5" style={{ minHeight: '100vh' }}>
+                <div className="row justify-content-center mt-4">
                     <div className="col-md-10">
                         <div className="card">
                             <div className="card-header" style={{ background: 'rgb(100, 170, 236)' }}>
