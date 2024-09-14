@@ -43,14 +43,14 @@ exports.getUserPage = async (req, res) => {
   try {
     let warning = [];
     const page = parseInt(req.params.page, 10) || 1;
-    if (!req.user) return res.status(500).json({ error: "try login again.." });
+    if (!req.user) return res.json({ error: "try login again..." });
     const user_id = req.user._id;
 
     // Fetch user info from the database
     const user = await User.findById(user_id);
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.json({ error: "User not found" });
     }
 
     // Check for overdue issues
@@ -87,7 +87,7 @@ exports.getUserPage = async (req, res) => {
     });
   } catch (err) {
     console.error("Error fetching user data:", err);
-    res.status(500).json({ error: "Unknown error occurred" });
+    res.json({ error: "Unknown error occurred" });
   }
 };
 
@@ -371,7 +371,7 @@ exports.updateProfile = async (req, res, _next) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(500).json(err);
+    res.json(err);
   }
 };
 

@@ -34,6 +34,7 @@ const collection = require("./utils/handler/collection");
 
 //* Import handlers
 const MailHandler = require("./utils/handler/config-mails");
+const BookHandler = require("./utils/handler/books");
 
 //* Import queue
 const startAgenda = require("./utils/queue/queue");
@@ -54,8 +55,10 @@ const suggestion = require("./Api/suggestions");
 //* Initialize collections
 /**
  * Initialize the mails collection as a Map.
+ * Initialize the books collection as a Map.
  */
 collection.mails = new Map();
+collection.books = new Map();
 
 //* Environment variables
 if (process.env.NODE_ENV !== "production") require("dotenv").config();
@@ -104,6 +107,22 @@ mongoose
     logs.log("info", "MongoDB is connected");
     console.log("MongoDB is connected");
 
+    //! Calling the BookHandler function.
+    /**
+     * Calls the BookHandler function and handles the result.
+     * The BookHandler function collects books data from the database
+     * and saves it in the collection.books Map.
+     * The result of the operation is logged to the console.
+     */
+    BookHandler().then((result) => {
+      if (result) {
+        console.log("\x1b[34mBooks collected successfully\x1b[0m");
+      } else {
+        console.log("\x1b[31mError collecting books\x1b[0m");
+      }
+    });
+
+    //! Calling the MailHandler function.
     /**
      * Call the MailHandler function when the server starts.
      * The MailHandler function collects mail configurations from the database
@@ -115,6 +134,7 @@ mongoose
       else console.log("\x1b[31mError collecting mails\x1b[0m");
     });
 
+    //! Starting the agenda.
     /**
      * Start the agenda when the server starts.
      * The startAgenda function initializes and starts the agenda for processing jobs.

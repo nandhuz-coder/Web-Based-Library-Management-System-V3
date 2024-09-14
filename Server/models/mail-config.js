@@ -140,4 +140,12 @@ mailConfigSchema.post("remove", function (doc) {
   collection.mails.clear();
 });
 
+// Middleware to update the in-memory collection on update
+mailConfigSchema.post("findOneAndUpdate", function (doc) {
+  if (doc) {
+    collection.mails.clear();
+    collection.mails.set(0, doc);
+  }
+});
+
 module.exports = mongoose.model("MailConfig", mailConfigSchema);

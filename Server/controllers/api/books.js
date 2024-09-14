@@ -10,6 +10,7 @@ const User = require("../../models/user");
 const Activity = require("../../models/activity");
 const Book = require("../../models/book");
 const Request = require("../../models/request");
+const { findBooks } = require("../../utils/handler/module-books");
 
 // global Variables
 const PER_PAGE = 12;
@@ -43,15 +44,10 @@ exports.getBooks = async (req, res) => {
 
   try {
     // Fetch books from database
-    const books = await Book.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE);
-
-    // Get the count of total available books of given filter
-    const count = await Book.find(searchObj).countDocuments();
+    const { books, count } = await findBooks(searchObj, page, PER_PAGE);
 
     // Send JSON response with books, pagination info, filter, value, and user details
-    return res.json({
+    return await res.json({
       books: books,
       current: page,
       pages: Math.ceil(count / PER_PAGE),

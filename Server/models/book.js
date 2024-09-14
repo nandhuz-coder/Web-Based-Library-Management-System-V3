@@ -4,7 +4,7 @@
  */
 
 const mongoose = require("mongoose");
-
+const collection = require("../utils/handler/collection");
 /**
  * @typedef {Object} Book
  * @property {String} title - The title of the book.
@@ -29,6 +29,23 @@ const bookSchema = new mongoose.Schema({
       ref: "Comment",
     },
   ],
+});
+
+// Middleware to update the in-memory collection on save
+bookSchema.post("save", function (doc) {
+  collection.books.set(doc._id.toString(), doc);
+});
+
+// Middleware to remove the document from the in-memory collection on delete
+bookSchema.post("remove", function (doc) {
+  collection.books.delete(doc._id.toString());
+});
+
+// Middleware to update the in-memory collection on update
+bookSchema.post("findOneAndUpdate", function (doc) {
+  if (doc) {
+    collection.books.set(doc._id.toString(), doc);
+  }
 });
 
 module.exports = mongoose.model("Book", bookSchema);
