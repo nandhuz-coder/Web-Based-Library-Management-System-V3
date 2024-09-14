@@ -46,6 +46,7 @@
 - [x] Fix delete comment.
 - [x] Add Admin comment force delete.
 - [x] Fix comment redirection from user profile.
+- [x] Implement Books caching.
 - [ ] Add suggestion on every search.
 - [ ] Add catogaries on add books.
 - [ ] Add notification.

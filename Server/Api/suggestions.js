@@ -10,6 +10,8 @@ const middleware = require("../middleware");
 const Request = require("../models/request");
 const Book = require("../models/book");
 const Return = require("../models/return");
+const modulebooks = require("../utils/handler/module-books");
+const perPage = 12;
 
 // Function to get the count of documents in each collection
 async function global() {
@@ -69,4 +71,26 @@ router.get("/api/global", middleware.isAdmin, async (req, res) => {
 router.get("/api/global/user", (req, res) => {
   res.json({ user: req.user });
 });
+
+/**
+ * Controller to get book title suggestions.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the list of book titles.
+ */
+router.get("/api/suggestion/books", async (req, res) => {
+  console.log(req.query);
+  try {
+    const searchValue = req.query.q;
+    if (!searchValue || searchValue.length < 3) {
+      return res.json([]);
+    }
+    const titles = await modulebooks.findBookTitlesByQuery(searchValue);
+    res.json(titles);
+  } catch (err) {
+    console.error(err);
+    res.json({ error: "Server error" });
+  }
+});
+
 module.exports = router;

@@ -17,6 +17,9 @@ const Comment = require("../../models/comment");
 const Request = require("../../models/request");
 const Return = require("../../models/return");
 
+//importing functions.
+const module_books = require("../../utils/handler/module-books");
+
 // GLOBAL_VARIABLES
 const PER_PAGE = 10;
 
@@ -87,11 +90,10 @@ exports.getDashboard = async (req, res) => {
  * 1. Extract the page number from the request parameters, defaulting to 1 if not provided.
  * 2. Extract the filter and value from the request parameters.
  * 3. Construct the search object based on the filter and value.
- * 4. Retrieve the count of books that match the search criteria.
- * 5. Fetch a paginated list of books based on the search criteria.
- * 6. Calculate the total number of pages based on the book count and items per page.
- * 7. Send a JSON response containing the books, current page, total pages, filter, and value.
- * 8. Handle any errors that occur during the process and log them to the console.
+ * 4. Fetch a paginated list of books and the count of books that match the search criteria.
+ * 5. Calculate the total number of pages based on the book count and items per page.
+ * 6. Send a JSON response containing the books, current page, total pages, filter, and value.
+ * 7. Handle any errors that occur during the process and log them to the console.
  */
 exports.getInventory = async (req, res) => {
   try {
@@ -108,18 +110,17 @@ exports.getInventory = async (req, res) => {
       searchObj[filter] = value;
     }
 
-    // Step 4: Get the book count
-    const books_count = await Book.find(searchObj).countDocuments();
+    // Step 4: Fetch paginated books and count
+    const { books, count } = await module_books.findBooks(
+      searchObj,
+      page,
+      PER_PAGE
+    );
 
-    // Step 5: Fetch paginated books
-    const books = await Book.find(searchObj)
-      .skip(PER_PAGE * page - PER_PAGE)
-      .limit(PER_PAGE);
+    // Step 5: Calculate total pages
+    const totalPages = Math.ceil(count / PER_PAGE);
 
-    // Step 6: Calculate total pages
-    const totalPages = Math.ceil(books_count / PER_PAGE);
-
-    // Step 7: Send JSON response
+    // Step 6: Send JSON response
     await res.json({
       books: books,
       current: page,
@@ -128,11 +129,9 @@ exports.getInventory = async (req, res) => {
       value: value,
     });
   } catch (err) {
-    // Step 8: Handle errors
+    // Step 7: Handle errors
     console.error(err);
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the book inventory." });
+    res.json({ error: "An error occurred while fetching the book inventory." });
   }
 };
 
@@ -146,28 +145,34 @@ exports.getInventory = async (req, res) => {
  *
  * Workflow:
  * 1. Extract the book ID from the request parameters.
- * 2. Retrieve the book from the database using the book ID.
- * 3. Send a JSON response containing the retrieved book.
- * 4. Handle any errors that occur during the process and log them to the console.
+ * 2. Validate the book ID format.
+ * 3. Retrieve the book from the database using the book ID.
+ * 4. If the book is not found, send an error response.
+ * 5. Send a JSON response containing the retrieved book.
+ * 6. Handle any errors that occur during the process and log them to the console.
  */
 exports.getUpdateBook = async (req, res, _next) => {
   try {
     // Step 1: Extract the book ID from the request parameters
     const book_id = req.params.book_id;
 
-    // Step 2: Retrieve the book from the database using the book ID
-    const book = await Book.findById(book_id);
+    // Step 2: Validate the book ID format
+    if (!ObjectId.isValid(book_id)) {
+      return res.json({ error: "Invalid ID format" });
+    }
 
-    // Step 3: Send a JSON response containing the retrieved book
-    await res.json({
-      book: book,
-    });
+    // Step 3: Retrieve the book from the database using the book ID
+    const book = await module_books.findBookById(book_id.toString());
+
+    // Step 4: If the book is not found, send an error response
+    if (!book) return res.json({ error: "No book found" });
+
+    // Step 5: Send a JSON response containing the retrieved book
+    await res.json({ book: book });
   } catch (err) {
-    // Step 4: Handle any errors that occur during the process and log them to the console
+    // Step 6: Handle any errors that occur during the process and log them to the console
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: "An error occurred while retrieving the book." });
+    return res.json({ error: "An error occurred while retrieving the book." });
   }
 };
 
@@ -273,7 +278,7 @@ exports.getUserProfile = async (req, res) => {
   } catch (err) {
     // Step 9: Handle any errors that occur during the process and log them to the console
     console.error(err);
-    res.status(500).json({ error: "An unknown error occurred." });
+    res.json({ error: "An unknown error occurred." });
   }
 };
 
@@ -347,7 +352,7 @@ exports.getAdminProfile = async (req, res) => {
 
 // admin -> get stock out book inventory working procedure
 /**
- * Retrieves a list of books based on the search criteria.
+ * Retrieves a list of books that are out of stock based on the search criteria.
  *
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
@@ -355,11 +360,12 @@ exports.getAdminProfile = async (req, res) => {
  *
  * Workflow:
  * 1. Extract the page number, filter, and value from the request parameters.
- * 2. Construct the search object based on the filter and value.
+ * 2. Construct the search object to include books with zero stock and additional filters if provided.
  * 3. Retrieve the count of books that match the search criteria.
  * 4. Retrieve a paginated list of books that match the search criteria.
- * 5. Send a JSON response containing the books, current page, total pages, filter, and value.
- * 6. Handle any errors that occur during the process and log them to the console.
+ * 5. Calculate the total number of pages based on the count and items per page.
+ * 6. Send a JSON response containing the books, current page, total pages, filter, and value.
+ * 7. Handle any errors that occur during the process and log them to the console.
  */
 exports.getAdminStock = async (req, res) => {
   try {
@@ -368,32 +374,34 @@ exports.getAdminStock = async (req, res) => {
     const filter = req.params.filter || "all";
     const value = req.params.value || "all";
 
-    // Step 2: Construct the search object based on the filter and value
+    // Step 2: Construct the search object to include books with zero stock and additional filters if provided
     let searchObj = { stock: 0 };
-    if (filter !== " " && value !== " ") {
+    if (filter !== "all" && value !== "all") {
       searchObj[filter] = value;
     }
 
     // Step 3: Retrieve the count of books that match the search criteria
-    const books_count = await Book.find(searchObj).countDocuments();
+    const { books, count } = await module_books.findBooks(
+      searchObj,
+      page,
+      PER_PAGE
+    );
 
-    // Step 4: Retrieve a paginated list of books that match the search criteria
-    const books = await Book.find(searchObj)
-      .skip(PER_PAGE * (page - 1))
-      .limit(PER_PAGE);
+    // Step 4: Calculate the total number of pages based on the count and items per page
+    const totalPages = Math.ceil(count / PER_PAGE);
 
     // Step 5: Send a JSON response containing the books, current page, total pages, filter, and value
     return res.json({
       books: books,
       current: page,
-      pages: Math.ceil(books_count / PER_PAGE),
+      pages: totalPages,
       filter: filter,
       value: value,
     });
   } catch (err) {
     // Step 6: Handle any errors that occur during the process and log them to the console
     console.error("Error fetching admin stock:", err);
-    return res.status(500).json({
+    return res.json({
       error: "An error occurred while fetching the stock data.",
     });
   }
@@ -473,8 +481,8 @@ exports.getAdminRequest = async (req, res) => {
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the list of return documents.
- * @description This function retrieves a paginated list of return documents based on the search criteria provided in the request parameters. 
- * 
+ * @description This function retrieves a paginated list of return documents based on the search criteria provided in the request parameters.
+ *
  * Workflow:
  * 1. Extract the page number, filter, and value from the request parameters.
  * 2. Adjust the filter key if necessary (e.g., for username or book information).
@@ -525,6 +533,6 @@ exports.getAdminReturn = async (req, res) => {
   } catch (err) {
     // Step 7: Handle any errors that occur during the process and log them to the console
     console.error("Error fetching return documents:", err.message);
-    return res.status(500).json({ error: "An unknown error occurred." });
+    return res.json({ error: "An unknown error occurred." });
   }
 };
